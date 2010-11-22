@@ -19,7 +19,6 @@ sub process {
         $self->run_servidores;
     }
 
-    return 2;
 }
 
 1;

@@ -12,6 +12,7 @@ requires 'MooseX::Traits';
 requires 'namespace::autoclean';
 requires 'Text::CSV';
 requires 'LWP::Curl';
+requires 'HTML::TreeBuilder::XPath';
 
 recommends 'Text::CSV_XS' => '0.50';
 
