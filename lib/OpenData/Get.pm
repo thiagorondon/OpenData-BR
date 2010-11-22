@@ -7,5 +7,3 @@ has '+_trait_namespace' => ( default => 'OpenData::Get' );
 
 1;
 
-1;
-

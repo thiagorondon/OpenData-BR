@@ -17,7 +17,7 @@ recommends 'Text::CSV_XS' => '0.50';
 
 test_requires  'Test::More';
 
-tests 't/*.t t/*/*t t/*/*/*t';
+tests 't/*.t t/*/*t t/*/*/*t t/*/*/*/*t';
 
 auto_install;
 WriteAll;
