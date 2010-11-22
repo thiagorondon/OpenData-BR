@@ -25,7 +25,7 @@ sub _servidores_parse_member {
 
     my $tree = HTML::TreeBuilder::XPath->new_from_content($content);
    
-    warn $content;
+    $self->debug($content);
 
     return (
         matricula       =>      '123456',

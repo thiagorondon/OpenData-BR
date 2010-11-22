@@ -5,6 +5,8 @@ use Moose;
 use OpenData::Get;
 
 with 'MooseX::Traits';
+with 'OpenData::Debug';
+
 extends 'OpenData::Config';
 
 has '+_trait_namespace' => ( default => 'OpenData' );
