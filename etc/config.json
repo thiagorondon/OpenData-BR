@@ -1,0 +1,15 @@
+
+{
+	"db" : [
+		"db:mysql:localhost",
+		"portal",
+		"porta"
+	],
+
+	"output" : [
+		"csv" : "/tmp/csv-example",
+		"xml" : "/tmp/xml-example"
+	],
+
+}
+
