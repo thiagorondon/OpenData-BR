@@ -6,7 +6,7 @@ use Moose;
 has 'items' => (
     traits  => ['Array'],
     is      => 'ro',
-    isa     => 'ArrayRef[Str]',
+    isa     => 'ArrayRef[HashRef]',
     default => sub { [] },
     handles => {
         all     => 'elements',

@@ -10,7 +10,8 @@ use OpenData::Runtime;
 my $opendata = new OpenData::Runtime
     ->with_traits('BR::Federal::PortalTransparencia')->new;
 
-print $opendata->process;
+my $data = $opendata->process;
 
+print $opendata->transform($data->all);
 
 

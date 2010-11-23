@@ -26,21 +26,17 @@ sub _servidores_parse_member {
     my $tree = HTML::TreeBuilder::XPath->new_from_content($content);
    
     my $root = $tree->findnodes("//tr");
+    my $data = {};
     foreach my $item (@{$root}) {
-        print $item->as_text . "\n";
+        my $line = $item->as_text;
+        $line =~ s/ *//;
+        my ($name, $value) = split(/:/, $line);
+        $value =~ s/ *// if $value;
+        $data->{nome} = $value if $name eq 'Nome';
+        $data->{cpf} = $value if $name eq 'CPF';
     }
 
-    return (
-        matricula       =>      '123456',
-        cargo_emprego   =>      'TECNICO',
-        classe          =>      3,
-        padrao          =>      1,
-        nivel           =>      5,
-        orgao_origem    =>      '',
-        uorg            =>      'FOO',
-        orgao           =>      'BAR',
-        orgao_superior  =>      'BAZ',
-    );
+    return $data ? $data : undef;
 
 }
 
@@ -54,7 +50,7 @@ sub _servidores_parse_tree () {
 } 
 
 
-sub servidores_init {
+sub _servidores_init {
     my $self = shift;
     my @servidores;
 
@@ -67,16 +63,19 @@ sub servidores_init {
     $tree = HTML::TreeBuilder::XPath->new_from_content($table);
     $root = $tree->findnodes("//tr");
     
-    $items->add($self->_servidores_parse_tree($_)) for (@{$root});
+    foreach my $obj (@{$root}) {
+        my $member = $self->_servidores_parse_tree($obj);
+        $items->add($member) if defined($member->{nome});
+    }
     
     $tree->delete;
     
-    return $items->all;
+    return $items;
 }
 
 sub run_servidores {
     my $self = shift;
-    return $self->servidores_init;
+    return $self->_servidores_init;
 }
 
 1;

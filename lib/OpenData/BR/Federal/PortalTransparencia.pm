@@ -6,18 +6,16 @@ use Moose::Role;
 
 with 'OpenData::BR::Federal::PortalTransparencia::Servidores';
 
-has servidores => (
-    is => 'ro',
-    isa => 'Int',
+has dept => (
+    is => 'rw',
+    isa => 'Str',
     default => 1
 );
 
 sub process {
     my $self = shift;
 
-    if ($self->servidores) {
-        $self->run_servidores;
-    }
+    return $self->run_servidores;
 
 }
 
