@@ -12,6 +12,7 @@ requires 'MooseX::Traits';
 requires 'namespace::autoclean';
 requires 'Text::CSV';
 requires 'LWP::Curl';
+requires 'WWW::Mechanize';
 requires 'HTML::TreeBuilder::XPath';
 requires 'KiokuDB::Backend::MongoDB';
 
