@@ -20,13 +20,20 @@ has mainurl => (
 
 sub _servidores_parse_member {
     my ($self, $url) = @_;
+    
+    return if $url =~ /Pagina/;
+    my $id = $url;
+    $id =~ s/^.*IdServidor=//;
+    
     my $people_url = join('/', $self->baseurl, $url);
     my $content = $self->get($people_url);
 
     my $tree = HTML::TreeBuilder::XPath->new_from_content($content);
-   
     my $root = $tree->findnodes("//tr");
+    
     my $data = {};
+    $data->{id} = $id;
+
     foreach my $item (@{$root}) {
         my $line = $item->as_text;
         $line =~ s/ *//;
