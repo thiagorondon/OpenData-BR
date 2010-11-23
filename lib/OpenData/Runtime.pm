@@ -3,6 +3,7 @@ package OpenData::Runtime;
 
 use Moose;
 use OpenData::Get;
+use utf8;
 
 with 'MooseX::Traits';
 with 'OpenData::Debug';
