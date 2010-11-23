@@ -6,19 +6,19 @@ use Moose::Role;
 use MongoDB;
 
 has host => (
-    is      => 'ro',
+    is      => 'rw',
     isa     => 'Str',
     default => 'localhost'
 );
 
 has database => (
-    is      => 'ro',
+    is      => 'rw',
     isa     => 'Str',
     default => 'opendata'
 );
 
 has collection => (
-    is      => 'ro',
+    is      => 'rw',
     isa     => 'Str',
     default => 'br'
 );
@@ -31,8 +31,8 @@ has _collection => (
     default => sub {
         my $self = shift;
         my $conn = MongoDB::Connection->new(host => $self->host);
-        my $database = $conn->opendata;
-        my $collection = $database->br;
+        my $database = $conn->get_database($self->database);
+        my $collection = $database->get_collection($self->collection);
         return $collection;
     }
 );

@@ -41,8 +41,13 @@ sub _servidores_parse_member {
         $line =~ s/ *//;
         my ( $name, $value ) = split( /:/, $line );
         $value =~ s/ *// if $value;
+        
+        #print $name . "\n";
+        #print $item->as_HTML . "\n\n";
+        
         $data->{nome} = $value if $name eq 'Nome';
         $data->{cpf}  = $value if $name eq 'CPF';
+    
     }
 
     return $data ? $data : undef;

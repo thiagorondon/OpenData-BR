@@ -19,7 +19,9 @@ has items => (
     lazy => 1,
     default => sub {
             return OpenData::Array
-                ->new_with_traits(traits => 'MongoDB');
+                ->new_with_traits(traits => 'MongoDB',
+                    host => 'localhost',
+                    );
         }
 );
 
@@ -31,7 +33,12 @@ sub BUILD {
 sub process {
     my $self = shift;
 
-    return $self->run_servidores;
+    $self->items->collection('sevidores');
+    $self->run_servidores;
+
+    $self->items->collection('despesas');
+    #return $self->run_despesas;
+
 
 }
 
