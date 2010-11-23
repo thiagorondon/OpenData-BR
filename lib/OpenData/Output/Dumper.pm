@@ -5,10 +5,10 @@ package OpenData::Output::Dumper;
 use Moose::Role;
 use Data::Dumper;
 
-sub transform {
+sub add {
     my $self = shift;
     my $data = shift;
-    return Dumper($data);
+    print Dumper($data);
 }
 
 1;
