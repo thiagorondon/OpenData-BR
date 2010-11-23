@@ -36,7 +36,8 @@ has _connect => (
         my $collection = $mongodb->get_collection($self->collection);
         my $mongo = KiokuDB::Backend::MongoDB
             ->new('collection' => $collection);
-        KiokuDB->new( backend => $mongo );
+        warn $mongo;
+        return KiokuDB->new( backend => $mongo );
     }
 );
 
@@ -45,7 +46,8 @@ sub add {
 
     my $mongo = $self->_connect;
     my $scope = $mongo->new_scope;
-    my $uuid = $mongo->store($object);
+    my $uuid = $mongo->store(\$object);
+    return $uuid;
 }
 
 1;
