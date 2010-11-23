@@ -73,10 +73,7 @@ sub _servidores_init {
     return $items;
 }
 
-sub run_servidores {
-    my $self = shift;
-    return $self->_servidores_init;
-}
+sub run_servidores { shift->_servidores_init; }
 
 1;
 
