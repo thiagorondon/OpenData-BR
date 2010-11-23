@@ -64,7 +64,12 @@ sub _servidores_init {
 
     my $content = $self->get( $self->mainurl );
 
-    my $items      = OpenData::Array->new;
+    #my $items      = OpenData::Array->new;
+    
+    # hack, isto deve mudar.
+    my $items       = OpenData::Array
+        ->new_with_traits(traits => 'KiokuDB::MongoDB');
+
     my $total_page = $self->_total_page($content);
 
     for my $i ( 1 .. $self->_total_page($content) ) {
