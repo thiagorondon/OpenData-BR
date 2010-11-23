@@ -64,12 +64,6 @@ sub _servidores_init {
 
     my $content = $self->get( $self->mainurl );
 
-    #my $items      = OpenData::Array->new;
-    
-    # hack, isto deve mudar.
-    my $items       = OpenData::Array
-        ->new_with_traits(traits => 'MongoDB');
-
     my $total_page = $self->_total_page($content);
 
     for my $i ( 1 .. $self->_total_page($content) ) {
@@ -85,14 +79,14 @@ sub _servidores_init {
 
         foreach my $obj ( @{$root} ) {
             my $member = $self->_servidores_parse_tree($obj);
-            $items->add($member) if defined( $member->{nome} );
+            $self->items->add($member) if defined( $member->{nome} );
         }
 
         $tree->delete;
 
     }
 
-    return $items;
+    return $self->items;
 }
 
 sub _page {

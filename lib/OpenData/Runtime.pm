@@ -12,17 +12,24 @@ extends 'OpenData::Config';
 
 has '+_trait_namespace' => ( default => 'OpenData' );
 
-has set_type => (
-    is => 'ro',
+has set_browser => (
+    is => 'rw',
     isa => 'Str',
     default => 'Curl'
 );
 
+after set_browser => sub {
+    my $self = shift;
+    my $orig = shift;
+    return if !$orig;
+    $self->_get(OpenData::Get->with_traits($orig)->new)
+};
+
 has _get => (
-    is => 'ro',
+    is => 'rw',
     isa => 'Object',
     lazy => 1,
-    default => sub { OpenData::Get->with_traits(shift->set_type)->new }
+    default => sub { OpenData::Get->with_traits(shift->set_browser)->new }
 );
 
 sub BUILD {

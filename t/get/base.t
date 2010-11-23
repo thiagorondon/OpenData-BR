@@ -9,7 +9,7 @@ my $meta = OpenData::Get::Base->meta;
 
 is_deeply(
     [ sort $meta->get_attribute_list() ],
-    [ 'agent', 'referer', 'url' ],
+    [ 'agent', 'referer', 'timeout', 'try', 'url' ],
     '... got the right attribute list'
 );
 

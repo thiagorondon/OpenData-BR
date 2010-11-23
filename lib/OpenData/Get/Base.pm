@@ -16,11 +16,42 @@ has referer => (
     default => '',
 );
 
+has timeout => (
+    is  => 'rw',
+    isa => 'Int', 
+    default => 30
+);
+
 has agent => (
     is => 'rw',
     isa => 'Str',
-    default => 'OpenData::BR'
+    default => 'Linux Mozilla'
 );
+
+has try => (
+    is => 'ro',
+    isa => 'Int',
+    default => 5
+);
+
+sub get {
+    my $self = shift;
+    return if !$self->has_url;
+    
+    for (1 .. $self->try) {
+        my $content = $self->_module->get($self->url);
+        return $content if $content;
+    }
+}
+
+sub post {
+    my ($self, $form) = @_;
+    return if !$self->has_url;
+    for (1 .. $self->try) {
+        my $content = $self->_module->post($self->url, $form, $self->referer);
+        return $content if $content;
+    }
+}
 
 1;
 

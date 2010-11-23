@@ -13,6 +13,7 @@ requires 'namespace::autoclean';
 requires 'Text::CSV';
 requires 'LWP::Curl';
 requires 'HTML::TreeBuilder::XPath';
+requires 'MongoDB';
 requires 'KiokuDB::Backend::MongoDB';
 
 recommends 'Text::CSV_XS' => '0.50';
