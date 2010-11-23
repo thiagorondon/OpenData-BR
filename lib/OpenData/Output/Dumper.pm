@@ -1,5 +1,3 @@
-
-
 package OpenData::Output::Dumper;
 
 use Moose::Role;

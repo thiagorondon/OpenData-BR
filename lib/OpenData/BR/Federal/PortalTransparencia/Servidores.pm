@@ -70,7 +70,14 @@ sub _servidores_init {
     for my $i ( 1 .. $self->_total_page($content) ) {
 
         $self->debug("Paginacao, $i");
-        $content = $self->get( $self->_page( $self->mainurl, $i ) );
+
+		# - Se o get falhar, retorna "return;" ou seja o $content
+		# ou seja o $content vai ser falso para uma avaliação
+		# caso isso ocorre tenta pegar de novo, até conseguir.
+
+        $content = $self->get( $self->_page( $self->mainurl, $i ) )
+          while !$content;
+
         my $tree  = HTML::TreeBuilder::XPath->new_from_content($content);
         my $root  = $tree->findnodes("//table");
         my $table = $root->[0]->as_HTML;
