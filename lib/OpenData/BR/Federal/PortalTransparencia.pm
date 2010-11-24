@@ -7,6 +7,7 @@ use OpenData::Array;
 
 with 'OpenData::BR::Federal::PortalTransparencia::Servidores';
 with 'OpenData::BR::Federal::PortalTransparencia::CEIS';
+with 'OpenData::BR::Federal::PortalTransparencia::Convenios';
 
 has dept => (
     is => 'rw',
@@ -37,9 +38,11 @@ sub process {
 #    $self->items->collection('servidores');
 #    $self->run_servidores;
 
-    $self->items->collection('ceis');
-    return $self->run_ceis;
+#    $self->items->collection('ceis');
+#    return $self->run_ceis;
 
+     $self->items->collection('convenios');
+     return $self->run_convenios;
 }
 
 1;
