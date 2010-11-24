@@ -9,6 +9,12 @@ use URI;
 my $baseurl = 'http://www.portaltransparencia.gov.br/convenios';
 my $mainurl = join( '/', $baseurl, 'ConveniosListaGeral.asp?Ordem=-1' );
 
+has convenios_page_start => (
+    is => 'rw',
+    isa => 'Int', 
+    default => 1
+);
+
 sub _convenios_parse_member {
     my ( $self, $url ) = @_;
     return undef if $url =~ /convenios/; 
@@ -77,7 +83,7 @@ sub _convenios_init {
 
     my $total_page = $self->_total_page($content);
 
-    for my $i ( 1 .. $self->_total_page($content) ) {
+    for my $i ( $self->convenios_page_start .. $self->_total_page($content) ) {
 
         $self->debug("Paginacao, $i");
         $content = $self->get( $self->_page( $mainurl, $i ) );
