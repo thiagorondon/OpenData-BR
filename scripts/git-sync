@@ -1,0 +1,47 @@
+#!/bin/bash
+#
+# git-sync
+#
+# local $alexei_znamensky, '<:utf8', 'russoz [AT] CPAN DOT ORG'
+#
+
+msg() {
+    echo "$@" >&2
+}
+
+die() {
+    msg "$@"
+    exit 1
+}
+
+u=upstream
+o=origin
+m=master
+
+##############################################################################
+
+param="$1"; shift
+
+msg '=== Pulling changes from your remote repository'
+git pull $o $m || die "*** FAILED to pull from $o to $m"
+
+git remote show | grep -q '$u' || {
+    msg "=== There is no tracked repository named '$u'. Trying to create"
+    [ -z "$param" ] && {
+        msg "*** Please specify $u repository:"
+        die '*** git-sync <repository-url>'
+    }
+    git remote add $u "$param" \
+    || die "*** FAILED to add remote repository $u"
+}
+msg "=== Using existing upstream repository '$u'"
+
+msg "=== Fetching from remote repo $u"
+git fetch $u || die "*** FAILED to fetch from $u"
+
+msg "=== Merging with $u/$m"
+git merge $u/$m || die '!!! Merge not successful. Please verify'
+
+msg "=== Pushing the merged tree into $o"
+git push $o $m || die "*** FAILED to push changes into $o"
+
