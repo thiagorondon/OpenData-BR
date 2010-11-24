@@ -5,7 +5,11 @@ package OpenData::BR::Federal::PortalTransparencia;
 use Moose::Role;
 use OpenData::Array;
 
+with 'OpenData::BR::Federal::PortalTransparencia::Page';
+
 with 'OpenData::BR::Federal::PortalTransparencia::Servidores';
+with 'OpenData::BR::Federal::PortalTransparencia::CEIS';
+with 'OpenData::BR::Federal::PortalTransparencia::Convenios';
 
 has dept => (
     is => 'rw',
@@ -33,13 +37,14 @@ sub BUILD {
 sub process {
     my $self = shift;
 
-    $self->items->collection('sevidores');
-    $self->run_servidores;
+#    $self->items->collection('servidores');
+#    $self->run_servidores;
 
-    $self->items->collection('despesas');
-    #return $self->run_despesas;
+#    $self->items->collection('ceis');
+#    return $self->run_ceis;
 
-
+     $self->items->collection('convenios');
+     return $self->run_convenios;
 }
 
 1;
