@@ -4,21 +4,25 @@
 #
 # local $alexei_znamensky, '<', 'russoz [AT] CPAN DOT ORG'
 #
-# git-sync will automate many steps for a developer working on a forked
+# This script will automate many steps for a developer working on a forked
 # git repository. This will merge the original repository into your local
 # copy and then update your remote fork.
 #
 # There is no dependency on github, but, as of now, the
-# repositoriy names are hard-coded as reasonably as::
+# repository names are hard-coded as reasonably as::
 #
 # - upstream: the original repo from where you forked
 # - origin: your forked repository
 # - master: your local working copy
 #
-# usage: git-sync [<origin-url>]
+#     usage: git-sync [<origin-url>]
 #
 # The <origin-url> is only necessary the first time git-sync is run. Next time
 # it is run, simply call 'git-sync'.
+#
+# The merging procedure with the upstream repository was learned from:
+#
+#     http://help.github.com/forking/
 #
 
 msg() {
