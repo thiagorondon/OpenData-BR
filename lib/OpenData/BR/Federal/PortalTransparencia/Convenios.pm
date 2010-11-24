@@ -75,12 +75,12 @@ sub _convenios_init {
 
     my $content = $self->get( $mainurl );
 
-    my $total_page = $self->_convenios_total_page($content);
+    my $total_page = $self->_total_page($content);
 
-    for my $i ( 1 .. $self->_convenios_total_page($content) ) {
+    for my $i ( 1 .. $self->_total_page($content) ) {
 
         $self->debug("Paginacao, $i");
-        $content = $self->get( $self->_convenios_page( $mainurl, $i ) );
+        $content = $self->get( $self->_page( $mainurl, $i ) );
         my $tree  = HTML::TreeBuilder::XPath->new_from_content($content);
         my $root  = $tree->findnodes("//table");
         my $table = $root->[1]->as_HTML;
@@ -98,28 +98,6 @@ sub _convenios_init {
     }
 
     return $self->items;
-}
-
-sub _convenios_page {
-    my ( $self, $url, $numero ) = @_;
-    my $u = URI->new($url);
-    $u->query_form( Pagina => $numero );
-    return $u->as_string;
-}
-
-sub _convenios_total_page {
-    my ( $self, $html ) = @_;
-    my $numero =
-      HTML::TreeBuilder::XPath->new_from_content($html)
-      ->findnodes('//p[@class="paginaAtual"]')->[0];
-    if ($numero) {
-        my $total = $numero->as_text;
-        $numero->delete;
-        return $1 if $total =~ /\d\/(\d+)/;
-    }
-    else {
-        die "Não conseguiu fazer a paginação";
-    }
 }
 
 sub run_convenios { shift->_convenios_init; }

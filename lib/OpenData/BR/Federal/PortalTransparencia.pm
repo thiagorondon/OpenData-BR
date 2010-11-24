@@ -5,6 +5,8 @@ package OpenData::BR::Federal::PortalTransparencia;
 use Moose::Role;
 use OpenData::Array;
 
+with 'OpenData::BR::Federal::PortalTransparencia::Page';
+
 with 'OpenData::BR::Federal::PortalTransparencia::Servidores';
 with 'OpenData::BR::Federal::PortalTransparencia::CEIS';
 with 'OpenData::BR::Federal::PortalTransparencia::Convenios';
