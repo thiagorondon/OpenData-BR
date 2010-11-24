@@ -6,6 +6,7 @@ use Moose::Role;
 use OpenData::Array;
 
 with 'OpenData::BR::Federal::PortalTransparencia::Servidores';
+with 'OpenData::BR::Federal::PortalTransparencia::CEIS';
 
 has dept => (
     is => 'rw',
@@ -33,12 +34,11 @@ sub BUILD {
 sub process {
     my $self = shift;
 
-    $self->items->collection('servidores');
-    $self->run_servidores;
+#    $self->items->collection('servidores');
+#    $self->run_servidores;
 
-    $self->items->collection('despesas');
-    #return $self->run_despesas;
-
+    $self->items->collection('ceis');
+    return $self->run_ceis;
 
 }
 

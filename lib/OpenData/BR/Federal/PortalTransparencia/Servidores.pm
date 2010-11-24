@@ -6,19 +6,8 @@ use HTML::TreeBuilder::XPath;
 use OpenData::Array;
 use URI;
 
-has baseurl => (
-    is      => 'ro',
-    isa     => 'Str',
-    default => 'http://www.portaltransparencia.gov.br/servidores'
-);
-
-has mainurl => (
-    is   => 'ro',
-    isa  => 'Str',
-    lazy => 1,
-    default =>
-      sub { join( '/', shift->baseurl, 'Servidor-ListaServidores.asp' ) }
-);
+my $baseurl = 'http://www.portaltransparencia.gov.br/servidores';
+my $mainurl = join( '/', $baseurl, 'Servidor-ListaServidores.asp' );
 
 sub _servidores_parse_member {
     my ( $self, $url ) = @_;
@@ -27,7 +16,7 @@ sub _servidores_parse_member {
     my $id = $url;
     $id =~ s/^.*IdServidor=//;
 
-    my $people_url = join( '/', $self->baseurl, $url );
+    my $people_url = join( '/', $baseurl, $url );
     my $content = $self->get($people_url);
 
     my $tree = HTML::TreeBuilder::XPath->new_from_content($content);
@@ -67,14 +56,14 @@ sub _servidores_init {
     my $self = shift;
     my @servidores;
 
-    my $content = $self->get( $self->mainurl );
+    my $content = $self->get( $mainurl );
 
     my $total_page = $self->_total_page($content);
 
     for my $i ( 1 .. $self->_total_page($content) ) {
 
         $self->debug("Paginacao, $i");
-        $content = $self->get( $self->_page( $self->mainurl, $i ) );
+        $content = $self->get( $self->_page( $mainurl, $i ) );
         my $tree  = HTML::TreeBuilder::XPath->new_from_content($content);
         my $root  = $tree->findnodes("//table");
         my $table = $root->[0]->as_HTML;
