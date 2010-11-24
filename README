@@ -19,6 +19,7 @@ Feito isto, agora você terá um repositório próprio para desenvolvimento, no 
 	git commit -a -s
 	git pull
 	git status
+	git push
 
 Logo depois de realizar suas contribuições, você pode realizar um "pull request" pelo próprio website do GITHUB, para quem os responsáveis possam efetuar um merge (efetivar) na arvore principal de desenvolvimento.
 
