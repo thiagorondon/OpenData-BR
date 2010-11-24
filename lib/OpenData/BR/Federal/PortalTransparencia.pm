@@ -33,7 +33,7 @@ sub BUILD {
 sub process {
     my $self = shift;
 
-    $self->items->collection('sevidores');
+    $self->items->collection('servidores');
     $self->run_servidores;
 
     $self->items->collection('despesas');
