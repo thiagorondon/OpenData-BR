@@ -14,7 +14,6 @@ requires 'Text::CSV';
 requires 'LWP::Curl';
 requires 'HTML::TreeBuilder::XPath';
 requires 'MongoDB';
-requires 'KiokuDB::Backend::MongoDB';
 requires 'WWW::Mechanize';
 
 recommends 'Text::CSV_XS' => '0.50';
