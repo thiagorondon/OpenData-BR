@@ -71,7 +71,7 @@ sub _ceis_init {
     return $self->items;
 }
 
-sub run_ceis { shift->_ceis_init; }
+sub _run_ceis { shift->_ceis_init; }
 
 1;
 

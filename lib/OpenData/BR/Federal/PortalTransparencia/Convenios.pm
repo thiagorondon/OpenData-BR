@@ -106,7 +106,7 @@ sub _convenios_init {
     return $self->items;
 }
 
-sub run_convenios { shift->_convenios_init; }
+sub _run_convenios { shift->_convenios_init; }
 
 1;
 

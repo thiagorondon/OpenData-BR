@@ -83,7 +83,7 @@ sub _servidores_init {
     return $self->items;
 }
 
-sub run_servidores { shift->_servidores_init; }
+sub _run_servidores { shift->_servidores_init; }
 
 1;
 
