@@ -1,9 +1,18 @@
 
-use Test::More tests => 1;
+use Test::More tests => 5;
 
 use strict;
 
-use_ok('OpenData::Output::MongoDB');
+use OpenData::Output;
+
+my $obj = OpenData::Output->new_with_traits(traits => 'MongoDB');
+
+is($obj->{_trait_namespace}, 'OpenData::Output');
+
+ok($obj->can('host'));
+ok($obj->can('database'));
+ok($obj->can('brother'));
+ok($obj->can('collection'));
 
 1;
 
