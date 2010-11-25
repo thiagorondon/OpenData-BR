@@ -21,11 +21,13 @@ has description => (
     isa => 'Str',
 );
 
-has parent => (
+has provider => (
     is       => 'rw',
     isa      => 'OpenData::Provider',
     weak_ref => 1,
 );
+
+##############################################################################
 
 has _raw_data => ( is => 'rw' );
 
@@ -47,12 +49,12 @@ sub transform {
 
 requires '_load';
 
-sub load {
-    my $self = shift;
-
-    my $loader = $self->parent->loader;
-    $loader->load( $self->_data );
-}
+#sub _load {
+#    my $self = shift;
+#
+#    my $loader = $self->provider->loader;
+#    $loader->load( $self->_data );
+#}
 
 1;
 

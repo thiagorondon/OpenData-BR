@@ -37,19 +37,25 @@ has loader => (
 sub add_collection {
     my ($self, $coll ) = @_;
 
-    $coll->parent($self);
+    $coll->provider($self);
 
     my $colls = $self->collections;
     $colls->{ $coll->id } = $coll;
 }
 
-sub process {
+sub collection {
     my ( $self, $coll ) = @_;
 
     croak qq{No such collection: }. $coll
-      unless exists $self->colections->{$coll};
+      unless exists $self->collections->{$coll};
 
-    my $coll_ref = $self->colections->{$coll};
+    return $self->collections->{$coll};
+}
+
+sub process {
+    my ( $self, $coll ) = @_;
+
+    my $coll_ref = $self->collection($coll);
 
     $coll_ref->extract;
     $coll_ref->transform;
