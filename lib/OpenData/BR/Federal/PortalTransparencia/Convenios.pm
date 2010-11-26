@@ -60,6 +60,7 @@ sub _convenios_parse_member {
 
         $loop++;
     }
+    $tree->delete;
 
     return $data ? $data : undef;
 
