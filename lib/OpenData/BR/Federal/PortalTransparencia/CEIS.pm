@@ -1,11 +1,18 @@
 
 package OpenData::BR::Federal::PortalTransparencia::CEIS;
 
-use Moose::Role;
+use Moose;
+
 use HTML::TreeBuilder::XPath;
 use URI;
 
-my $baseurl = 'http://www.portaltransparencia.gov.br/ceis';
+with 'OpenData::Provider::Collection';
+with 'OpenData::BR::Federal::PortalTransparencia::Base';
+
+has '+mainURI' => (
+    default => 'EmpresasSancionadas.asp?paramEmpresa=0';
+    );
+
 my $mainurl = join( '/', $baseurl, 'EmpresasSancionadas.asp?paramEmpresa=0' );
 
 sub _ceis_parse_tree () {
