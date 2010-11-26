@@ -22,7 +22,7 @@ sub _ceis_parse_tree () {
         $line =~ s/\<t.*\">//g;
         $line =~ s/\<td>//g;
         $line =~ s/\<\/td>//g;
-   
+
         $data->{cpfcnpj} = $line if $loop == 0;
         $data->{nome} = $line if $loop == 1;
         $data->{tipo} = $line if $loop == 2;

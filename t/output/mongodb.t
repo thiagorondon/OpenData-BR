@@ -2,7 +2,6 @@
 use Test::More tests => 5;
 
 use strict;
-
 use OpenData::Output;
 
 my $obj = OpenData::Output->new_with_traits(traits => 'MongoDB');
@@ -13,7 +12,3 @@ ok($obj->can('host'));
 ok($obj->can('database'));
 ok($obj->can('brother'));
 ok($obj->can('collection'));
-
-1;
-
-

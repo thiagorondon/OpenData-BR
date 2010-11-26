@@ -2,7 +2,6 @@
 
 package OpenData::Output::DB;
 
-sub add { 1 } 
+sub add { 1 }
 
 1;
-

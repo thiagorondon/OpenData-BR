@@ -17,7 +17,7 @@ has _connect => (
     default => sub {
         my $self = shift;
         my $dbfile = $self->dbfile;
-        return DBI->connect("dbi:SQLite:dbname=$dbfile", "", "");
+        return DBI->connect("dbi:SQLite:$dbfile", '', '');
     }
 );
 
@@ -37,12 +37,12 @@ sub ev_create {
 sub ev_get {
     my ($self, $key) = @_;
     return undef if !$key;
-    
+
     my $table = $self->table;
     my $sth = $self->_connect->prepare("SELECT * from $table where key='$key'");
     $sth->execute;
     my $row = $sth->fetch;
-    
+
     return $row ? $row->[1] : undef;
 }
 

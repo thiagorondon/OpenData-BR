@@ -53,7 +53,7 @@ has brother => (
     is => 'rw',
     isa => 'Str',
     lazy => 1,
-    default => sub { 
+    default => sub {
         my $user = $ENV{'USER'} || '';
         my $host = $ENV{'HOSTNAME'} || '';
         return join('@', $user, $host) }

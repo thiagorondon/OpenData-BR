@@ -22,10 +22,10 @@ has current_collection => (
     predicate => 'has_current_collection',
     clearer => 'clear_current_collection',
     trigger => sub  {
-    	my ($self, $new, $old ) = @_;
+        my ($self, $new, $old ) = @_;
 
-    	$self->items->collection( $new );
-	},
+        $self->items->collection( $new );
+    },
 );
 
 has items => (

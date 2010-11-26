@@ -18,7 +18,7 @@ has referer => (
 
 has timeout => (
     is  => 'rw',
-    isa => 'Int', 
+    isa => 'Int',
     default => 30
 );
 
@@ -37,7 +37,7 @@ has try => (
 sub get {
     my $self = shift;
     return if !$self->has_url;
-    
+
     for (1 .. $self->try) {
         my $content = $self->_module->get($self->url);
         return $content if $content;
