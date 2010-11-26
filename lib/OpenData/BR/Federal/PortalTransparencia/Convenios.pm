@@ -11,20 +11,19 @@ my $mainurl = join( '/', $baseurl, 'ConveniosListaGeral.asp?Ordem=-1' );
 
 has convenios_page_start => (
     is => 'rw',
-    isa => 'Int', 
+    isa => 'Int',
     default => 1
 );
 
 sub _convenios_parse_member {
     my ( $self, $url ) = @_;
-    return undef if $url =~ /convenios/; 
+    return undef if $url =~ /convenios/;
     $url =~ s/amp\;//g;
 
     my $people_url = join( '/', $baseurl, $url );
     my $content = $self->get($people_url);
 
     my $tree = HTML::TreeBuilder::XPath->new_from_content($content);
-    
 
     my $root = $tree->findnodes("//tr");
 
@@ -35,15 +34,15 @@ sub _convenios_parse_member {
         my ($name, $value) = split (':', $item->as_text);
         $value ||= '';
         $value =~ s/^ *//;
-        
+
         $data->{uf} = $value if $loop == 1;
         $data->{municipio} = $value if $loop == 2;
-        
+
         if ($loop == 3) {
             $value =~ s/Saiba.*//;
             $data->{SIAFI} = $value;
         }
-        
+
         $data->{situacao} = $value if $loop == 4;
         $data->{n_original} = $value if $loop == 5;
         $data->{objeto_do_convenio} = $value if $loop == 6;
@@ -61,6 +60,7 @@ sub _convenios_parse_member {
 
         $loop++;
     }
+    $tree->delete;
 
     return $data ? $data : undef;
 

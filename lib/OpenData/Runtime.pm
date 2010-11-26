@@ -40,9 +40,8 @@ sub BUILD {
 sub get {
     my ($self, $url) = @_;
     my $http = $self->_get;
-    $http->url($url);  
+    $http->url($url);
     return $http->get();
 }
 
 1;
-

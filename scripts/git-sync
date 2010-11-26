@@ -51,7 +51,7 @@ git branch | grep -q " $m\$" || {
 }
 git remote show | grep -q "$u" || {
     msg "!!! There is no tracked repository named '$u'. Trying to create"
-    [ -z "$param" ] && {
+    [ -z "$url" ] && {
         msg "*** FAILED Please specify $u repository:"
         die '***        git-sync <repository-url>'
     }

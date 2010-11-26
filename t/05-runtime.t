@@ -7,7 +7,6 @@ use strict;
 use_ok('OpenData::Runtime');
 
 package OpenData::Test;
-    
     use Moose::Role;
     use OpenData::Array;
 
@@ -23,12 +22,11 @@ package OpenData::Test;
         }
     );
 
-    sub process { 
+    sub process {
         return 1;
     }
 
     1;
-
 package main;
 
 my $obj = new OpenData::Runtime->with_traits('Test');
@@ -36,7 +34,3 @@ my $obj = new OpenData::Runtime->with_traits('Test');
 ok($obj->process);
 
 memory_cycle_ok( $obj );
-
-1;
-
-

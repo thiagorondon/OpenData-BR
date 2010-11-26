@@ -15,10 +15,16 @@ requires 'LWP::Curl';
 requires 'HTML::TreeBuilder::XPath';
 requires 'MongoDB';
 requires 'WWW::Mechanize';
+requires 'Test::Memory::Cycle';
+requires 'MooseX::App::Cmd';
 
 recommends 'Text::CSV_XS' => '0.50';
 
-test_requires  'Test::More';
+test_requires 'Test::More';
+test_requires 'Test::Pod' => '1.41';
+test_requires 'Test::Pod::Coverage' => '1.08';
+test_requires 'Pod::Coverage::TrustPod';
+
 
 tests 't/*.t t/*/*t t/*/*/*t t/*/*/*/*t';
 
