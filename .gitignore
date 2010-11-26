@@ -1,4 +1,5 @@
 *~
+*.swp
 META.yml
 Makefile
 blib
@@ -10,3 +11,4 @@ nytprof
 nytprof.out
 MANIFEST.bak
 *.tar.gz
+cover_db
