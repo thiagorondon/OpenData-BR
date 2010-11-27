@@ -29,32 +29,65 @@ has provider => (
 
 ##############################################################################
 
-has _raw_data => ( is => 'rw' );
+requires '_extract_chunk';
 
-requires '_extract';
-
-sub extract {
+sub extract_chunk {
     my $self = shift;
-    $self->_raw_data( $self->_extract );
+
+    return $self->_extract_chunk;
 }
 
-has _data => ( is => 'rw', );
-
-requires '_transform';
-
-sub transform {
+sub extract_all {
     my $self = shift;
-    $self->_data( $self->_transform );
+
+    my $queue = [];
+    while( my $raw = $self->extract_chunk ) {
+        push @{ $queue }, @{ $raw };
+    }
+
+    return $queue;
 }
 
-requires '_load';
+##############################################################################
 
-#sub _load {
-#    my $self = shift;
-#
-#    my $loader = $self->provider->loader;
-#    $loader->load( $self->_data );
-#}
+requires '_transform_chunk';
 
-1;
+sub transform_chunk {
+    my ($self, $raw) = @_;
+    return unless $raw;
+    return $self->_transform_chunk( $raw );
+}
+
+sub transform_all {
+    my ($self,$full_raw) = @_;
+
+    my $queue = [];
+    foreach my $raw ( @{ $full_raw } ) {
+        my $date = $self->transform_chunk( $raw );
+        push @{ $queue }, @{ $data };
+
+    }
+
+    return $queue;
+}
+
+##############################################################################
+
+requires '_load_chunk';
+
+sub load_chunk {
+    my ($self, $raw) = @_;
+    return unless $raw;
+    return $self->_load_chunk( $raw );
+}
+
+sub load_all {
+    my ($self,$full_data) = @_;
+
+    foreach my $data ( @{ $full_data } ) {
+        $self->load_chunk( $data );
+    }
+}
+
+42;
 

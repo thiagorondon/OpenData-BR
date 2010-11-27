@@ -6,17 +6,15 @@ use Moose::Role;
 
 use OpenData::Provider::Collection;
 
-has name => (
-    is       => 'ro',
-    isa      => 'Str',
-    required => 1,
-);
-
 has id => (
     is      => 'ro',
     isa     => 'Str',
-    lazy    => 1,
-    default => sub { uc( shift->name ) },
+    required => 1,
+);
+
+has name => (
+    is       => 'ro',
+    isa      => 'Str',
 );
 
 has description => (
@@ -57,10 +55,11 @@ sub process {
 
     my $coll_ref = $self->collection($coll);
 
-    $coll_ref->extract;
-    $coll_ref->transform;
-    $coll_ref->load;
+    while( my $raw = $coll_ref->extract_chunk ) {
+        my $data = $coll_ref->transform( $raw );
+        $coll_ref->load( $data );
+    }
 }
 
-1;
+42;
 
