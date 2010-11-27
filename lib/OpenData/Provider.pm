@@ -15,6 +15,8 @@ has id => (
 has name => (
     is       => 'ro',
     isa      => 'Str',
+    lazy => 1,
+    default => sub { ucfirst( shift->id ) },
 );
 
 has description => (
