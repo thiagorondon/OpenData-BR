@@ -31,19 +31,19 @@ has provider => (
 
 ##############################################################################
 
-requires '_extract_chunk';
+requires '_extract';
 
-sub extract_chunk {
+sub extract{
     my $self = shift;
 
-    return $self->_extract_chunk;
+    return $self->_extract;
 }
 
 sub extract_all {
     my $self = shift;
 
     my $queue = [];
-    while( my $raw = $self->extract_chunk ) {
+    while( my $raw = $self->extract) {
         push @{ $queue }, @{ $raw };
     }
 
@@ -52,12 +52,12 @@ sub extract_all {
 
 ##############################################################################
 
-requires '_transform_chunk';
+requires '_transform';
 
-sub transform_chunk {
+sub transform{
     my ($self, $raw) = @_;
-    return unless $raw;
-    return $self->_transform_chunk( $raw );
+    $self->confess('Cannot transform empty data') unless $raw;
+    return $self->_transform( $raw );
 }
 
 sub transform_all {
@@ -65,7 +65,7 @@ sub transform_all {
 
     my $queue = [];
     foreach my $raw ( @{ $full_raw } ) {
-        my $date = $self->transform_chunk( $raw );
+        my $date = $self->transform( $raw );
         push @{ $queue }, @{ $data };
 
     }
@@ -75,19 +75,20 @@ sub transform_all {
 
 ##############################################################################
 
-requires '_load_chunk';
+requires '_load';
 
-sub load_chunk {
-    my ($self, $raw) = @_;
-    return unless $raw;
-    return $self->_load_chunk( $raw );
+sub load{
+    my ($self, $data) = @_;
+    $self->confess('Cannot load empty data') unless $data;
+    return unless $data;
+    return $self->_load( $data );
 }
 
 sub load_all {
     my ($self,$full_data) = @_;
 
     foreach my $data ( @{ $full_data } ) {
-        $self->load_chunk( $data );
+        $self->load( $data );
     }
 }
 
