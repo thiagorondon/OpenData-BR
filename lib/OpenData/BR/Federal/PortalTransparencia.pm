@@ -7,34 +7,39 @@ use OpenData::Array;
 
 with 'OpenData::Provider';
 
-#with 'OpenData::BR::Federal::PortalTransparencia::Page';
-
-use OpenData::BR::Federal::PortalTransparencia::Servidores;
-use OpenData::BR::Federal::PortalTransparencia::CEIS;
-use OpenData::BR::Federal::PortalTransparencia::Convenios;
-
+has '+id'   => ( default => 'PortalTransparencia', );
 has '+name' => ( default => 'PortalTransparencia', );
 
 has '+description' =>
   ( default => 'Dados fornecidos pelo Portal Transparencia: '
-      . 'http://www.portaltransparencia.gov.br/', );
+      . 'http://www.portaltransparencia.gov.br', );
+
+use OpenData::BR::Federal::PortalTransparencia::CEIS;
+
+sub add_collection_ceis {
+    my $c = OpenData::BR::Federal::PortalTransparencia::CEIS->new;
+    shift->add_collection($c);
+}
+
+#use OpenData::BR::Federal::PortalTransparencia::Servidores;
+#use OpenData::BR::Federal::PortalTransparencia::Convenios;
 
 #has dept => (
-    #is      => 'rw',
-    #isa     => 'Str',
-    #default => 1
+#is      => 'rw',
+#isa     => 'Str',
+#default => 1
 #);
 
 #has current_collection => (
-    #is        => 'rw',
-    #isa       => 'Str',
-    #predicate => 'has_current_collection',
-    #clearer   => 'clear_current_collection',
-    #trigger   => sub {
-        #my ( $self, $new, $old ) = @_;
+#is        => 'rw',
+#isa       => 'Str',
+#predicate => 'has_current_collection',
+#clearer   => 'clear_current_collection',
+#trigger   => sub {
+#my ( $self, $new, $old ) = @_;
 #
-        #$self->items->collection($new);
-    #},
+#$self->items->collection($new);
+#},
 #);
 
 has items => (
@@ -43,16 +48,16 @@ has items => (
     lazy    => 1,
     default => sub {
         return OpenData::Array->new_with_traits(
-            traits => 'MongoDB',
-            host   => 'localhost',
+            traits => 'Dumper',
+            #host   => 'localhost',
         );
     }
 );
 
 has '+loader' => (
-    lazy => 1,
+    lazy    => 1,
     default => sub { shift->items },
-    );
+);
 
 sub BUILD {
     my $self = shift;
