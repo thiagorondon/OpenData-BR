@@ -52,7 +52,7 @@ has page => (
     is      => 'rw',
     isa     => 'Int',
     lazy    => 1,
-    default => 1,
+    default => 0,
 );
 
 sub turn_page {
@@ -68,14 +68,27 @@ has last_page => (
     default => sub { shift->_total_page(); },
 );
 
+##############################################################################
+
+has elements_list => (
+    is      => 'ro',
+    isa     => 'ArrayRef',
+    default => sub { [] },
+);
+
+##############################################################################
+
 sub _extract {
-    my $self    = shift;
-    my $page    = $self->page;
+    my $self = shift;
+    my $page = $self->turn_page;
+    return unless $page;    # empty if in last page
+
     my $url = $self->_make_page_url($page);
+
     #warn $url;
-    my $content = $self->get( $url );
+    my $content = $self->get($url);
+
     #$self->debug( 'Página ' . $self->page . ' extraída' );
-    return unless $self->turn_page;    # empty if in last page
     return $content;
 }
 

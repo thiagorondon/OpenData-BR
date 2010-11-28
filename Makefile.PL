@@ -11,6 +11,7 @@ requires 'MooseX::Traits';
 
 requires 'namespace::autoclean';
 requires 'Text::CSV';
+requires 'List::MoreUtils';
 requires 'LWP::Curl';
 requires 'HTML::TreeBuilder::XPath';
 requires 'MongoDB';

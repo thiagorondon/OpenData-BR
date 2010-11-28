@@ -4,6 +4,7 @@ package OpenData::BR::Federal::PortalTransparencia::CEIS;
 use Moose;
 
 use Data::Dumper;
+use List::MoreUtils qw/mesh/;
 
 with 'OpenData::Debug';
 with 'OpenData::BR::Federal::PortalTransparencia::Base';
@@ -17,8 +18,20 @@ has '+description' => ( default => 'EMPRESAS SANCIONADAS', );
 
 has '+mainURI' => (
     default => sub {
-        my $baseURL = shift->baseURL || '';
-        join( '/', $baseURL, 'ceis', 'EmpresasSancionadas.asp?paramEmpresa=0' );
+        my $base = shift->baseURL || '';
+        join( '/', $base, 'ceis', 'EmpresasSancionadas.asp?paramEmpresa=0' );
+    },
+);
+
+has '+elements_list' => (
+    default => sub {
+        [
+            q{cpfcnpj},    q{nome},
+            q{tipo},       q{data_inicial},
+            q{data_final}, q{orgao_sancionador},
+            q{uf},         q{fonte},
+            q{fonte_data},
+        ];
     },
 );
 
@@ -34,8 +47,8 @@ sub _transform {
       unless scalar( @{$tr_list} );
 
     my $data = [];
-
     foreach my $tr_item ( @{$tr_list} ) {
+
         #warn 'tr_item = '.Dumper($tr_item->as_HTML);
         my $tr =
           HTML::TreeBuilder::XPath->new_from_content( $tr_item->as_HTML );
@@ -45,21 +58,9 @@ sub _transform {
         die 'Não conseguiu encontrar as colunas com os dados no HTML'
           unless scalar( @{$td_list} );
 
-        my $line_data = {};
-
-        $line_data->{cpfcnpj}           = $td_list->[0];
-        $line_data->{nome}              = $td_list->[1];
-        $line_data->{tipo}              = $td_list->[2];
-        $line_data->{data_inicial}      = $td_list->[3];
-        $line_data->{data_final}        = $td_list->[4];
-        $line_data->{orgao_sancionador} = $td_list->[5];
-        $line_data->{uf}                = $td_list->[6];
-        $line_data->{fonte}             = $td_list->[7];
-        $line_data->{fonte_data}        = $td_list->[8];
-
-        $tr->delete;
-
+        my $line_data = { mesh @{ $self->elements_list }, @{$td_list} };
         push @{$data}, $line_data;
+        $tr->delete;
     }
     $tree->delete;
 
