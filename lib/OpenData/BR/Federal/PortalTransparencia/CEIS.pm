@@ -11,74 +11,66 @@ with 'OpenData::BR::Federal::PortalTransparencia::Base';
 
 has '+mainURI' => (
     default => 'EmpresasSancionadas.asp?paramEmpresa=0';
-    );
+);
 
-my $mainurl = join( '/', $baseurl, 'EmpresasSancionadas.asp?paramEmpresa=0' );
+my $mainurl =
+  join( '/', $baseurl, 'ceis', 'EmpresasSancionadas.asp?paramEmpresa=0' );
 
-sub _ceis_parse_tree () {
+sub _extract {
+    my $self    = shift;
+    my $page    = $self->page;
+    my $content = $self->get( $self->_page( $mainurl, $page ) );
+    return unless $self->turn_page;    # empty if in last page
+    return $content;
+}
+
+sub _transform {
     my ( $self, $content ) = @_;
 
-    my $tree = HTML::TreeBuilder::XPath->new_from_content($content->as_HTML);
-    my $root = $tree->findnodes("//td");
+    return unless $content;
 
-    my $data = {};
-    my $loop = 0;
+    my $tree    = HTML::TreeBuilder::XPath->new_from_content($content);
+    my $tr_list = $tree->findnodes("//table/tbody");
 
-    foreach my $item (@{$root}) {
-        my $line = $item->as_HTML;
-        $line =~ s/\<t.*\">//g;
-        $line =~ s/\<td>//g;
-        $line =~ s/\<\/td>//g;
+    die 'Não conseguiu encontrar as tabelas com os dados no HTML'
+      if $#$tr_list == -1;
 
-        $data->{cpfcnpj} = $line if $loop == 0;
-        $data->{nome} = $line if $loop == 1;
-        $data->{tipo} = $line if $loop == 2;
-        $data->{data_inicial} = $line if $loop == 3;
-        $data->{data_final} = $line if $loop == 4;
-        $data->{orgao_sancionador} = $line if $loop == 5;
-        $data->{uf} = $line if $loop == 6;
-        $data->{fonte} = $line if $loop == 7;
-        $data->{fonte_data} = $line if $loop == 8;
+    my $data = [];
 
-        $loop++;
+    foreach my $tr_item ( @{$tr_list} ) {
+        my $tr =
+          HTML::TreeBuilder::XPath->new_from_content( $tr_item->as_HTML )
+          my $td_list = $tr->findvalue("./td");
+
+        die 'Não conseguiu encontrar as colunas com os dados no HTML'
+          if $#$td_list == -1;
+
+        my $line_data = {};
+
+        $line_data->{cpfcnpj}           = $td_list[0];
+        $line_data->{nome}              = $td_list[1];
+        $line_data->{tipo}              = $td_list[2];
+        $line_data->{data_inicial}      = $td_list[3];
+        $line_data->{data_final}        = $td_list[4];
+        $line_data->{orgao_sancionador} = $td_list[5];
+        $line_data->{uf}                = $td_list[6];
+        $line_data->{fonte}             = $td_list[7];
+        $line_data->{fonte_data}        = $td_list[8];
+
+        $tr->delete;
+
+        push @{$data}, $line_data;
     }
+    $tree->delete;
 
     return $data ? $data : undef;
 }
 
+sub _load {
+    my ($self,$data) = @_;
 
-sub _ceis_init {
-    my $self = shift;
-    my @ceis;
-
-    my $content = $self->get( $mainurl );
-
-    my $total_page = $self->_total_page($content);
-
-    for my $i ( 1 .. $self->_total_page($content) ) {
-
-        $self->debug("Paginacao, $i");
-        $content = $self->get( $self->_page( $mainurl, $i ) );
-        my $tree  = HTML::TreeBuilder::XPath->new_from_content($content);
-        my $root  = $tree->findnodes("//table");
-        my $table = $root->[0]->as_HTML;
-
-        $tree = HTML::TreeBuilder::XPath->new_from_content($table);
-        $root = $tree->findnodes("//tr");
-
-        foreach my $obj ( @{$root} ) {
-            my $member = $self->_ceis_parse_tree($obj);
-            $self->items->add($member) if defined( $member->{nome} );
-        }
-
-        $tree->delete;
-
-    }
-
-    return $self->items;
+    $self->provider->loader->load($data);
 }
-
-sub _run_ceis { shift->_ceis_init; }
 
 1;
 
