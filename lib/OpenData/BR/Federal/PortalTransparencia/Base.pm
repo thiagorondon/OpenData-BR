@@ -1,5 +1,5 @@
 
-package BR::Federal::PortalTransparencia::Base;
+package OpenData::BR::Federal::PortalTransparencia::Base;
 
 use Moose::Role;
 
