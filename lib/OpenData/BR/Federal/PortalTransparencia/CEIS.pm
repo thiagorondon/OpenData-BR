@@ -3,25 +3,24 @@ package OpenData::BR::Federal::PortalTransparencia::CEIS;
 
 use Moose;
 
+use Data::Dumper;
+
+with 'OpenData::Debug';
 with 'OpenData::BR::Federal::PortalTransparencia::Base';
+with 'OpenData::Provider::Collection';
 
 use HTML::TreeBuilder::XPath;
-use URI;
+
+has '+id'          => ( default => 'ceis', );
+has '+name'        => ( default => 'CEIS', );
+has '+description' => ( default => 'EMPRESAS SANCIONADAS', );
 
 has '+mainURI' => (
     default => sub {
-        join( '/',
-            shift->baseURL, 'ceis', 'EmpresasSancionadas.asp?paramEmpresa=0' );
+        my $baseURL = shift->baseURL || '';
+        join( '/', $baseURL, 'ceis', 'EmpresasSancionadas.asp?paramEmpresa=0' );
     },
 );
-
-sub _extract {
-    my $self    = shift;
-    my $page    = $self->page;
-    my $content = $self->get( $self->_make_page_url($page) );
-    return unless $self->turn_page;    # empty if in last page
-    return $content;
-}
 
 sub _transform {
     my ( $self, $content ) = @_;
@@ -29,20 +28,22 @@ sub _transform {
     return unless $content;
 
     my $tree    = HTML::TreeBuilder::XPath->new_from_content($content);
-    my $tr_list = $tree->findnodes("//table/tbody");
+    my $tr_list = $tree->findnodes("//table/tbody/tr");
 
     die 'Não conseguiu encontrar as tabelas com os dados no HTML'
-      if $#$tr_list == -1;
+      unless scalar( @{$tr_list} );
 
     my $data = [];
 
     foreach my $tr_item ( @{$tr_list} ) {
+        #warn 'tr_item = '.Dumper($tr_item->as_HTML);
         my $tr =
           HTML::TreeBuilder::XPath->new_from_content( $tr_item->as_HTML );
-        my $td_list = $tr->findvalue("./td");
+        my $td_list = [ $tr->findvalues("//td") ];
 
+        #warn Dumper($td_list);
         die 'Não conseguiu encontrar as colunas com os dados no HTML'
-          if $#$td_list == -1;
+          unless scalar( @{$td_list} );
 
         my $line_data = {};
 
@@ -62,13 +63,8 @@ sub _transform {
     }
     $tree->delete;
 
+    #warn Dumper($data);
     return $data ? $data : undef;
-}
-
-sub _load {
-    my ( $self, $data ) = @_;
-
-    $self->provider->loader->load($data);
 }
 
 1;
