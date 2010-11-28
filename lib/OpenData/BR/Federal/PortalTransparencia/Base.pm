@@ -68,5 +68,22 @@ has last_page => (
     default => sub { shift->_total_page(); },
 );
 
+sub _extract {
+    my $self    = shift;
+    my $page    = $self->page;
+    my $url = $self->_make_page_url($page);
+    #warn $url;
+    my $content = $self->get( $url );
+    #$self->debug( 'Página ' . $self->page . ' extraída' );
+    return unless $self->turn_page;    # empty if in last page
+    return $content;
+}
+
+sub _load {
+    my ( $self, $data ) = @_;
+
+    $self->provider->loader->load($data);
+}
+
 1;
 
