@@ -27,11 +27,14 @@ has description => (
 has collections => (
     is  => 'ro',
     isa => 'HashRef[OpenData::Provider::Collection]',
+    lazy => 1,
+    default => sub { return {}; },
 );
 
 has loader => (
     is => 'ro',
-    isa => 'OpenData::Loader',
+    isa => 'Object',
+    #isa => 'OpenData::Loader',
 );
 
 sub add_collection {
@@ -57,7 +60,7 @@ sub process {
 
     my $coll_ref = $self->collection($coll);
 
-    while( my $raw = $coll_ref->extract_chunk ) {
+    while( my $raw = $coll_ref->extract ) {
         my $data = $coll_ref->transform( $raw );
         $coll_ref->load( $data );
     }
