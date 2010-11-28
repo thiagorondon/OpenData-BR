@@ -24,7 +24,8 @@ sub main {
     my $opendata = new OpenData::Runtime
         ->with_traits($app->_trait)->new( 
             debug => $app->debug, 
-            current_collection => $app->collection 
+            current_collection => $app->collection,
+            set_browser => $app->browser,
             );
 
     $opendata->process;

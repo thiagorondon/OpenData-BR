@@ -31,6 +31,13 @@ has 'collection' => (
     documentation => 'Ex. convenios'
 );
 
+has 'browser' => (
+    is => 'rw',
+    isa => 'Str',
+    required => 1,
+    documentation => 'Ex. Curl, Mechaninze'
+);
+
 has '_trait' => (
     is => 'ro',
     isa => 'Str',
