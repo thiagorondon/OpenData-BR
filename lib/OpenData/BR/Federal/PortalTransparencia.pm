@@ -59,12 +59,7 @@ sub _run {
 
 sub process {
     my $self = shift;
-
-    #$self->items->collection('servidores');
-    #$self->items->collection('ceis');
-    #$self->items->collection('convenios');
-
-    $self->current_collection('convenios');
+    $self->debug($self->current_collection);
     return $self->_run;
 }
 

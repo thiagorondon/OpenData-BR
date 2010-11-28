@@ -21,14 +21,21 @@ has 'provider' => (
     is => 'rw',
     isa => 'Str',
     required => 1,
-    documentation => 'Ex. portaltransparencia'
+    documentation => 'Ex. portaldatransparencia'
+);
+
+has 'collection' => (
+    is => 'rw',
+    isa => 'Str',
+    required => 1,
+    documentation => 'Ex. convenios'
 );
 
 has '_trait' => (
     is => 'ro',
     isa => 'Str',
     lazy => 1,
-    default => sub { $traits{shift->provider} || undef }
+    default => sub { $traits{shift->provider} || '' }
 );
 
 1;
