@@ -17,7 +17,7 @@ has is_debug => (
 sub debug {
     my ($self, @items) = @_;
     return unless $self->is_debug;
-    print $_ . "\n" for (@items);
+    print STDERR $_ . "\n" for (@items);
 }
 
 1;
