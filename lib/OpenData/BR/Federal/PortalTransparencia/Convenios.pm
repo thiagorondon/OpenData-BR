@@ -32,31 +32,36 @@ sub _convenios_parse_member {
     my $loop = 0;
     foreach my $item ( @{$root} ) {
         my ($name, $value) = split (':', $item->as_text);
+        
+        #print "$loop - $name\n";
+        #$loop++;
+        #next;
+
         $value ||= '';
         $value =~ s/^ *//;
 
         $data->{uf} = $value if $loop == 1;
         $data->{municipio} = $value if $loop == 2;
 
-        if ($loop == 3) {
+        if ($loop == 4) {
             $value =~ s/Saiba.*//;
             $data->{SIAFI} = $value;
         }
 
-        $data->{situacao} = $value if $loop == 4;
-        $data->{n_original} = $value if $loop == 5;
-        $data->{objeto_do_convenio} = $value if $loop == 6;
-        $data->{orgao_superior} = $value if $loop == 7;
-        $data->{concedente} = $value if $loop == 8;
-        $data->{convenente} = $value if $loop == 9;
-        $data->{valor_convenio} = $value if $loop == 10;
-        $data->{valor_liberado} = $value if $loop == 11;
-        $data->{publicacao} = $value if $loop == 12;
-        $data->{inicio_vigencia} = $value if $loop == 13;
-        $data->{fim_vigencia} = $value if $loop == 14;
-        $data->{valor_contrapartida} = $value if $loop == 15;
-        $data->{data_ultima_liberacao} = $value if $loop == 16;
-        $data->{valor_ultima_liberacao} = $value if $loop == 17;
+        $data->{situacao} = $value if $loop == 5;
+        $data->{n_original} = $value if $loop == 6;
+        $data->{objeto_do_convenio} = $value if $loop == 7;
+        $data->{orgao_superior} = $value if $loop == 8;
+        $data->{concedente} = $value if $loop == 9;
+        $data->{convenente} = $value if $loop == 10;
+        $data->{valor_convenio} = $value if $loop == 11;
+        $data->{valor_liberado} = $value if $loop == 12;
+        $data->{publicacao} = $value if $loop == 13;
+        $data->{inicio_vigencia} = $value if $loop == 14;
+        $data->{fim_vigencia} = $value if $loop == 15;
+        $data->{valor_contrapartida} = $value if $loop == 16;
+        $data->{data_ultima_liberacao} = $value if $loop == 17;
+        $data->{valor_ultima_liberacao} = $value if $loop == 18;
 
         $loop++;
     }
@@ -90,6 +95,8 @@ sub _convenios_init {
         my $tree  = HTML::TreeBuilder::XPath->new_from_content($content);
         my $root  = $tree->findnodes("//table");
         my $table = $root->[1]->as_HTML;
+        
+        $tree->delete;
 
         $tree = HTML::TreeBuilder::XPath->new_from_content($table);
         $root = $tree->findnodes("//tr");
