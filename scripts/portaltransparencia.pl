@@ -7,10 +7,11 @@ use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
 use OpenData::Runtime;
+use OpenData::BR::Federal::PortalTransparencia;
 
-my $opendata = new OpenData::Runtime
-    ->with_traits('BR::Federal::PortalTransparencia')->new;
-
-my $data = $opendata->process;
+#my $opendata = new OpenData::Runtime->new;
+my $opendata = new OpenData::BR::Federal::PortalTransparencia->new;
+$opendata->add_collection_ceis;
+my $data = $opendata->process('ceis');
 
 
