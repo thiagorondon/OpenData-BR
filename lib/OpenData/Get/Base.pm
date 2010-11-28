@@ -34,13 +34,15 @@ has try => (
     default => 5
 );
 
+sub content { $_[1] }
+
 sub get {
     my $self = shift;
     return if !$self->has_url;
 
     for (1 .. $self->try) {
         my $content = $self->_module->get($self->url);
-        return $content if $content;
+        return $self->content($content) if $content;
     }
 }
 
