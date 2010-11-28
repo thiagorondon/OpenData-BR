@@ -10,16 +10,17 @@ with 'OpenData::Provider::Collection';
 with 'OpenData::BR::Federal::PortalTransparencia::Base';
 
 has '+mainURI' => (
-    default => 'EmpresasSancionadas.asp?paramEmpresa=0';
+    default => sub {
+        join( '/', $baseurl, 'ceis', 'EmpresasSancionadas.asp?paramEmpresa=0' );
+    },
 );
 
 my $mainurl =
-  join( '/', $baseurl, 'ceis', 'EmpresasSancionadas.asp?paramEmpresa=0' );
 
 sub _extract {
     my $self    = shift;
     my $page    = $self->page;
-    my $content = $self->get( $self->_page( $mainurl, $page ) );
+    my $content = $self->get( $self->_make_page_url( $page ) );
     return unless $self->turn_page;    # empty if in last page
     return $content;
 }
