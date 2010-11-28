@@ -7,11 +7,11 @@ use OpenData::Array;
 
 with 'OpenData::Provider';
 
-with 'OpenData::BR::Federal::PortalTransparencia::Page';
+#with 'OpenData::BR::Federal::PortalTransparencia::Page';
 
-with 'OpenData::BR::Federal::PortalTransparencia::Servidores';
-with 'OpenData::BR::Federal::PortalTransparencia::CEIS';
-with 'OpenData::BR::Federal::PortalTransparencia::Convenios';
+use OpenData::BR::Federal::PortalTransparencia::Servidores;
+use OpenData::BR::Federal::PortalTransparencia::CEIS;
+use OpenData::BR::Federal::PortalTransparencia::Convenios;
 
 has '+name' => ( default => 'PortalTransparencia', );
 

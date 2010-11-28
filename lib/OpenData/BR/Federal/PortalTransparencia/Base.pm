@@ -68,3 +68,5 @@ has last_page => (
     default => sub { shift->_total_page(); },
 );
 
+1;
+

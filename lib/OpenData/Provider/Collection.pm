@@ -65,7 +65,7 @@ sub transform_all {
 
     my $queue = [];
     foreach my $raw ( @{ $full_raw } ) {
-        my $date = $self->transform( $raw );
+        my $data = $self->transform( $raw );
         push @{ $queue }, @{ $data };
 
     }
