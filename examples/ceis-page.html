@@ -1,0 +1,571 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- intancia o include para obter a connection string -->
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pt" lang="pt">
+
+<head>
+    <title> Portal da Transparência - EMPRESAS SANCIONADAS  - TODAS </title>
+    <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=iso-8859-1">
+		<link rel="stylesheet" type="text/css" href="/css/reset.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/geral.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/cabecalho.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/consultas.css"/>
+
+	<link rel="stylesheet" type="text/css" href="/css/cabecalhoPrint.css" media="print"/>
+	<link rel="stylesheet" type="text/css" href="/css/consultasPrint.css" media="print"/><script language="JavaScript">
+    function navega(pagina)
+    {
+    
+        var paginaInicial = 1;
+        var paginaFinal = 354;
+        var paginaAtual = 1;
+        var strUrl = "/ceis/empresassancionadas.asp?paramempresa=0" 
+        
+
+        if (pagina == paginaAtual || pagina =='')
+        {
+            document.paginacao.numeroPagina.value = '';
+        }
+        else
+        {
+            if (isNaN(pagina) || (pagina < paginaInicial) || (pagina > paginaFinal))
+            {
+                alert('Pagina inválida');
+                document.paginacao.numeroPagina.value = '';
+            }
+            else
+            {
+                strUrl += '&Pagina=' + pagina;
+                window.location = strUrl;
+            }
+        }
+        return false
+    }
+	
+    function pesquisa(texto)
+    {
+		var strUrl = "/ceis/empresassancionadas.asp?paramempresa=0"
+		
+		strUrl = strUrl + '&pagina=1&textoPesquisa=' + escape(texto)
+		window.location = strUrl;
+    }    
+</script>
+
+    <noscript>Script de navegação</noscript>
+</head>	
+
+<body>
+<div id="site">
+
+<script type="text/javascript" language="JavaScript">
+if (window != top) top.location.href = location.href;
+
+function comboChange(comoBox,usado){
+  window.open( comoBox.options[comoBox.selectedIndex].value);
+  if (usado) comoBox.selectedIndex=0;
+
+}
+</script>
+
+<noscript>Script para abertura de nova janela</noscript>
+
+<div id="presidencia">
+
+	<a href="http://www.cgu.gov.br" target="_blank" style="float:left; width:64%">
+		<!-- style margin-bottom:-4px == HACK IE6 -->
+		<img src="/images/cgu_logo.gif" style="border-style: none; margin-bottom:-4px;" alt="Presidência da Republica - Controladoria Geral da União"/>
+	</a>
+
+	
+	<div style="float:left; width:23.5%;">
+		<select name="sltVoce" id="sltVoce" title="Paginas do Governo Federal" class="pr" tabindex="1" onchange="comboChange(this,1)" size="1">
+			<option value="" selected="selected">Destaques do Governo</option>
+			<option value="http://www.brasil.gov.br">Portal do Governo Federal</option>
+			<option value="http://www.e.gov.br">Portal de Serviços do Governo</option>
+			<option value="http://www.agenciabrasil.gov.br">Portal da Agência de Notícias</option>
+			<option value="http://www.brasil.gov.br/emquestao">Em Questão</option>
+			<option value="http://www.fomezero.gov.br">Programa Fome Zero</option>
+		  </select>
+	</div>
+
+	<!-- <a href="http://www.brasil.gov.br" target="_blank" style="float:left; width:12.5%;"> -->
+		<!-- style margin-bottom:-4px == HACK IE6 -->
+		<!-- <img src="/images/brasil.gif" style="margin-top:2px; margin-bottom:-4px;" alt="Brasil - Um pais de todos"/> -->
+	<!-- </a> -->
+	
+</div>
+
+
+<!-- Testeira do Portal da Transparência -->
+<div id="logo">
+	<a href="/" title="Portal da Transparência">
+		<h1>
+            <img src="/images/bandeira.png" alt="Portal da Transparência do Governo Federal" />
+        </h1>
+	</a>
+</div>
+
+<script type="text/javascript" language="JavaScript">
+
+    function redirAcessoRapido() {
+
+        var sel = document.getElementById('linksAcessoRapido');
+        var opt = sel.options[sel.selectedIndex];
+		
+		// Apenas redireciona se não for um link "fake" (#)
+		if (opt.value != "#")
+		{
+			// Se possui um "+" indicando para abrir em nova janela...
+			if (opt.value.indexOf ("+") == 0)
+			{
+				window.open (opt.value.substring(1)); // ... abre em nova janela (desconsiderando o "+")
+			}
+			else // Se não possui...
+			{
+				window.location = opt.value; // ... abre na mesma janela
+			}
+		}
+		
+    }
+	
+</script>
+
+<!-- Combo de acesso rápido -->
+<div id="acesso-rapido">
+
+    <div class="conteudo">
+        <h2>
+            <label for="linksAcessoRapido">Acesso rápido</label>
+        </h2>
+        <select id="linksAcessoRapido">
+                <option value="#">Selecione...</option>
+            <optgroup label="CONSULTAS">
+                <option value="/Despesas.asp">Despesas</option>
+				<option value="/receitas">Receitas</option>
+                <option value="/convenios">Convênios</option>
+                <option value="/ceis">Empresas Sancionadas</option>
+				<option value="/servidores">Servidores</option>
+            </optgroup>
+            <optgroup label="INFORMAÇÕES">
+                <option value="/sobre">Sobre o Portal</option>
+                <option value="/sobre/Origem.asp">Dados do Portal</option>
+                <option value="/aprendaMais">Aprenda Mais</option>
+                <option value="/noticias">Notícias</option>
+                <option value="/controleSocial">Controle Social</option>
+                <option value="/licitacoesecontratos/">Licitações e Contratos</option>
+            </optgroup>
+            <optgroup label="SERVIÇOS">
+				<option value="/convenios/ConveniosFormulario.asp">Informações sobre convênios</option>
+				<option value="/rede/">Rede de Transparência</option>
+				<option value="http://www1.transparencia.gov.br/">Páginas de Transparência</option>
+				<option value="http://br.transparencia.gov.br/">Estados e Municípios</option>
+				<option value="+http://www.cgu.gov.br/olhovivo/">Programa Olho Vivo</option>
+				<option value="+http://www.portalzinho.cgu.gov.br/">Portal Criança Cidadã</option>
+            </optgroup>
+        </select>
+        <a href="javascript: redirAcessoRapido();">OK</a>
+    </div>
+    <div class="borda"></div>
+</div>
+
+<!-- Links de navegação -->
+<div id="navegacao">
+	<ul>
+		<li><a href="/faleConosco/">Fale conosco</a> |</li>
+		<li><a href="/glossario/">Glossário</a> |</li>
+		<li><a href="/faleConosco/Perguntas.asp">Perguntas Freqüentes</a> |</li>
+		<li><a href="/links/">Links</a> |</li>
+		<li><a href="/manual/">Manual de Navegação</a></li>
+	</ul>
+</div>
+
+
+	<p class="caminho">
+
+		<span class="rotulo">Você está em:</span>
+		<br />
+		<span class="passos">
+		
+			<span class="anterior"><a href="/">Início</a></span>&raquo;
+
+
+				<span class="anterior"><a href="/ceis/index.asp">CEIS</a></span>&raquo;
+
+			<span class="atual"><a href="/ceis/EmpresasSancionadas.asp?paramEmpresa=0">Empresas sancionadas</a></span>
+			
+		</span>
+	</p>
+
+		
+
+<!--Conteúdo geral -->
+<div id="pagina">
+
+	<div id="conteudo" >
+	
+
+		<div id="titulo">
+			<h1>EMPRESAS SANCIONADAS  - TODAS</h1>
+		</div>
+		
+		<div id="acoes">
+
+ 
+	<a  href='http://arquivos.portaldatransparencia.gov.br/PortalTransparenciaEscolheTipoDePlanilha.asp?origem=Ceis&Planilha=0'
+		onclick="javascript: window.open('http://arquivos.portaldatransparencia.gov.br/PortalTransparenciaEscolheTipoDePlanilha.asp?origem=Ceis&Planilha=0&fechar=1','_blank','width=420,height=200,resizable=yes,menubar=no,status=yes'); return false;">
+		baixar mais dados&nbsp;<img src="/images/icone-salvar.png" alt="baixar mais dados"/></a>
+
+<!-- Sublinhado simulado via javascript para IE6; para outros navegadores, o css resolve isso. -->
+<span tabindex="0" 
+		onclick="javascript: print();" 
+		onkeypress="javascript: if (checkKey(event,13)) print ();"
+		onfocus="javascript: this.style.textDecoration='underline';"
+		onblur="javascript: this.style.textDecoration='none';" 
+		onmouseover="javascript: this.style.textDecoration='underline'; this.style.cursor='pointer';"
+		onmouseout="javascript: this.style.textDecoration='none';"
+		>
+			imprimir&nbsp;<img src="/images/icone-imprimir.png" alt="imprimir"/>
+</span>
+
+		</div>
+		
+		<div id="listagemEmpresasSancionadas">
+		
+			<div id="ajudaListagem">
+				<p class="firstChild"> </p>
+				<p>Caso queira outra classificação, clique no título da coluna correspondente</p>					
+			</div>		
+				
+			<table>
+				<thead>
+	                <tr class="firstChild">
+						
+						
+						<th  colspan="2">Dados da empresa sancionada</th>
+						<th  colspan="3" class="borda">Dados da sanção</th>
+
+						<th  colspan="2" class="borda">Orgão sancionador</th>
+						<th  colspan="2" class="borda">Origem da informação</th>
+	                </tr>
+						
+					<tr> 
+				
+						
+						<th class="firstChild" style="width: 13.6%;" ><a href="?paramEmpresa=0&Ordem=1&paramDesc=1" title="Ordena por &quot;CNPJ/CPF&quot;">CNPJ/CPF</a></th>
+						<th style="width: 22.9%;"><a href="?paramEmpresa=0&Ordem=2&paramDesc=2" title="Ordena por &quot;Nome/Razão Social/Nome Fantasia&quot;">Nome/Razão Social/Nome Fantasia</a></th>          							
+						<th style="width: 6.5%;" class="borda"><a href="?paramEmpresa=0&Ordem=3&paramDesc=1" title="Ordena por &quot;Tipo&quot;">Tipo</a></th>			
+			            <th style="width: 8%;" >Data Inicial</th>					
+			            <th style="width: 10%;">Data Final</th>
+						<th style="text-align: center;" style="width: 18%;" class="borda"><a href="?paramEmpresa=0&Ordem=6&paramDesc=1" title="Ordena por &quot;Nome do Órgão/Entidade&quot;">Nome do Órgão/Entidade</a></th>					
+						<th style="width: 3%;" ><a href="?paramEmpresa=0&Ordem=7&paramDesc=1" title="Ordena por &quot;UF&quot;">UF</a></th>
+						<th style="width: 11%;" class="borda"><a href="?paramEmpresa=0&Ordem=8&paramDesc=1" title="Ordena por &quot;Fonte&quot;">Fonte</a></th>
+			            <th style="width: 7%;" >Data</th>
+
+
+
+				
+					</tr>	
+				</thead>
+				<tbody>	
+
+				
+					<tr  >
+				
+						<td>08.604.359/0001-80</td>
+						<td class="borda">11 ANKA CONSTRUÇÕES E PROJETOS LTDA </td>
+
+						<td class="borda">Suspensa</td>
+
+
+						<td class="borda">19/07/10</td>
+						<td class="borda">2 anos</td>
+					
+						<td style="text-align: left;" class="borda">INSTITUTO DE PESQUISAS JARDIM BOTÂNICO DO RIO DE JANEIRO</td>
+						<td style="text-align: center;" class="borda">RJ</td>
+					
+						<td style="text-align: left;" class="borda">DOU SEÇÃO 3 PÁG 122</td>
+						<td style="text-align: left;" class="borda">19/07/2010</td>
+
+					</tr>
+			
+
+
+				
+					<tr  class="linhaPar"  >
+				
+						<td>05.423.963/0001-11</td>
+						<td class="borda">14 BRASIL TELECOM CELULAR S/A </td>
+
+						<td class="borda">Suspensa</td>
+
+
+						<td class="borda">24/08/10</td>
+						<td class="borda">22/08/12</td>
+					
+						<td style="text-align: left;" class="borda">MINISTÉRIO DO ESPORTE</td>
+						<td style="text-align: center;" class="borda">DF</td>
+					
+						<td style="text-align: left;" class="borda">DOU SEÇÃO 1 PÁG 108</td>
+						<td style="text-align: left;" class="borda">26/08/2010</td>
+
+					</tr>
+			
+
+
+				
+					<tr  >
+				
+						<td>10.330.112/0001-64</td>
+						<td class="borda">2C INFORMATICA LTDA </td>
+
+						<td class="borda">Suspensa</td>
+
+
+						<td class="borda">23/06/10</td>
+						<td class="borda">22/06/12</td>
+					
+						<td style="text-align: left;" class="borda">NSTITUTO FEDERAL DE EDUCAÇÃO, CIÊNCIA E TECNOLOGIA DO SUL DE MINAS GERAIS - CAMPUS INCONFIDENTES</td>
+						<td style="text-align: center;" class="borda">**</td>
+					
+						<td style="text-align: left;" class="borda">DOU SEÇÃO 3 PÁG 062</td>
+						<td style="text-align: left;" class="borda">23/06/2010</td>
+
+					</tr>
+			
+
+
+				
+					<tr  class="linhaPar"  >
+				
+						<td>10.330.112/0001-64</td>
+						<td class="borda">2C INFORMATICA LTDA </td>
+
+						<td class="borda">Suspensa</td>
+
+
+						<td class="borda">15/06/10</td>
+						<td class="borda">14/06/12</td>
+					
+						<td style="text-align: left;" class="borda">QUINTO COMANDO AÉREO REGIONAL</td>
+						<td style="text-align: center;" class="borda">**</td>
+					
+						<td style="text-align: left;" class="borda">DOU SEÇÃO 3 PÁG 021</td>
+						<td style="text-align: left;" class="borda">01/07/2010</td>
+
+					</tr>
+			
+
+
+				
+					<tr  >
+				
+						<td>08.052.436/0001-36</td>
+						<td class="borda">2SOLUTIONS TECHNOLOGY LTDA </td>
+
+						<td class="borda">Suspensa</td>
+
+
+						<td class="borda">01/10/09</td>
+						<td class="borda">2 anos</td>
+					
+						<td style="text-align: left;" class="borda">UNIVERSIDADE FEDERAL DE SÃO CARLOS</td>
+						<td style="text-align: center;" class="borda">SP</td>
+					
+						<td style="text-align: left;" class="borda">DOU SEÇÃO 3 PÁG 040</td>
+						<td style="text-align: left;" class="borda">01/10/2009</td>
+
+					</tr>
+			
+
+
+				
+					<tr  class="linhaPar"  >
+				
+						<td>07.797.339/0001-00</td>
+						<td class="borda">A & C BUSINESS DISTRIBUIDORA & COMÉRCIO LTDA.-ME </td>
+
+						<td class="borda">Suspensa</td>
+
+
+						<td class="borda">18/02/10</td>
+						<td class="borda">2 anos</td>
+					
+						<td style="text-align: left;" class="borda">JUSTIÇA FEDERAL</td>
+						<td style="text-align: center;" class="borda">TO</td>
+					
+						<td style="text-align: left;" class="borda">DOU SEÇÃO 3 PÁG 106</td>
+						<td style="text-align: left;" class="borda">19/02/2010</td>
+
+					</tr>
+			
+
+
+				
+					<tr  >
+				
+						<td>07.797.339/0001-00</td>
+						<td class="borda">A & C BUSINESS DISTRIBUIDORA & COMÉRCIO LTDA.-ME </td>
+
+						<td class="borda">Suspensa</td>
+
+
+						<td class="borda">14/07/09</td>
+						<td class="borda">13/07/11</td>
+					
+						<td style="text-align: left;" class="borda">JUNTA COMERCIAL DO ESTADO DE MINAS GERAIS - JUCEMG</td>
+						<td style="text-align: center;" class="borda">MG</td>
+					
+						<td style="text-align: left;" class="borda">GOVERNO DO ESTADO DE MINAS GERAIS - AUDITORIA GERAL</td>
+						<td style="text-align: left;" class="borda">18/08/2009</td>
+
+					</tr>
+			
+
+
+				
+					<tr  class="linhaPar"  >
+				
+						<td>07.797.339/0001-00</td>
+						<td class="borda">A & C BUSINESS DISTRIBUIDORA & COMÉRCIO LTDA.-ME </td>
+
+						<td class="borda">Suspensa</td>
+
+
+						<td class="borda">18/03/10</td>
+						<td class="borda">2 anos</td>
+					
+						<td style="text-align: left;" class="borda">JUSTIÇA FEDERAL</td>
+						<td style="text-align: center;" class="borda">CE</td>
+					
+						<td style="text-align: left;" class="borda">DOU SEÇÃO 3 PÁG 125</td>
+						<td style="text-align: left;" class="borda">18/03/2010</td>
+
+					</tr>
+			
+
+
+				
+					<tr  >
+				
+						<td>07.797.339/0001-00</td>
+						<td class="borda">A & C BUSINESS DISTRIBUIDORA & COMÉRCIO LTDA.-ME </td>
+
+						<td class="borda">Suspensa</td>
+
+
+						<td class="borda">15/05/09</td>
+						<td class="borda">2 anos</td>
+					
+						<td style="text-align: left;" class="borda">SERPRO</td>
+						<td style="text-align: center;" class="borda">PA</td>
+					
+						<td style="text-align: left;" class="borda">SICAF –  GOVERNO FEDERAL</td>
+						<td style="text-align: left;" class="borda">14/07/2009</td>
+
+					</tr>
+			
+
+
+				
+					<tr  class="linhaPar"  >
+				
+						<td>07.797.339/0001-00</td>
+						<td class="borda">A & C BUSINESS DISTRIBUIDORA & COMÉRCIO LTDA.-ME </td>
+
+						<td class="borda">Suspensa</td>
+
+
+						<td class="borda">14/10/09</td>
+						<td class="borda">2 anos</td>
+					
+						<td style="text-align: left;" class="borda">SUPERIOR TRIBUNAL MILITAR - STM</td>
+						<td style="text-align: center;" class="borda">**</td>
+					
+						<td style="text-align: left;" class="borda">DOU SEÇÃO 3 PÁG 164</td>
+						<td style="text-align: left;" class="borda">14/10/2009</td>
+
+					</tr>
+			
+
+
+				</tbody>
+			</table>
+
+		</div>
+		
+		<p>** Informação não disponível, favor verificar junto ao Órgão sancionador</p>
+		
+		<script language="javascript" src="../../Recursos/helper.js"></script>
+<noscript> </noscript>
+
+<form name="formPesquisa" onsubmit="return false">
+
+	<div id="pesquisaListagem">
+	
+		<label for="Pesquisa">Pesquisar:</label>
+		<input type="text" id="Pesquisa" name="Pesquisa" onfocus="this.select();"
+			   onkeypress="if (checkKey(event,13)) pesquisa(document.formPesquisa.Pesquisa.value);"
+			   value="Entre com o texto" >
+		<input type="button" value="ok" style="width:3em;" 
+			   onclick="pesquisa(document.formPesquisa.Pesquisa.value);"
+			   onkeypress="if (checkKey(event,13)) pesquisa(document.formPesquisa.Pesquisa.value);" />
+	</div>
+	
+</form><script language="javascript" src="../../Recursos/helper.js"></script>
+<noscript> </noscript>
+
+<form name="paginacao" onsubmit="return false">
+
+	<div id="paginacao">
+
+		<p class="paginaAtual">Página 1/354</p>
+		<p>
+			
+				&#171; Primeira |
+				&#8249; Anterior |
+			
+				<a href="#" onclick="return navega(2);" >Próxima &#8250;</a> |
+				<a href="#" onclick="return navega(354);" >Última &#187;</a> |
+			
+
+			<label for="numeroPagina">Página:</label>
+			
+				<input id="numeroPagina" type="text" style="width:7em;"
+					   value="nº página" onfocus="this.select();"
+					   onkeypress="if (checkKey(event,13)) navega(document.paginacao.numeroPagina.value);" />
+				<input type="button" value="Ir" style="width:3.5em;"
+					   onclick="navega(document.paginacao.numeroPagina.value);" 
+					   onkeypress="if (checkKey(event,13)) navega(document.paginacao.numeroPagina.value);" />
+			
+		</p>
+	</div>
+</form><div id="avisos">
+	<p>
+		Recomenda-se visualizar em resolução 1024x768
+	</p>
+</div>
+
+		
+		<div id="consultaCeis">
+			<p class="atencao"> ATENÇÃO </p>
+			<p class="informacao">Este cadastro visa dar publicidade às sanções administrativas aplicadas contra licitantes e fornecedores. As informações aqui veiculadas são de inteira responsabilidade das entidades que as prestaram, não podendo a União ser responsabilizada pela veracidade e/ou autenticidade de tais informações nem pelos eventuais danos diretos ou indiretos que delas resultem causados a terceiros.</p>
+		</div>
+		
+	</div> <!-- /conteudo -->
+</div> <!-- /pagina -->
+</div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<noscript> </noscript>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-1665737-12");
+pageTracker._trackPageview();
+</script>
+<noscript> </noscript>
+</body>
+</html>
+
