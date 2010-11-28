@@ -11,5 +11,9 @@ sub add {
     print Dumper($data);
 }
 
+sub load {
+    shift->add(shift);
+}
+
 1;
 
