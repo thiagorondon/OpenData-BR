@@ -56,7 +56,7 @@ sub _servidores_init {
     my $self = shift;
     my @servidores;
 
-    my $content = $self->get( $mainurl );
+    my $content = $self->get($mainurl);
 
     my $total_page = $self->_total_page($content);
 

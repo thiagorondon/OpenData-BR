@@ -7,9 +7,9 @@ with 'OpenData::Get::Base';
 use LWP::Curl;
 
 has _module => (
-    is => 'rw',
-    isa => 'Object',
-    lazy => 1,
+    is      => 'rw',
+    isa     => 'Object',
+    lazy    => 1,
     default => sub { LWP::Curl->new }
 );
 

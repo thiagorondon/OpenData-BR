@@ -5,12 +5,9 @@ use Moose;
 
 sub get_config {
 
-    return {
-        data_dir => '/tmp'
-        };
+    return { data_dir => '/tmp' };
 
 }
-
 
 1;
 

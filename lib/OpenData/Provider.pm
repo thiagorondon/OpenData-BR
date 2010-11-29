@@ -7,15 +7,15 @@ use Moose::Role;
 use OpenData::Provider::Collection;
 
 has id => (
-    is      => 'ro',
-    isa     => 'Str',
+    is       => 'ro',
+    isa      => 'Str',
     required => 1,
 );
 
 has name => (
-    is       => 'ro',
-    isa      => 'Str',
-    lazy => 1,
+    is      => 'ro',
+    isa     => 'Str',
+    lazy    => 1,
     default => sub { ucfirst( shift->id ) },
 );
 
@@ -25,20 +25,21 @@ has description => (
 );
 
 has collections => (
-    is  => 'ro',
-    isa => 'HashRef[OpenData::Provider::Collection]',
-    lazy => 1,
+    is      => 'ro',
+    isa     => 'HashRef[OpenData::Provider::Collection]',
+    lazy    => 1,
     default => sub { return {}; },
 );
 
 has loader => (
-    is => 'ro',
+    is  => 'ro',
     isa => 'Object',
+
     #isa => 'OpenData::Loader',
 );
 
 sub add_collection {
-    my ($self, $coll ) = @_;
+    my ( $self, $coll ) = @_;
 
     $coll->provider($self);
 
@@ -49,7 +50,7 @@ sub add_collection {
 sub collection {
     my ( $self, $coll ) = @_;
 
-    croak qq{No such collection: }. $coll
+    croak qq{No such collection: } . $coll
       unless exists $self->collections->{$coll};
 
     return $self->collections->{$coll};
@@ -60,9 +61,9 @@ sub process {
 
     my $coll_ref = $self->collection($coll);
 
-    while( my $raw = $coll_ref->extract ) {
-        my $data = $coll_ref->transform( $raw );
-        $coll_ref->load( $data );
+    while ( my $raw = $coll_ref->extract ) {
+        my $data = $coll_ref->transform($raw);
+        $coll_ref->load($data);
     }
 }
 

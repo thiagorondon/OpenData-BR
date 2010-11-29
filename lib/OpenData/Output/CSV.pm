@@ -1,5 +1,4 @@
 
-
 package OpenData::Output::CSV;
 
 use Text::CSV;

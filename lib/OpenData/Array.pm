@@ -6,7 +6,6 @@ extends 'OpenData::Output';
 
 1;
 
-
 __END__
 
 has 'items' => (

@@ -10,8 +10,8 @@ my $baseurl = 'http://www.portaltransparencia.gov.br/convenios';
 my $mainurl = join( '/', $baseurl, 'ConveniosListaGeral.asp?Ordem=-1' );
 
 has convenios_page_start => (
-    is => 'rw',
-    isa => 'Int',
+    is      => 'rw',
+    isa     => 'Int',
     default => 1
 );
 
@@ -31,31 +31,31 @@ sub _convenios_parse_member {
 
     my $loop = 0;
     foreach my $item ( @{$root} ) {
-        my ($name, $value) = split (':', $item->as_text);
+        my ( $name, $value ) = split( ':', $item->as_text );
         $value ||= '';
         $value =~ s/^ *//;
 
-        $data->{uf} = $value if $loop == 1;
+        $data->{uf}        = $value if $loop == 1;
         $data->{municipio} = $value if $loop == 2;
 
-        if ($loop == 3) {
+        if ( $loop == 3 ) {
             $value =~ s/Saiba.*//;
             $data->{SIAFI} = $value;
         }
 
-        $data->{situacao} = $value if $loop == 4;
-        $data->{n_original} = $value if $loop == 5;
-        $data->{objeto_do_convenio} = $value if $loop == 6;
-        $data->{orgao_superior} = $value if $loop == 7;
-        $data->{concedente} = $value if $loop == 8;
-        $data->{convenente} = $value if $loop == 9;
-        $data->{valor_convenio} = $value if $loop == 10;
-        $data->{valor_liberado} = $value if $loop == 11;
-        $data->{publicacao} = $value if $loop == 12;
-        $data->{inicio_vigencia} = $value if $loop == 13;
-        $data->{fim_vigencia} = $value if $loop == 14;
-        $data->{valor_contrapartida} = $value if $loop == 15;
-        $data->{data_ultima_liberacao} = $value if $loop == 16;
+        $data->{situacao}               = $value if $loop == 4;
+        $data->{n_original}             = $value if $loop == 5;
+        $data->{objeto_do_convenio}     = $value if $loop == 6;
+        $data->{orgao_superior}         = $value if $loop == 7;
+        $data->{concedente}             = $value if $loop == 8;
+        $data->{convenente}             = $value if $loop == 9;
+        $data->{valor_convenio}         = $value if $loop == 10;
+        $data->{valor_liberado}         = $value if $loop == 11;
+        $data->{publicacao}             = $value if $loop == 12;
+        $data->{inicio_vigencia}        = $value if $loop == 13;
+        $data->{fim_vigencia}           = $value if $loop == 14;
+        $data->{valor_contrapartida}    = $value if $loop == 15;
+        $data->{data_ultima_liberacao}  = $value if $loop == 16;
         $data->{valor_ultima_liberacao} = $value if $loop == 17;
 
         $loop++;
@@ -79,7 +79,7 @@ sub _convenios_init {
     my $self = shift;
     my @convenios;
 
-    my $content = $self->get( $mainurl );
+    my $content = $self->get($mainurl);
 
     my $total_page = $self->_total_page($content);
 
