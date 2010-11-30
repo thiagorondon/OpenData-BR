@@ -12,7 +12,7 @@ ok($obj);
 #ok($obj->can('_ceis_init'));
 #ok($obj->can('_ceis_parse_tree'));
 
-my $content = $obj->extract
+my $content = $obj->extract;
 
 
 ok($content);
