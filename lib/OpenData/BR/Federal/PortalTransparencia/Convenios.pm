@@ -32,6 +32,11 @@ sub _convenios_parse_member {
     my $loop = 0;
     foreach my $item ( @{$root} ) {
         my ( $name, $value ) = split( ':', $item->as_text );
+        
+        #print "$loop - $name\n";
+        #$loop++;
+        #next;
+
         $value ||= '';
         $value =~ s/^ *//;
 
@@ -90,6 +95,8 @@ sub _convenios_init {
         my $tree  = HTML::TreeBuilder::XPath->new_from_content($content);
         my $root  = $tree->findnodes("//table");
         my $table = $root->[1]->as_HTML;
+        
+        $tree->delete;
 
         $tree = HTML::TreeBuilder::XPath->new_from_content($table);
         $root = $tree->findnodes("//tr");
