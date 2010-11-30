@@ -5,3 +5,19 @@ http://www.portaltransparencia.gov.br/
 http://www.ssp.sp.gov.br/estatistica/
 http://www.seade.gov.br/index.php
 
+Idéias/brainstorms para futuro
+- escrever testes e testes para o CEIS - desde a captação do número total de páginas até testes de parse mesmo
+--- criei um diretorio "examples" na árvore, para salvarmos outputs de páginas efetivamente buscadas no site. Podemos depois rodar os testes alterando a URL de "http" para "file" e fazer testes com dados reais
+--- há algumas linhas no output do CEIS que retornam arrays (com colunas) incompletos. Possivelmente é algum pau de parse no XPath, mas precisaríamos ter certeza disso para mandar um patch para os caras - ou teríamos de bolar alguma estratégia de contorno para essas situações
+- obviamente repetir o refactoring nas outras coleções de dados do PortalTransparência
+- a sequencia lógica que faz funcionar essa arquitetura nova está no método OpenData::Provider::process(), mas veja, nada impede que criemos uma classe que estende Provider e implementa o fluxo de dados (através dos métodos extract -> transform -> load) via RabbitMQ. Ou, por exemplo, poderíamos ter um "loader" que, ao invés de colcoar no banco ou imprimir na tela, gera mensagens em uma fila. Do outro lado teríamos um extract que, ao invés de puxar de um site, pega da fila e consome de alguma outra forma.
+--- cheguei a pensar em ter classes e/ou roles "Extractor", "Transformer" (piada pronta!), e "Loader" (este último na verdade já está previsto, mas não implantado, na versão atual), daí poderíamos simplesmente trocar o Extractor... não sei se precisamos disso, é só uma idéia.
+- criar um role do tipo OpenData::Provider::Collection::Item, no qual podemos especificar nomes e tipos dos dados
+--- fazer com que a classe de banco (loader/output/como quiser chamar) receba listas de elementos desse tipo Item, daí ele poderia fazer introspecção e descobrir o que quer e/ou precisa salvar,e como precisa salvar
+--- efetivamente converter strings para valores em Perl, por exemplo "25/10/10" para um DateTime correspondente, o que garante uma certa integridade de dados. No CEIS, por exemplo, tem coluna de data de início dcom um dia específico, e a data final (ou duração) vem escrito algo como "2 anos". Poderíamos eventualmente fazer até implantar a lógica que faz o parse desse tipo de sujeira.
+--- role Item teria aluns campos além dos dados em si:
+----- failed_columns: lista com as colunas que não passaram em validação (como data, ou unidade federativa)
+- modificar o código de output para deixar roles como definição de interfaces, e classes como implementação de interfaces. Hoje as implementações específicas (MongoDB, Dumper, etc...) são roles, e isso á, do ponto de vista de arquitetura, um pouco estranho. Perl permite isso, e em alguns momentos acho que podemos sim usar, mas acho que não é o caso aqui. Dito isso, não tenho certeza de como seira a melhor forma.
+- modificar o código de Runtime para podermos ter vários Providers
+--- talvez fazer com que a configuração de "quais providers e seus respectivos collections" serão carregados esteja em um arquivo de configuração (formato a escolher), e o Runtime passa a ser simplesmente um cara que lê esse arquivo de configuração, carrega as classes, e ao ser chamado algum método do tipo run(), ele executa as a ações
+
