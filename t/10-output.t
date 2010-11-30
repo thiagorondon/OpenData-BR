@@ -15,6 +15,6 @@ package OpenData::Output::Test;
 
 package main;
 
-my $obj = OpenData::Output->new_with_traits(traits => 'Test');
+my $obj = OpenData::Output->new_with_traits(id => 'Test', traits => 'Test');
 
 ok($obj->can('add'));

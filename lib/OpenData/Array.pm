@@ -4,6 +4,10 @@ package OpenData::Array;
 use Moose;
 extends 'OpenData::Output';
 
+has '+id' => (
+    default => 'OpenData::Array',
+);
+
 1;
 
 __END__
