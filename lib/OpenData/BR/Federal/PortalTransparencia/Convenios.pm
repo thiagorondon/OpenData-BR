@@ -1,119 +1,100 @@
 
 package OpenData::BR::Federal::PortalTransparencia::Convenios;
 
-use Moose::Role;
+use Moose;
+
+with 'OpenData::Debug';
+with 'OpenData::BR::Federal::PortalTransparencia::Base';
+with 'OpenData::Provider::Collection';
+
+use Data::Dumper;
+use List::MoreUtils qw/mesh/;
 use HTML::TreeBuilder::XPath;
-use OpenData::Array;
-use URI;
 
-my $baseurl = 'http://www.portaltransparencia.gov.br/convenios';
-my $mainurl = join( '/', $baseurl, 'ConveniosListaGeral.asp?Ordem=-1' );
+has '+id'          => ( default => 'convenios', );
+has '+description' => ( default => 'Convênios', );
 
-has convenios_page_start => (
-    is      => 'rw',
-    isa     => 'Int',
-    default => 1
+has '+mainURI' => (
+    default => sub {
+        join( '/', 'convenios', 'ConveniosListaGeral.asp?Ordem=-1' );
+    },
 );
 
-sub _convenios_parse_member {
-    my ( $self, $url ) = @_;
-    return undef if $url =~ /convenios/;
-    $url =~ s/amp\;//g;
+has '+elements_list' => (
+    default => sub {
 
-    my $people_url = join( '/', $baseurl, $url );
-    my $content = $self->get($people_url);
+        #return [ qw/uf municipio SIAFI situacao n_original objeto_do_convenio
+        #orgao_superior concedente convenente valor_convenio valor_liberado
+        #publicacao inicio_vigencia fim_vigencia valor_contrapartida
+        #data_ultima_liberacao valor_ultima_liberacao/
+        #];
 
-    my $tree = HTML::TreeBuilder::XPath->new_from_content($content);
+        return [
+            qw/numero numero_original uf objeto orgao_superior concedente
+              convenente valor_conveniado/
+        ];
+    },
+);
 
-    my $root = $tree->findnodes("//tr");
-
-    my $data = {};
-
-    my $loop = 0;
-    foreach my $item ( @{$root} ) {
-        my ( $name, $value ) = split( ':', $item->as_text );
-        
-        #print "$loop - $name\n";
-        #$loop++;
-        #next;
-
-        $value ||= '';
-        $value =~ s/^ *//;
-
-        $data->{uf}        = $value if $loop == 1;
-        $data->{municipio} = $value if $loop == 2;
-
-        if ( $loop == 3 ) {
-            $value =~ s/Saiba.*//;
-            $data->{SIAFI} = $value;
-        }
-
-        $data->{situacao}               = $value if $loop == 4;
-        $data->{n_original}             = $value if $loop == 5;
-        $data->{objeto_do_convenio}     = $value if $loop == 6;
-        $data->{orgao_superior}         = $value if $loop == 7;
-        $data->{concedente}             = $value if $loop == 8;
-        $data->{convenente}             = $value if $loop == 9;
-        $data->{valor_convenio}         = $value if $loop == 10;
-        $data->{valor_liberado}         = $value if $loop == 11;
-        $data->{publicacao}             = $value if $loop == 12;
-        $data->{inicio_vigencia}        = $value if $loop == 13;
-        $data->{fim_vigencia}           = $value if $loop == 14;
-        $data->{valor_contrapartida}    = $value if $loop == 15;
-        $data->{data_ultima_liberacao}  = $value if $loop == 16;
-        $data->{valor_ultima_liberacao} = $value if $loop == 17;
-
-        $loop++;
-    }
-    $tree->delete;
-
-    return $data ? $data : undef;
-
-}
-
-sub _convenios_parse_tree () {
-    my ( $self, $html ) = @_;
-
-    my $link = $html->as_HTML;
-    $link =~ s/^.*href=\"//;
-    $link =~ s/\".*$//;
-    return $self->_convenios_parse_member($link);
-}
-
-sub _convenios_init {
+sub _extract {
     my $self = shift;
-    my @convenios;
+    my $page = $self->turn_page;
+    return unless $page;    # empty if in last page
 
-    my $content = $self->get($mainurl);
+    my $url = $self->_make_page_url($page);
+    my $raw = [];
 
-    my $total_page = $self->_total_page($content);
+    #warn 'url = '. $url;
+    my $content = $self->get($url);
+    $raw = [$content];
 
-    for my $i ( $self->convenios_page_start .. $self->_total_page($content) ) {
+# inserir código de "click" aqui
+# - findnode .../td/a
+# - pega o valor do atributo href
+# - faz o get
+# - acrescenta o resultado no array ref $raw
+#
+#my $tree    = HTML::TreeBuilder::XPath->new_from_content($content);
+#my $tr_list = $tree->findnodes('//div[@id="listagemConvenios"]/table/tbody/tr');
 
-        $self->debug("Paginacao, $i");
-        $content = $self->get( $self->_page( $mainurl, $i ) );
-        my $tree  = HTML::TreeBuilder::XPath->new_from_content($content);
-        my $root  = $tree->findnodes("//table");
-        my $table = $root->[1]->as_HTML;
-        
-        $tree->delete;
-
-        $tree = HTML::TreeBuilder::XPath->new_from_content($table);
-        $root = $tree->findnodes("//tr");
-
-        foreach my $obj ( @{$root} ) {
-            my $member = $self->_convenios_parse_tree($obj);
-            $self->items->add($member) if defined( $member->{uf} );
-        }
-
-        $tree->delete;
-
-    }
-
-    return $self->items;
+    #$self->debug( 'Página ' . $self->page . ' extraída' );
+    return $raw;
 }
 
-sub _run_convenios { shift->_convenios_init; }
+sub _transform {
+    my ( $self, $content ) = @_;
+
+    my $data = [];
+    foreach my $page ( @{$content} ) {
+        my $tree = HTML::TreeBuilder::XPath->new_from_content($page);
+        my $tr_list =
+          $tree->findnodes('//div[@id="listagemConvenios"]/table/tbody/tr');
+
+        die 'Não conseguiu encontrar as tabelas com os dados no HTML'
+          unless scalar( @{$tr_list} );
+
+        foreach my $tr_item ( @{$tr_list} ) {
+
+            warn 'tr_item = ' . Dumper( $tr_item->as_HTML );
+            my $tr =
+              HTML::TreeBuilder::XPath->new_from_content( $tr_item->as_HTML );
+            my $td_list = [ $tr->findvalues("//td") ];
+
+            #warn Dumper($td_list);
+            die 'Não conseguiu encontrar as colunas com os dados no HTML'
+              unless scalar( @{$td_list} ) ==
+                  scalar( @{ $self->elements_list } );
+
+            my $line_data = { mesh @{ $self->elements_list }, @{$td_list} };
+            push @{$data}, $line_data;
+            $tr->delete;
+        }
+        $tree->delete;
+    }
+
+    #warn Dumper($data);
+    return scalar( @{$data} ) ? $data : undef;
+}
 
 1;
 
