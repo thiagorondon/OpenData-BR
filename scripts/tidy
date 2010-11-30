@@ -1,0 +1,3 @@
+#!/bin/sh
+
+find bin lib t scripts \( -name '*.pm' -o -name '*.pl' -o -name '*.t' \) -print -exec perltidy -b {} \;
