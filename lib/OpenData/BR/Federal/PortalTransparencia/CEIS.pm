@@ -3,64 +3,66 @@ package OpenData::BR::Federal::PortalTransparencia::CEIS;
 
 use Moose;
 
-use Data::Dumper;
-use List::MoreUtils qw/mesh/;
-
 with 'OpenData::Debug';
 with 'OpenData::BR::Federal::PortalTransparencia::Base';
 with 'OpenData::Provider::Collection';
 
+use Data::Dumper;
+use List::MoreUtils qw/mesh/;
 use HTML::TreeBuilder::XPath;
 
-has '+id'          => ( default => 'ceis', );
-has '+name'        => ( default => 'CEIS', );
-has '+description' => ( default => 'CADASTRO DE EMPRESAS INIDÔNEAS OU SANCIONADAS', );
+has '+id' => ( default => 'ceis', );
+has '+description' =>
+  ( default => 'CADASTRO DE EMPRESAS INIDÔNEAS OU SANCIONADAS', );
 
 has '+mainURI' => (
     default => sub {
-        my $base = shift->baseURL || '';
-        join( '/', $base, 'ceis', 'EmpresasSancionadas.asp?paramEmpresa=0' );
+        join( '/', 'ceis', 'EmpresasSancionadas.asp?paramEmpresa=0' );
     },
 );
 
 has '+elements_list' => (
     default => sub {
-        return [ qw/cpfcnpj nome tipo data_inicial data_final orgao_sancionador
-          uf fonte fonte_data/ ];
+        return [
+            qw/cpfcnpj nome tipo data_inicial data_final orgao_sancionador
+              uf fonte fonte_data/
+        ];
     },
 );
 
 sub _transform {
     my ( $self, $content ) = @_;
 
-    return unless $content;
-
-    my $tree    = HTML::TreeBuilder::XPath->new_from_content($content);
-    my $tr_list = $tree->findnodes("//table/tbody/tr");
-
-    die 'Não conseguiu encontrar as tabelas com os dados no HTML'
-      unless scalar( @{$tr_list} );
-
     my $data = [];
-    foreach my $tr_item ( @{$tr_list} ) {
+    foreach my $page ( @{$content} ) {
+        my $tree    = HTML::TreeBuilder::XPath->new_from_content($page);
+        my $tr_list = $tree->findnodes(
+            '//div[@id="listagemEmpresasSancionadas"]/table/tbody/tr');
 
-        #warn 'tr_item = '.Dumper($tr_item->as_HTML);
-        my $tr =
-          HTML::TreeBuilder::XPath->new_from_content( $tr_item->as_HTML );
-        my $td_list = [ $tr->findvalues("//td") ];
+        die 'Não conseguiu encontrar as tabelas com os dados no HTML'
+          unless scalar( @{$tr_list} );
 
-        #warn Dumper($td_list);
-        die 'Não conseguiu encontrar as colunas com os dados no HTML'
-          unless scalar( @{$td_list} ) == scalar( @{ $self->elements_list } );
+        foreach my $tr_item ( @{$tr_list} ) {
 
-        my $line_data = { mesh @{ $self->elements_list }, @{$td_list} };
-        push @{$data}, $line_data;
-        $tr->delete;
+            #warn 'tr_item = '.Dumper($tr_item->as_HTML);
+            my $tr =
+              HTML::TreeBuilder::XPath->new_from_content( $tr_item->as_HTML );
+            my $td_list = [ $tr->findvalues("//td") ];
+
+            #warn Dumper($td_list);
+            die 'Não conseguiu encontrar as colunas com os dados no HTML'
+              unless scalar( @{$td_list} ) ==
+                  scalar( @{ $self->elements_list } );
+
+            my $line_data = { mesh @{ $self->elements_list }, @{$td_list} };
+            push @{$data}, $line_data;
+            $tr->delete;
+        }
+        $tree->delete;
     }
-    $tree->delete;
 
     #warn Dumper($data);
-    return $data ? $data : undef;
+    return scalar( @{$data} ) ? $data : undef;
 }
 
 1;
