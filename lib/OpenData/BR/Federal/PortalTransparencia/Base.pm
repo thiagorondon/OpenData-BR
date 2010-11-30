@@ -30,7 +30,7 @@ sub _total_page {
 has baseURL => (
     is      => 'ro',
     isa     => 'Str',
-    default => 'http://www.portaltransparencia.gov.br/',
+    default => 'http://www.portaltransparencia.gov.br',
 );
 
 has mainURI => (
@@ -85,11 +85,11 @@ sub _extract {
 
     my $url = $self->_make_page_url($page);
 
-    #warn $url;
+    #warn 'url = '. $url;
     my $content = $self->get($url);
 
     #$self->debug( 'Página ' . $self->page . ' extraída' );
-    return $content;
+    return [$content];
 }
 
 sub _load {
