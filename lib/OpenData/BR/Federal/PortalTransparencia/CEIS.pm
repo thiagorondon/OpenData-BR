@@ -56,7 +56,7 @@ sub _transform {
 
         #warn Dumper($td_list);
         die 'Não conseguiu encontrar as colunas com os dados no HTML'
-          unless scalar( @{$td_list} );
+          unless scalar( @{$td_list} ) == scalar( @{ $self->elements_list });
 
         my $line_data = { mesh @{ $self->elements_list }, @{$td_list} };
         push @{$data}, $line_data;
