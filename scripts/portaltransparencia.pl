@@ -11,7 +11,9 @@ use OpenData::BR::Federal::PortalTransparencia;
 
 #my $opendata = new OpenData::Runtime->new;
 my $opendata = new OpenData::BR::Federal::PortalTransparencia->new;
-$opendata->add_collection_ceis;
-my $data = $opendata->process('ceis');
+$opendata->add_collection_convenios;
+my $data = $opendata->process('convenios');
 
+#$opendata->add_collection_ceis;
+#my $data = $opendata->process('ceis');
 
