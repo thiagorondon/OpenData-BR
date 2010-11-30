@@ -27,7 +27,12 @@ sub add_collection_convenios {
     shift->add_collection($c);
 }
 
-#use OpenData::BR::Federal::PortalTransparencia::Servidores;
+use OpenData::BR::Federal::PortalTransparencia::Servidores;
+
+sub add_collection_servidores {
+    my $c = OpenData::BR::Federal::PortalTransparencia::Servidores->new;
+    shift->add_collection($c);
+}
 
 has items => (
     is      => 'ro',
