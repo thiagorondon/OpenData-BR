@@ -14,7 +14,7 @@ use HTML::TreeBuilder::XPath;
 
 has '+id'          => ( default => 'ceis', );
 has '+name'        => ( default => 'CEIS', );
-has '+description' => ( default => 'EMPRESAS SANCIONADAS', );
+has '+description' => ( default => 'CADASTRO DE EMPRESAS INIDÔNEAS OU SANCIONADAS', );
 
 has '+mainURI' => (
     default => sub {
@@ -25,13 +25,8 @@ has '+mainURI' => (
 
 has '+elements_list' => (
     default => sub {
-        [
-            q{cpfcnpj},    q{nome},
-            q{tipo},       q{data_inicial},
-            q{data_final}, q{orgao_sancionador},
-            q{uf},         q{fonte},
-            q{fonte_data},
-        ];
+        return [ qw/cpfcnpj nome tipo data_inicial data_final orgao_sancionador
+          uf fonte fonte_data/ ];
     },
 );
 
@@ -56,7 +51,7 @@ sub _transform {
 
         #warn Dumper($td_list);
         die 'Não conseguiu encontrar as colunas com os dados no HTML'
-          unless scalar( @{$td_list} ) == scalar( @{ $self->elements_list });
+          unless scalar( @{$td_list} ) == scalar( @{ $self->elements_list } );
 
         my $line_data = { mesh @{ $self->elements_list }, @{$td_list} };
         push @{$data}, $line_data;

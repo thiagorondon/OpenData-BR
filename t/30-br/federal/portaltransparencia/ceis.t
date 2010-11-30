@@ -1,21 +1,22 @@
 
-use Test::More tests => 4;
+use Test::More tests => 3;
 
 use strict;
 
-package Portal;
+use OpenData::BR::Federal::PortalTransparencia::CEIS;
 
-    use Moose;
-    with 'OpenData::BR::Federal::PortalTransparencia::CEIS';
-
-    1;
-
-package main;
-
-my $obj = new Portal;
+my $obj = OpenData::BR::Federal::PortalTransparencia::CEIS->new;
 ok($obj);
 
-ok($obj->can('_run_ceis'));
-ok($obj->can('_ceis_init'));
-ok($obj->can('_ceis_parse_tree'));
+#ok($obj->can('_run_ceis'));
+#ok($obj->can('_ceis_init'));
+#ok($obj->can('_ceis_parse_tree'));
 
+my $content = $obj->extract
+
+
+ok($content);
+
+my $data = $obj->transform($content);
+
+ok($data);
