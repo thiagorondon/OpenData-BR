@@ -1,17 +1,19 @@
 
 BEGIN {
-    unless ($ENV{POD_AUTHOR}) {
+    unless ( $ENV{POD_AUTHOR} ) {
         require Test::More;
-        Test::More::plan(skip_all => 'these tests are for who write pod');
+        Test::More::plan( skip_all => 'these tests are for who write pod' );
     }
 }
 
 use Test::More;
 
 eval "use Test::Pod::Coverage 1.08";
-plan skip_all => "Test::Pod::Coverage 1.08 required for testing POD coverage" if $@;
+plan skip_all => "Test::Pod::Coverage 1.08 required for testing POD coverage"
+  if $@;
 
 eval "use Pod::Coverage::TrustPod";
-plan skip_all => "Pod::Coverage::TrustPod required for testing POD coverage" if $@;
+plan skip_all => "Pod::Coverage::TrustPod required for testing POD coverage"
+  if $@;
 
-all_pod_coverage_ok({ coverage_class => 'Pod::Coverage::TrustPod' });
+all_pod_coverage_ok( { coverage_class => 'Pod::Coverage::TrustPod' } );

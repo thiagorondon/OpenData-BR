@@ -23,8 +23,7 @@ has '+mainURI' => (
 has '+elements_list' => (
     default => sub {
         return [
-            qw/cpf nome_do_servidor orgao_lotacao orgao_exercicio jornada/
-        ];
+            qw/cpf nome_do_servidor orgao_lotacao orgao_exercicio jornada/ ];
     },
 );
 
@@ -36,7 +35,7 @@ sub _extract {
     my $url = $self->_make_page_url($page);
     my $raw = [];
 
-    warn 'url = '. $url;
+    warn 'url = ' . $url;
     my $content = $self->get($url);
     $raw = [$content];
 
@@ -61,8 +60,8 @@ sub _transform {
         my $tree = HTML::TreeBuilder::XPath->new_from_content($page);
 
         # na pagina dos servidores, a table nao tem <tbody>
-        my $tr_list =
-          $tree->findnodes('//table[@summary="Lista de Servidores"]/tr[position()>1]');
+        my $tr_list = $tree->findnodes(
+            '//table[@summary="Lista de Servidores"]/tr[position()>1]');
 
         die 'Não conseguiu encontrar as tabelas com os dados no HTML'
           unless scalar( @{$tr_list} );

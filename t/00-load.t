@@ -6,7 +6,7 @@ use warnings;
 use Test::UseAllModules;
 
 BEGIN {
-        all_uses_ok();
+    all_uses_ok();
 }
 
 1;

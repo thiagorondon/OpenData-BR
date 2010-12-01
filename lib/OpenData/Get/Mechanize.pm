@@ -22,10 +22,9 @@ has _module => (
 );
 
 sub content {
-    my ($self, $response) = @_;
+    my ( $self, $response ) = @_;
     return $response->content;
-};
-
+}
 
 1;
 
