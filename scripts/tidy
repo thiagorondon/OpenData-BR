@@ -1,3 +1,5 @@
 #!/bin/sh
 
 find bin lib t scripts \( -name '*.pm' -o -name '*.pl' -o -name '*.t' \) -print -exec perltidy -b {} \;
+
+find bin lib t scripts -name '*.bak' -print -exec rm -f {} \;
