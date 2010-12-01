@@ -12,3 +12,4 @@ nytprof.out
 MANIFEST.bak
 *.tar.gz
 cover_db
+*.ERR
