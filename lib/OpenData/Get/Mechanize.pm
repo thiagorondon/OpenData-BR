@@ -14,7 +14,7 @@ has obj => (
     default => sub {
         my $self = shift;
         WWW::Mechanize->new(
-            agent_alias => $self->agent,
+            agent       => $self->agent,
             onerror     => sub { $self->debug(@_) },
             timeout     => $self->timeout
         );
