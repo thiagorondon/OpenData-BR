@@ -9,7 +9,7 @@ use OpenData::Get;
 
 has URL => ( is => 'ro', isa => 'Str', required => 1 );
 
-has set_browser => ( is => 'rw', isa => 'Str', default => 'Curl' );
+has set_browser => ( is => 'rw', isa => 'Str', default => 'Mechanize' );
 
 after set_browser => sub {
     my $self = shift;
@@ -32,6 +32,8 @@ sub get {
     $http->url($url);
     return $http->get();
 }
+
+sub obj { shift->_get->obj; }
 
 sub extract {
 }
