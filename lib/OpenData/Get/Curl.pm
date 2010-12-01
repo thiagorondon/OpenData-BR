@@ -6,7 +6,7 @@ with 'OpenData::Get::Base';
 
 use LWP::Curl;
 
-has _module => (
+has obj => (
     is      => 'rw',
     isa     => 'Object',
     lazy    => 1,

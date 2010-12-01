@@ -41,7 +41,7 @@ sub get {
     return if !$self->has_url;
 
     for ( 1 .. $self->try ) {
-        my $content = $self->_module->get( $self->url );
+        my $content = $self->obj->get( $self->url );
         return $self->content($content) if $content;
     }
 }
@@ -50,7 +50,7 @@ sub post {
     my ( $self, $form ) = @_;
     return if !$self->has_url;
     for ( 1 .. $self->try ) {
-        my $content = $self->_module->post( $self->url, $form, $self->referer );
+        my $content = $self->obj->post( $self->url, $form, $self->referer );
         return $content if $content;
     }
 }

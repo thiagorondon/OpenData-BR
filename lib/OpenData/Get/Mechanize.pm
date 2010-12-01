@@ -7,7 +7,7 @@ with 'OpenData::Debug';
 
 use WWW::Mechanize;
 
-has _module => (
+has obj => (
     is      => 'rw',
     isa     => 'Object',
     lazy    => 1,
