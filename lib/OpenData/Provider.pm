@@ -4,25 +4,9 @@ package OpenData::Provider;
 use Carp;
 use Moose::Role;
 
+with 'OpenData::Identifiable';
+
 use OpenData::Provider::Collection;
-
-has id => (
-    is       => 'ro',
-    isa      => 'Str',
-    required => 1,
-);
-
-has name => (
-    is      => 'ro',
-    isa     => 'Str',
-    lazy    => 1,
-    default => sub { ucfirst( shift->id ) },
-);
-
-has description => (
-    is  => 'ro',
-    isa => 'Str',
-);
 
 has collections => (
     is      => 'ro',
@@ -44,6 +28,9 @@ sub add_collection {
     $coll->provider($self);
 
     my $colls = $self->collections;
+    $self->confess(
+        'A collection with ID (' . $coll->id . ') is already registered!' )
+      if exists $colls->{ $coll->id };
     $colls->{ $coll->id } = $coll;
 }
 

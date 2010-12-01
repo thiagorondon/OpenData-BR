@@ -2,6 +2,7 @@
 package OpenData::Transformer::HTML;
 
 use Moose;
+use Data::Dumper;
 use Scalar::Util qw/reftype/;
 use HTML::TreeBuilder::XPath;
 
@@ -26,6 +27,7 @@ has _data => (
 
 sub _transform_element {
     my $self = shift;
+    #warn 'vanilla _transform_element';
     return @_;
 }
 
@@ -43,19 +45,27 @@ sub transform {
         $self->confess( 'Cannot match node_xpath (' . $self->node_xpath . ')' )
           unless scalar( @{$nodes} );
 
+        #warn 'node = '.$self->node_xpath;
+        #warn "\nnodes = ". Dumper($nodes);
         foreach my $value ( @{$nodes} ) {
-            my $cut = [ $value->findvalues( $self->value_xpath ) ];
+            #warn 'value = '. $value->as_HTML;
+            my $value_html = HTML::TreeBuilder::XPath->new_from_content( $value->as_HTML );
+            my $cut = [ $value_html->findvalues( $self->value_xpath ) ];
 
             $self->confess(
                 'Cannot match value_xpath (' . $self->value_xpath . ')' )
               unless scalar( @{$cut} );
 
+            #warn 'cut = '.Dumper($cut);
             my $d = $self->_transform_element($cut);
-            push @{ $self->data }, $d;
+            push @{ $self->_data }, $d;
+
+            $value_html->delete;
         }
         $tree->delete;
     }
 
+    #warn 'transformed data = ' . Dumper($self->_data);
     return $self->_data;
 }
 

@@ -3,21 +3,39 @@ package OpenData::BR::Federal::PortalTransparencia::PageExtractor;
 
 use Moose;
 
-#with 'OpenData::Extractor';
+extends 'OpenData::Extractor::HTTP';
 
-use HTML::TreeBuilder::XPath;
 use URI;
+use HTML::TreeBuilder::XPath;
+
+has baseURL => (
+    is      => 'ro',
+    isa     => 'Str',
+    default => 'http://www.portaltransparencia.gov.br',
+);
+
+has '+URL' => (
+    lazy => 1,
+    default => sub {
+        my $self = shift;
+        my $base = $self->baseURL || '';
+        my $main = $self->mainURI || '';
+        return $base . '/' . $main;
+    },
+);
+
+has mainURI => ( is => 'ro', isa => 'Str', required => 1, );
 
 sub _make_page_url {
     my ( $self, $numero ) = @_;
-    my $u = URI->new( $self->mainURL );
+    my $u = URI->new( $self->URL );
     $u->query_form( Pagina => $numero );
     return $u->as_string;
 }
 
 sub _total_page {
     my $self = shift;
-    my $html = $self->get( $self->mainURL );
+    my $html = $self->get( $self->URL );
     my $numero =
       HTML::TreeBuilder::XPath->new_from_content($html)
       ->findnodes('//p[@class="paginaAtual"]')->[0];
@@ -28,27 +46,6 @@ sub _total_page {
     $numero->delete;
     return $1 if $total =~ /\d\/(\d+)/;
 }
-
-has baseURL => (
-    is      => 'ro',
-    isa     => 'Str',
-    default => 'http://www.portaltransparencia.gov.br',
-);
-
-has mainURI => (
-    is  => 'ro',
-    isa => 'Str',
-);
-
-has mainURL => (
-    is      => 'ro',
-    isa     => 'Str',
-    lazy    => 1,
-    default => sub {
-        my $self = shift;
-        join( '/', $self->baseURL, $self->mainURI );
-    },
-);
 
 has page => (
     is      => 'rw',
@@ -67,15 +64,23 @@ has last_page => (
     is      => 'ro',
     isa     => 'Int',
     lazy    => 1,
-    default => sub { shift->_total_page(); },
+    builder => '_total_page',
 );
 
 ##############################################################################
 
-sub _load {
-    my ( $self, $data ) = @_;
+sub extract {
+    my $self = shift;
+    my $page = $self->turn_page;
+    return unless $page;    # empty if in last page
 
-    $self->provider->loader->load($data);
+    my $url = $self->_make_page_url($page);
+
+    #warn 'url = '. $url;
+    my $content = $self->get($url);
+
+    #$self->debug( 'Página ' . $self->page . ' extraída' );
+    return [$content];
 }
 
 1;

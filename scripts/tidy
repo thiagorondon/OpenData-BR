@@ -1,5 +1,7 @@
 #!/bin/sh
 
-find bin lib t scripts \( -name '*.pm' -o -name '*.pl' -o -name '*.t' \) -print -exec perltidy -b {} \;
+(
+find bin lib t scripts \( -name '*.pm' -o -name '*.pl' -o -name '*.t' \) -print -exec perltidy -b {} \; | xargs echo 'TIDY:'
 
-find bin lib t scripts -name '*.bak' -print -exec rm -f {} \;
+find bin lib t scripts -name '*.bak' -print -exec rm -f {} \; | xargs echo '  RM:'
+) > &2
