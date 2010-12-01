@@ -7,4 +7,3 @@ use_ok('OpenData::Config');
 
 1;
 
-

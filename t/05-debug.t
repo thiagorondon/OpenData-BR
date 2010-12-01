@@ -7,23 +7,22 @@ use_ok('OpenData::Debug');
 
 package Debug;
 
-    use Moose;
-    with 'OpenData::Debug';
+use Moose;
+with 'OpenData::Debug';
 
-    1;
+1;
 
 package main;
 
 my $debug = Debug->new;
 
-ok($debug->can('set_debug'));
+ok( $debug->can('set_debug') );
 $debug->set_debug;
-is($debug->is_debug, 1);
+is( $debug->is_debug, 1 );
 
-ok($debug->can('not_debug'));
+ok( $debug->can('not_debug') );
 $debug->not_debug;
-is($debug->is_debug, 0);
+is( $debug->is_debug, 0 );
 
 1;
-
 

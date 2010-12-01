@@ -7,4 +7,3 @@ use_ok('OpenData::Get');
 
 1;
 
-

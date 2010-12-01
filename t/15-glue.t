@@ -9,14 +9,13 @@ my $dbpath = ':memory:';
 
 my $obj = OpenData::Glue->new( dbfile => $dbpath );
 
-is($obj->dbfile, $dbpath);
+is( $obj->dbfile, $dbpath );
 
 $obj->ev_create;
 
-ok($obj->ev_save('foo', 'bar'));
-ok($obj->ev_save('foo', 'baz'));
-is($obj->ev_get('foo'), 'baz');
+ok( $obj->ev_save( 'foo', 'bar' ) );
+ok( $obj->ev_save( 'foo', 'baz' ) );
+is( $obj->ev_get('foo'), 'baz' );
 
 1;
-
 

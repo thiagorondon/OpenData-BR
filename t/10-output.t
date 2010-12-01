@@ -7,14 +7,14 @@ use_ok('OpenData::Output');
 
 package OpenData::Output::Test;
 
-    use Moose::Role;
+use Moose::Role;
 
-    sub add {
-        return 1;
-    }
+sub add {
+    return 1;
+}
 
 package main;
 
-my $obj = OpenData::Output->new_with_traits(id => 'Test', traits => 'Test');
+my $obj = OpenData::Output->new_with_traits( id => 'Test', traits => 'Test' );
 
-ok($obj->can('add'));
+ok( $obj->can('add') );

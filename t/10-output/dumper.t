@@ -7,4 +7,3 @@ use_ok('OpenData::Output::Dumper');
 
 1;
 
-
