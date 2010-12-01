@@ -15,6 +15,7 @@ requires 'List::MoreUtils';
 requires 'LWP::Curl';
 requires 'HTML::TreeBuilder::XPath';
 requires 'DBI';
+requires 'DBD::SQLite';
 requires 'MongoDB';
 requires 'WWW::Mechanize';
 requires 'Test::Memory::Cycle';
@@ -26,7 +27,7 @@ test_requires 'Test::More';
 test_requires 'Test::Pod' => '1.41';
 test_requires 'Test::Pod::Coverage' => '1.08';
 test_requires 'Pod::Coverage::TrustPod';
-
+test_requires 'Test::UseAllModules';
 
 tests 't/*.t t/*/*t t/*/*/*t t/*/*/*/*t';
 
