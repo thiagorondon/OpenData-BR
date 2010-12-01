@@ -14,7 +14,6 @@ ok($obj);
 
 my $content = $obj->extract;
 
-
 ok($content);
 
 my $data = $obj->transform($content);

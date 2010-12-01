@@ -5,8 +5,8 @@ use Moose;
 
 with 'OpenData::Transformer';
 
-has chain => (
-    is => 'ro',
+has links => (
+    is  => 'ro',
     isa => 'ArrayRef[OpenData::Transformer]',
 );
 
@@ -15,14 +15,16 @@ sub transform {
     my $data = shift;
 
     die 'Must have at least two transformers in the chain!'
-        unless scalar( @{ $self->chain } ) > 1;
+      unless scalar( @{ $self->links } ) > 1;
 
     my $new = $data;
 
-    foreach my $t ( @{ $self->chain } ) {
-        $new = $t->transform($new);
+    foreach my $l ( @{ $self->links } ) {
+        $new = $l->transform($new);
     }
 
     return $new;
 }
+
+1;
 

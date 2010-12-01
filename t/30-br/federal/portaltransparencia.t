@@ -5,7 +5,5 @@ use strict;
 
 use_ok('OpenData::BR::Federal::PortalTransparencia');
 
-
 1;
-
 

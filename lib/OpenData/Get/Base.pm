@@ -40,8 +40,8 @@ sub get {
     my $self = shift;
     return if !$self->has_url;
 
-    for (1 .. $self->try) {
-        my $content = $self->_module->get($self->url);
+    for ( 1 .. $self->try ) {
+        my $content = $self->_module->get( $self->url );
         return $self->content($content) if $content;
     }
 }
