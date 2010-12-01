@@ -22,8 +22,7 @@ has '+mainURI' => (
 
 has '+elements_list' => (
     default => sub {
-        return [
-            qw/cpf nome_do_servidor orgao_lotacao orgao_exercicio jornada/ ];
+        return [qw/cpf nome_do_servidor orgao_lotacao orgao_exercicio jornada/];
     },
 );
 
