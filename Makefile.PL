@@ -14,6 +14,7 @@ requires 'Text::CSV';
 requires 'List::MoreUtils';
 requires 'LWP::Curl';
 requires 'HTML::TreeBuilder::XPath';
+requires 'DBI';
 requires 'MongoDB';
 requires 'WWW::Mechanize';
 requires 'Test::Memory::Cycle';
