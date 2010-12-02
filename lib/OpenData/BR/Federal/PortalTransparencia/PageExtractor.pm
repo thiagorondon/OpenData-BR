@@ -15,7 +15,7 @@ has baseURL => (
 );
 
 has '+URL' => (
-    lazy => 1,
+    lazy    => 1,
     default => sub {
         my $self = shift;
         my $base = $self->baseURL || '';
@@ -53,6 +53,18 @@ has page => (
     lazy    => 1,
     default => 0,
 );
+
+before 'page' => sub {
+    my ( $self, $num ) = @_;
+    if ($num) {
+        $self->confess( 'Invalid page (' 
+              . $num
+              . '), must be between 0 < x <= last page ('
+              . $self->last_page
+              . ')' )
+          unless 0 < +$num && +$num <= $self->last_page;
+    }
+};
 
 sub turn_page {
     my $self = shift;
