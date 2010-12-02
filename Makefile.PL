@@ -10,6 +10,7 @@ requires 'Moose';
 requires 'MooseX::Traits';
 
 requires 'namespace::autoclean';
+requires 'File::Slurp';
 requires 'Text::CSV';
 requires 'Scalar::Util';
 requires 'List::MoreUtils';

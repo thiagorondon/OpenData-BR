@@ -16,11 +16,11 @@ package MyExtractor;
     use Moose;
     with 'OpenData::Extractor';
 
-    my $storage = [ qw/ddd eee fff/ ];
+    our $storage = [ qw/ddd eee fff/ ];
 
     sub extract {
         shift;
-        return shift @{__PACKAGE__->$storage};
+        return shift @{$MyExtractor::storage};
     }
     1;
 
@@ -35,5 +35,7 @@ ok($source);
 ok($source->extract eq 'ddd');
 ok($source->extract eq 'eee');
 ok($source->extract eq 'fff');
-ok($source->extract eq undef);
+
+my $undef = $source->extract;
+ok(!$undef);
 
