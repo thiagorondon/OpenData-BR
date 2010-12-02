@@ -1,12 +1,12 @@
 #!/bin/bash
 #
-# git-sync
+# git-sync-local
 #
 # local $alexei_znamensky, '<', 'russoz [AT] CPAN DOT ORG'
 #
 # This script will automate many steps for a developer working on a forked
 # git repository. This will merge the original repository into your local
-# copy and then update your remote fork.
+# copy.
 #
 # There is no dependency on github, but, as of now, the
 # repository names are hard-coded as reasonably as::
@@ -15,10 +15,10 @@
 # - origin: your forked repository
 # - master: your local working copy
 #
-#     usage: git-sync [<origin-url>]
+#     usage: git-sync-local [<origin-url>]
 #
 # The <origin-url> is only necessary the first time git-sync is run. Next time
-# it is run, simply call 'git-sync'.
+# it is run, simply call 'git-sync-local'.
 #
 # The merging procedure with the upstream repository was learned from:
 #
@@ -71,6 +71,6 @@ git fetch "$u" || die "*** FAILED to fetch from $u"
 msg "=== Merging with $u/$m"
 git merge "$u/$m" || die '!!! Merge not successful. Please verify'
 
-msg "=== Pushing the merged tree into $o"
-git push "$o" "$m" || die "*** FAILED to push changes into $o"
+#msg "=== Pushing the merged tree into $o"
+#git push "$o" "$m" || die "*** FAILED to push changes into $o"
 

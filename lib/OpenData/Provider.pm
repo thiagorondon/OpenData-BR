@@ -1,4 +1,3 @@
-
 package OpenData::Provider;
 
 use Carp;

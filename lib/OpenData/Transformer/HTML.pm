@@ -28,14 +28,15 @@ has _data => (
 sub _transform_element {
     my $self = shift;
     #warn 'vanilla _transform_element';
-    return @_;
+    return wantarray ? @_ : shift @_;
 }
 
 sub transform {
     my $self = shift;
     my $raw  = shift;
 
-    return unless reftype($raw) eq 'ARRAY' and scalar( @{$raw} );
+    my $reftype = reftype($raw) || '';
+    return unless $reftype eq 'ARRAY' && scalar( @{$raw} );
 
     $self->_data( [] );
     foreach my $part ( @{$raw} ) {

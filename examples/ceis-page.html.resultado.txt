@@ -1,0 +1,143 @@
+t/09-transformer/02-html.t ........................ 1/2 # $VAR1 = [
+
+0
+
+#           [
+#             '08.604.359/0001-80',
+#             '11 ANKA CONSTRU��ES E PROJETOS LTDA ',
+#             'Suspensa',
+#             '19/07/10',
+#             '2 anos',
+#             'INSTITUTO DE PESQUISAS JARDIM BOT�NICO DO RIO DE JANEIRO',
+#             'RJ',
+#             'DOU SE��O 3 P�G 122',
+#             '19/07/2010'
+#           ],
+
+1
+
+#           [
+#             '05.423.963/0001-11',
+#             '14 BRASIL TELECOM CELULAR S/A ',
+#             'Suspensa',
+#             '24/08/10',
+#             '22/08/12',
+#             'MINIST�RIO DO ESPORTE',
+#             'DF',
+#             'DOU SE��O 1 P�G 108',
+#             '26/08/2010'
+#           ],
+
+2
+
+#           [
+#             '10.330.112/0001-64',
+#             '2C INFORMATICA LTDA ',
+#             'Suspensa',
+#             '23/06/10',
+#             '22/06/12',
+#             'NSTITUTO FEDERAL DE EDUCA��O, CI�NCIA E TECNOLOGIA DO SUL DE MINAS GERAIS - CAMPUS INCONFIDENTES',
+#             '**',
+#             'DOU SE��O 3 P�G 062',
+#             '23/06/2010'
+#           ],
+
+3
+
+#           [
+#             '10.330.112/0001-64',
+#             '2C INFORMATICA LTDA ',
+#             'Suspensa',
+#             '15/06/10',
+#             '14/06/12',
+#             'QUINTO COMANDO A�REO REGIONAL',
+#             '**',
+#             'DOU SE��O 3 P�G 021',
+#             '01/07/2010'
+#           ],
+
+4
+
+#           [
+#             '08.052.436/0001-36',
+#             '2SOLUTIONS TECHNOLOGY LTDA ',
+#             'Suspensa',
+#             '01/10/09',
+#             '2 anos',
+#             'UNIVERSIDADE FEDERAL DE S�O CARLOS',
+#             'SP',
+#             'DOU SE��O 3 P�G 040',
+#             '01/10/2009'
+#           ],
+
+5
+
+#           [
+#             '07.797.339/0001-00',
+#             'A & C BUSINESS DISTRIBUIDORA & COM�RCIO LTDA.-ME ',
+#             'Suspensa',
+#             '18/02/10',
+#             '2 anos',
+#             'JUSTI�A FEDERAL',
+#             'TO',
+#             'DOU SE��O 3 P�G 106',
+#             '19/02/2010'
+#           ],
+
+6
+
+#           [
+#             '07.797.339/0001-00',
+#             'A & C BUSINESS DISTRIBUIDORA & COM�RCIO LTDA.-ME ',
+#             'Suspensa',
+#             '14/07/09',
+#             '13/07/11',
+#             'JUNTA COMERCIAL DO ESTADO DE MINAS GERAIS - JUCEMG',
+#             'MG',
+#             'GOVERNO DO ESTADO DE MINAS GERAIS - AUDITORIA GERAL',
+#             '18/08/2009'
+#           ],
+
+7
+
+#           [
+#             '07.797.339/0001-00',
+#             'A & C BUSINESS DISTRIBUIDORA & COM�RCIO LTDA.-ME ',
+#             'Suspensa',
+#             '18/03/10',
+#             '2 anos',
+#             'JUSTI�A FEDERAL',
+#             'CE',
+#             'DOU SE��O 3 P�G 125',
+#             '18/03/2010'
+#           ],
+
+8
+
+#           [
+#             '07.797.339/0001-00',
+#             'A & C BUSINESS DISTRIBUIDORA & COM�RCIO LTDA.-ME ',
+#             'Suspensa',
+#             '15/05/09',
+#             '2 anos',
+#             'SERPRO',
+#             'PA',
+#             'SICAF � GOVERNO FEDERAL',
+#             '14/07/2009'
+#           ],
+
+9
+
+#           [
+#             '07.797.339/0001-00',
+#             'A & C BUSINESS DISTRIBUIDORA & COM�RCIO LTDA.-ME ',
+#             'Suspensa',
+#             '14/10/09',
+#             '2 anos',
+#             'SUPERIOR TRIBUNAL MILITAR - STM',
+#             '**',
+#             'DOU SE��O 3 P�G 164',
+#             '14/10/2009'
+#           ]
+#         ];
+
