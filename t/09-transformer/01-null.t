@@ -1,18 +1,15 @@
-use Test::More tests => 7;
+use Test::More tests => 6;
 
 use strict;
 
 use OpenData::Transformer::Null;
 
-my $obj = OpenData::Transformer::Null->new;
-ok($obj);
-ok($obj->transform('anything') eq 'anything' );
-ok($obj->transform(42) == 42);
+my $t = OpenData::Transformer::Null->new;
+ok($t);
+can_ok($t,'transform');
 
-my $r = $obj->transform( [qw/Up And Down/]);
-ok( $r->[0] eq 'Up');
-ok( $r->[1] eq 'And');
-ok( $r->[2] eq 'Down');
-
-ok( $t->transform(undef) == undef );
+ok( !$t->transform('anything') );
+ok( !$t->transform(42) );
+ok( !$t->transform( [qw/Up And Down/]) );
+ok( !$t->transform(undef) );
 

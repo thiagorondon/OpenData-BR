@@ -47,6 +47,8 @@ output.
 
 =head1 METHODS
 
+=over
+
 =item extract()
 
 The class consuming this role must must implement the method C<extract>,
@@ -58,6 +60,8 @@ some other free-form data.
 
 The only requirement for this interface is that, whenever the data source has
 ceased to provide information, C<< extract() >> b<MUST> return C<undef>.
+
+=back
 
 =head1 INCOMPATIBILITIES
 

@@ -42,6 +42,8 @@ some output, by changing it in the way.
 
 =head1 METHODS
 
+=over
+
 =item transform()
 
 The class consuming this role must must implement the method C<transform>,
@@ -51,6 +53,7 @@ method, it is highly recommended that a standard be followed. For a number of
 reference implementations, both input and output are array references to
 some other free-form data.
 
+=back
 
 =head1 INCOMPATIBILITIES
 

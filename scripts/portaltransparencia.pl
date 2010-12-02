@@ -6,7 +6,6 @@ use warnings;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use OpenData::Runtime;
 use OpenData::BR::Federal::PortalTransparencia;
 
 #my $opendata = new OpenData::Runtime->new;
