@@ -4,7 +4,8 @@ use Moose;
 use namespace::autoclean;
 use JSON::XS;
 
-use version; our $VERSION = qv /0.02/;
+use version;
+our $VERSION = '0.02';
 
 sub _build_config {
     my $filename = $ENV{OpenData_config};
