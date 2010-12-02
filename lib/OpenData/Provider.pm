@@ -28,6 +28,9 @@ sub add_collection {
     $coll->provider($self);
 
     my $colls = $self->collections;
+
+    $self->confess('Please, declare a collection ID') unless $coll->id;
+
     $self->confess(
         'A collection with ID (' . $coll->id . ') is already registered!' )
       if exists $colls->{ $coll->id };
