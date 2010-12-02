@@ -1,0 +1,76 @@
+#!/bin/bash
+#
+# git-sync-origin
+#
+# local $alexei_znamensky, '<', 'russoz [AT] CPAN DOT ORG'
+#
+# This script will automate many steps for a developer working on a forked
+# git repository. This will merge the original repository into your local
+# copy and then update your remote fork.
+#
+# There is no dependency on github, but, as of now, the
+# repository names are hard-coded as reasonably as::
+#
+# - upstream: the original repo from where you forked
+# - origin: your forked repository
+# - master: your local working copy
+#
+#     usage: git-sync-origin [<origin-url>]
+#
+# The <origin-url> is only necessary the first time git-sync is run. Next time
+# it is run, simply call 'git-sync-origin'.
+#
+# The merging procedure with the upstream repository was learned from:
+#
+#     http://help.github.com/forking/
+#
+
+msg() {
+    echo "$@" >&2
+}
+
+die() {
+    msg "$@"
+    exit 1
+}
+
+u=upstream
+o=origin
+m=master
+
+##############################################################################
+
+url="$1"; shift
+
+msg '=== Checking requisites'
+git remote show | grep -q "$o" || {
+    die "*** FAILED There is no tracked repository named '$o'. Aborting!!!"
+}
+git branch | grep -q " $m\$" || {
+    die "*** FAILED There is no branch named '$m'. Aborting!!!"
+}
+git remote show | grep -q "$u" || {
+    msg "!!! There is no tracked repository named '$u'. Trying to create"
+    [ -z "$url" ] && {
+        msg "*** FAILED Please specify $u repository:"
+        die '***        git-sync <repository-url>'
+    }
+    git remote add "$u" "$url" \
+    || die "*** FAILED to add remote repository $u"
+
+    msg "=== ...done."
+}
+msg "=== Using existing upstream repository '$u'"
+
+msg "=== Pulling changes from remote repository $o into $m"
+git pull "$o" "$m" || die "*** FAILED to pull from $o to $m"
+
+msg "=== Fetching from remote repo $u"
+git fetch "$u" || die "*** FAILED to fetch from $u"
+
+msg "=== Merging with $u/$m"
+git merge "$u/$m" || die '!!! Merge not successful. Please verify'
+
+msg "=== Pushing the merged tree into $o"
+git push "$o" "$m" || die "*** FAILED to push changes into $o"
+
