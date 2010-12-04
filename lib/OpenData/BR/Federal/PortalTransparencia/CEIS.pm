@@ -2,33 +2,25 @@
 package OpenData::BR::Federal::PortalTransparencia::CEIS;
 
 use Moose;
-
-with 'OpenData::Log';
+extends 'OpenData::Component';
 with 'OpenData::Provider::Collection';
 
-use Data::Dumper;
-use OpenData::BR::Federal::PortalTransparencia::PageExtractor;
-use OpenData::BR::Federal::PortalTransparencia::CEIS::CEISTransformer;
+use aliased 'OpenData::BR::Federal::PortalTransparencia::PageExtractor';
+use aliased 'OpenData::BR::Federal::PortalTransparencia::CEIS::Transformer';
 
-has '+id' => ( default => 'CEIS', );
+my $uri = 'ceis/EmpresasSancionadas.asp?paramEmpresa=0';
+
 has '+description' =>
   ( default => 'CADASTRO DE EMPRESAS INIDÔNEAS OU SANCIONADAS', );
 
 has '+extractor' => (
     lazy    => 1,
-    default => sub {
-        return OpenData::BR::Federal::PortalTransparencia::PageExtractor->new(
-            mainURI => 'ceis/EmpresasSancionadas.asp?paramEmpresa=0', );
-    },
+    default => sub { PageExtractor->new( mainURI => $uri ) }
 );
 
 has '+transformer' => (
     lazy    => 1,
-    default => sub {
-        return
-          OpenData::BR::Federal::PortalTransparencia::CEIS::CEISTransformer
-          ->new;
-    },
+    default => sub { Transformer->new; },
 );
 
 1;
