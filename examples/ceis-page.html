@@ -7,96 +7,10 @@
 
 <head>
     <title> Portal da Transparência - EMPRESAS SANCIONADAS  - TODAS </title>
-    <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=iso-8859-1">
-		<link rel="stylesheet" type="text/css" href="/css/reset.css"/>
-	<link rel="stylesheet" type="text/css" href="/css/geral.css"/>
-	<link rel="stylesheet" type="text/css" href="/css/cabecalho.css"/>
-	<link rel="stylesheet" type="text/css" href="/css/consultas.css"/>
-
-	<link rel="stylesheet" type="text/css" href="/css/cabecalhoPrint.css" media="print"/>
-	<link rel="stylesheet" type="text/css" href="/css/consultasPrint.css" media="print"/><script language="JavaScript">
-    function navega(pagina)
-    {
-    
-        var paginaInicial = 1;
-        var paginaFinal = 354;
-        var paginaAtual = 1;
-        var strUrl = "/ceis/empresassancionadas.asp?paramempresa=0" 
-        
-
-        if (pagina == paginaAtual || pagina =='')
-        {
-            document.paginacao.numeroPagina.value = '';
-        }
-        else
-        {
-            if (isNaN(pagina) || (pagina < paginaInicial) || (pagina > paginaFinal))
-            {
-                alert('Pagina inválida');
-                document.paginacao.numeroPagina.value = '';
-            }
-            else
-            {
-                strUrl += '&Pagina=' + pagina;
-                window.location = strUrl;
-            }
-        }
-        return false
-    }
-	
-    function pesquisa(texto)
-    {
-		var strUrl = "/ceis/empresassancionadas.asp?paramempresa=0"
-		
-		strUrl = strUrl + '&pagina=1&textoPesquisa=' + escape(texto)
-		window.location = strUrl;
-    }    
-</script>
-
-    <noscript>Script de navegação</noscript>
 </head>	
 
 <body>
 <div id="site">
-
-<script type="text/javascript" language="JavaScript">
-if (window != top) top.location.href = location.href;
-
-function comboChange(comoBox,usado){
-  window.open( comoBox.options[comoBox.selectedIndex].value);
-  if (usado) comoBox.selectedIndex=0;
-
-}
-</script>
-
-<noscript>Script para abertura de nova janela</noscript>
-
-<div id="presidencia">
-
-	<a href="http://www.cgu.gov.br" target="_blank" style="float:left; width:64%">
-		<!-- style margin-bottom:-4px == HACK IE6 -->
-		<img src="/images/cgu_logo.gif" style="border-style: none; margin-bottom:-4px;" alt="Presidência da Republica - Controladoria Geral da União"/>
-	</a>
-
-	
-	<div style="float:left; width:23.5%;">
-		<select name="sltVoce" id="sltVoce" title="Paginas do Governo Federal" class="pr" tabindex="1" onchange="comboChange(this,1)" size="1">
-			<option value="" selected="selected">Destaques do Governo</option>
-			<option value="http://www.brasil.gov.br">Portal do Governo Federal</option>
-			<option value="http://www.e.gov.br">Portal de Serviços do Governo</option>
-			<option value="http://www.agenciabrasil.gov.br">Portal da Agência de Notícias</option>
-			<option value="http://www.brasil.gov.br/emquestao">Em Questão</option>
-			<option value="http://www.fomezero.gov.br">Programa Fome Zero</option>
-		  </select>
-	</div>
-
-	<!-- <a href="http://www.brasil.gov.br" target="_blank" style="float:left; width:12.5%;"> -->
-		<!-- style margin-bottom:-4px == HACK IE6 -->
-		<!-- <img src="/images/brasil.gif" style="margin-top:2px; margin-bottom:-4px;" alt="Brasil - Um pais de todos"/> -->
-	<!-- </a> -->
-	
-</div>
-
 
 <!-- Testeira do Portal da Transparência -->
 <div id="logo">
@@ -107,31 +21,6 @@ function comboChange(comoBox,usado){
 	</a>
 </div>
 
-<script type="text/javascript" language="JavaScript">
-
-    function redirAcessoRapido() {
-
-        var sel = document.getElementById('linksAcessoRapido');
-        var opt = sel.options[sel.selectedIndex];
-		
-		// Apenas redireciona se não for um link "fake" (#)
-		if (opt.value != "#")
-		{
-			// Se possui um "+" indicando para abrir em nova janela...
-			if (opt.value.indexOf ("+") == 0)
-			{
-				window.open (opt.value.substring(1)); // ... abre em nova janela (desconsiderando o "+")
-			}
-			else // Se não possui...
-			{
-				window.location = opt.value; // ... abre na mesma janela
-			}
-		}
-		
-    }
-	
-</script>
-
 <!-- Combo de acesso rápido -->
 <div id="acesso-rapido">
 
@@ -139,49 +28,10 @@ function comboChange(comoBox,usado){
         <h2>
             <label for="linksAcessoRapido">Acesso rápido</label>
         </h2>
-        <select id="linksAcessoRapido">
-                <option value="#">Selecione...</option>
-            <optgroup label="CONSULTAS">
-                <option value="/Despesas.asp">Despesas</option>
-				<option value="/receitas">Receitas</option>
-                <option value="/convenios">Convênios</option>
-                <option value="/ceis">Empresas Sancionadas</option>
-				<option value="/servidores">Servidores</option>
-            </optgroup>
-            <optgroup label="INFORMAÇÕES">
-                <option value="/sobre">Sobre o Portal</option>
-                <option value="/sobre/Origem.asp">Dados do Portal</option>
-                <option value="/aprendaMais">Aprenda Mais</option>
-                <option value="/noticias">Notícias</option>
-                <option value="/controleSocial">Controle Social</option>
-                <option value="/licitacoesecontratos/">Licitações e Contratos</option>
-            </optgroup>
-            <optgroup label="SERVIÇOS">
-				<option value="/convenios/ConveniosFormulario.asp">Informações sobre convênios</option>
-				<option value="/rede/">Rede de Transparência</option>
-				<option value="http://www1.transparencia.gov.br/">Páginas de Transparência</option>
-				<option value="http://br.transparencia.gov.br/">Estados e Municípios</option>
-				<option value="+http://www.cgu.gov.br/olhovivo/">Programa Olho Vivo</option>
-				<option value="+http://www.portalzinho.cgu.gov.br/">Portal Criança Cidadã</option>
-            </optgroup>
-        </select>
-        <a href="javascript: redirAcessoRapido();">OK</a>
     </div>
-    <div class="borda"></div>
 </div>
 
 <!-- Links de navegação -->
-<div id="navegacao">
-	<ul>
-		<li><a href="/faleConosco/">Fale conosco</a> |</li>
-		<li><a href="/glossario/">Glossário</a> |</li>
-		<li><a href="/faleConosco/Perguntas.asp">Perguntas Freqüentes</a> |</li>
-		<li><a href="/links/">Links</a> |</li>
-		<li><a href="/manual/">Manual de Navegação</a></li>
-	</ul>
-</div>
-
-
 	<p class="caminho">
 
 		<span class="rotulo">Você está em:</span>
@@ -211,23 +61,6 @@ function comboChange(comoBox,usado){
 		</div>
 		
 		<div id="acoes">
-
- 
-	<a  href='http://arquivos.portaldatransparencia.gov.br/PortalTransparenciaEscolheTipoDePlanilha.asp?origem=Ceis&Planilha=0'
-		onclick="javascript: window.open('http://arquivos.portaldatransparencia.gov.br/PortalTransparenciaEscolheTipoDePlanilha.asp?origem=Ceis&Planilha=0&fechar=1','_blank','width=420,height=200,resizable=yes,menubar=no,status=yes'); return false;">
-		baixar mais dados&nbsp;<img src="/images/icone-salvar.png" alt="baixar mais dados"/></a>
-
-<!-- Sublinhado simulado via javascript para IE6; para outros navegadores, o css resolve isso. -->
-<span tabindex="0" 
-		onclick="javascript: print();" 
-		onkeypress="javascript: if (checkKey(event,13)) print ();"
-		onfocus="javascript: this.style.textDecoration='underline';"
-		onblur="javascript: this.style.textDecoration='none';" 
-		onmouseover="javascript: this.style.textDecoration='underline'; this.style.cursor='pointer';"
-		onmouseout="javascript: this.style.textDecoration='none';"
-		>
-			imprimir&nbsp;<img src="/images/icone-imprimir.png" alt="imprimir"/>
-</span>
 
 		</div>
 		
@@ -495,27 +328,6 @@ function comboChange(comoBox,usado){
 
 		</div>
 		
-		<p>** Informação não disponível, favor verificar junto ao Órgão sancionador</p>
-		
-		<script language="javascript" src="../../Recursos/helper.js"></script>
-<noscript> </noscript>
-
-<form name="formPesquisa" onsubmit="return false">
-
-	<div id="pesquisaListagem">
-	
-		<label for="Pesquisa">Pesquisar:</label>
-		<input type="text" id="Pesquisa" name="Pesquisa" onfocus="this.select();"
-			   onkeypress="if (checkKey(event,13)) pesquisa(document.formPesquisa.Pesquisa.value);"
-			   value="Entre com o texto" >
-		<input type="button" value="ok" style="width:3em;" 
-			   onclick="pesquisa(document.formPesquisa.Pesquisa.value);"
-			   onkeypress="if (checkKey(event,13)) pesquisa(document.formPesquisa.Pesquisa.value);" />
-	</div>
-	
-</form><script language="javascript" src="../../Recursos/helper.js"></script>
-<noscript> </noscript>
-
 <form name="paginacao" onsubmit="return false">
 
 	<div id="paginacao">
@@ -541,31 +353,11 @@ function comboChange(comoBox,usado){
 			
 		</p>
 	</div>
-</form><div id="avisos">
-	<p>
-		Recomenda-se visualizar em resolução 1024x768
-	</p>
-</div>
+</form>
 
-		
-		<div id="consultaCeis">
-			<p class="atencao"> ATENÇÃO </p>
-			<p class="informacao">Este cadastro visa dar publicidade às sanções administrativas aplicadas contra licitantes e fornecedores. As informações aqui veiculadas são de inteira responsabilidade das entidades que as prestaram, não podendo a União ser responsabilizada pela veracidade e/ou autenticidade de tais informações nem pelos eventuais danos diretos ou indiretos que delas resultem causados a terceiros.</p>
-		</div>
-		
 	</div> <!-- /conteudo -->
 </div> <!-- /pagina -->
 </div>
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<noscript> </noscript>
-<script type="text/javascript">
-var pageTracker = _gat._getTracker("UA-1665737-12");
-pageTracker._trackPageview();
-</script>
-<noscript> </noscript>
 </body>
 </html>
 

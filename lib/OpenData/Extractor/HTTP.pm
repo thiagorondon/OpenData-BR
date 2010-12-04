@@ -36,6 +36,8 @@ sub get {
 sub obj { shift->_get->obj; }
 
 sub extract {
+    my $self = shift;
+    return $self->get( $self->URL );
 }
 
 1;

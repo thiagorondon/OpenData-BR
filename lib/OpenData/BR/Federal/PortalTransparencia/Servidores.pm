@@ -3,6 +3,7 @@ package OpenData::BR::Federal::PortalTransparencia::Servidores;
 
 use Moose;
 use OpenData::BR::Federal::PortalTransparencia::Servidores::ServidoresTransformer;
+use OpenData::BR::Federal::PortalTransparencia::PageExtractor;
 
 extends 'OpenData::Component';
 
