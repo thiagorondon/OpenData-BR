@@ -1,5 +1,5 @@
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 
 use strict;
 
@@ -22,8 +22,4 @@ for my $item (qw[ debug info warn error fatal ]) {
     can_ok($logger, $item);
     can_ok($logger, "is_$item");
 }
-
-warn $logger->is_debug;
-
-$logger->debug('foo');
 
