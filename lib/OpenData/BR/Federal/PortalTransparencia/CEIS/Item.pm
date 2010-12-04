@@ -1,5 +1,5 @@
 
-package OpenData::BR::Federal::PortalTransparencia::CEIS::CEISItem;
+package OpenData::BR::Federal::PortalTransparencia::CEIS::Item;
 
 use Moose;
 use List::MoreUtils qw/mesh/;

@@ -9,7 +9,7 @@ package OneL;
 
     our @r;
 
-    sub load { 
+    sub load {
         shift;
         push @r, @_;
     }

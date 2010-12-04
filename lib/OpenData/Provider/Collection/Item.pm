@@ -4,6 +4,7 @@ package OpenData::Provider::Collection::Item;
 use Moose::Role;
 use OpenData::Provider::Collection;
 
+with 'OpenData::Log';
 with 'OpenData::Identifiable';
 
 has collection =>

@@ -26,7 +26,7 @@ package Test::Collection;
 package Test;
 
     use Moose;
-    with 'OpenData::Provider';
+    extends 'OpenData::Provider';
 
     sub add_collection_test {
         my $c = Test::Collection->new;

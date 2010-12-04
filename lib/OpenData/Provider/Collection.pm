@@ -4,15 +4,39 @@ package OpenData::Provider::Collection;
 use Moose::Role;
 
 use OpenData::Provider;
+use OpenData::Utils;
 
-with 'OpenData::Debug';
-with 'OpenData::Identifiable';
+with 'OpenData::Log';
+with 'OpenData::Identifiable' => { -excludes => 'id' };
 
-has provider => ( is => 'rw', isa => 'OpenData::Provider', weak_ref => 1, );
+has id => (
+    is  => 'ro',
+    isa => 'Str',
+    lazy => 1,
+    default => sub {
+        my $self = shift;
+        defined($self->component_name) ?
+            OpenData::Utils::class2suffix($self->component_name) : undef }
+);
 
-has extractor => ( is => 'ro', isa => 'OpenData::Extractor', required => 1, );
-has transformer =>
-  ( is => 'ro', isa => 'OpenData::Transformer', required => 1, );
+has provider => (
+    is => 'rw',
+    isa => 'OpenData::Provider',
+    weak_ref => 1,
+);
+
+has extractor => (
+    is => 'ro',
+    isa => 'OpenData::Extractor',
+    required => 1,
+);
+
+has transformer => (
+    is => 'ro',
+    isa => 'OpenData::Transformer',
+    required => 1,
+);
+
 has loader => (
     is       => 'ro',
     isa      => 'OpenData::Loader',
