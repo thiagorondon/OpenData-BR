@@ -4,10 +4,12 @@ package OpenData::App::Getopt;
 use Carp;
 use Moose;
 use Moose::Util::TypeConstraints;
+use namespace::autoclean;
 
 with 'MooseX::Getopt';
 
-our %traits = ( portaldatransparencia => 'BR::Federal::PortalTransparencia' );
+our %providers = 
+    ( portaldatransparencia => 'BR::Federal::PortalTransparencia' );
 
 has 'debug' => (
     is      => 'rw',
@@ -32,15 +34,9 @@ has 'collection' => (
 has 'browser' => (
     is            => 'rw',
     isa           => 'Str',
-    required      => 1,
     documentation => 'Ex. Curl, Mechaninze'
 );
 
-has '_trait' => (
-    is      => 'ro',
-    isa     => 'Str',
-    lazy    => 1,
-    default => sub { $traits{ shift->provider } || '' }
-);
+__PACKAGE__->meta->make_immutable;
 
 1;
