@@ -33,7 +33,7 @@ sub add_collections {
 
     foreach my $c (@collections) {
         my $package = join('::', $self->namespace, $c);
-        
+
         eval { Class::MOP::load_class($package); };
         croak "No such collection: $c" if $@;
 

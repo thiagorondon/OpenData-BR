@@ -15,7 +15,7 @@ has '+namespace' => ( default => 'OpenData::BR::Federal::PortalTransparencia' );
 # Nome do provedor de dados
 has '+name' => ( default => 'PortalTransparencia', );
 
-# Descrição 
+# Descrição
 has '+description' => ( default => 'http://www.portaltransparencia.gov.br' );
 
 # Loader que será utilizado.
