@@ -7,7 +7,6 @@ use OpenData::Array;
 
 extends 'OpenData::Provider';
 
-has '+id'   => ( default => 'PortalTransparencia', );
 has '+name' => ( default => 'PortalTransparencia', );
 
 has '+description' => ( default => 'Portal da Transparência: '
