@@ -2,32 +2,24 @@
 package OpenData::BR::Federal::PortalTransparencia::Convenios;
 
 use Moose;
-
-with 'OpenData::Debug';
+extends 'OpenData::Component';
 with 'OpenData::Provider::Collection';
 
-use Data::Dumper;
-use OpenData::BR::Federal::PortalTransparencia::PageExtractor;
-use OpenData::BR::Federal::PortalTransparencia::Convenios::ConveniosTransformer;
+use aliased 'OpenData::BR::Federal::PortalTransparencia::PageExtractor';
+use aliased 'OpenData::BR::Federal::PortalTransparencia::Convenios::Transformer';
 
-has '+id'          => ( default => 'convenios', );
+my $uri = 'convenios/ConveniosListaGeral.asp?Ordem=-1';
+
 has '+description' => ( default => 'Convênios', );
 
 has '+extractor' => (
     lazy    => 1,
-    default => sub {
-        return OpenData::BR::Federal::PortalTransparencia::PageExtractor->new(
-            mainURI => 'convenios/ConveniosListaGeral.asp?Ordem=-1' );
-    },
+    default => sub { PageExtractor->new( mainURI => $uri ) },
 );
 
 has '+transformer' => (
     lazy    => 1,
-    default => sub {
-        return
-          OpenData::BR::Federal::PortalTransparencia::Convenios::ConveniosTransformer
-          ->new;
-    },
+    default => sub { Transformer->new; },
 );
 
 1;

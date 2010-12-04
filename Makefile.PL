@@ -23,6 +23,7 @@ requires 'WWW::Mechanize';
 requires 'Test::Memory::Cycle';
 requires 'MooseX::App::Cmd';
 requires 'version' => 0.86;
+requires 'aliased';
 
 recommends 'Text::CSV_XS' => '0.50';
 

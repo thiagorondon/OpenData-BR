@@ -1,7 +1,10 @@
 package OpenData::Provider;
 
 use Carp;
-use Moose::Role;
+use Moose;
+use Class::MOP;
+
+extends 'OpenData::Component';
 
 with 'OpenData::Identifiable';
 
@@ -17,9 +20,26 @@ has collections => (
 has loader => (
     is  => 'ro',
     isa => 'Object',
-
-    #isa => 'OpenData::Loader',
 );
+
+has namespace => (
+    is => 'rw',
+    isa => 'Str',
+    default => 'OpenData::BR'
+);
+
+sub add_collections {
+    my ($self, @collections) = @_;
+
+    foreach my $c (@collections) {
+        my $package = join('::', $self->namespace, $c);
+
+        eval { Class::MOP::load_class($package); };
+        croak "No such collection: $c" if $@;
+
+        $self->add_collection($package->new);
+    }
+}
 
 sub add_collection {
     my ( $self, $coll ) = @_;
@@ -55,6 +75,8 @@ sub process {
         $coll_ref->load($data);
     }
 }
+
+__PACKAGE__->meta->make_immutable;
 
 42;
 
