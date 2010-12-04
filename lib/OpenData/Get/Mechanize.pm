@@ -3,7 +3,7 @@ package OpenData::Get::Mechanize;
 
 use Moose::Role;
 with 'OpenData::Get::Base' => { -excludes => 'content' };
-with 'OpenData::Debug';
+with 'OpenData::Log';
 
 use WWW::Mechanize;
 

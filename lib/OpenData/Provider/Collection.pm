@@ -5,7 +5,7 @@ use Moose::Role;
 
 use OpenData::Provider;
 
-with 'OpenData::Debug';
+with 'OpenData::Log';
 with 'OpenData::Identifiable';
 
 has provider => ( is => 'rw', isa => 'OpenData::Provider', weak_ref => 1, );

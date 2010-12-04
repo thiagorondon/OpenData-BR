@@ -4,7 +4,7 @@ package OpenData::BR::Federal::PortalTransparencia::Servidores;
 use Moose;
 use OpenData::BR::Federal::PortalTransparencia::Servidores::ServidoresTransformer;
 
-with 'OpenData::Debug';
+with 'OpenData::Log';
 with 'OpenData::Provider::Collection';
 
 use Data::Dumper;

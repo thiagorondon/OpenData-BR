@@ -5,7 +5,7 @@ use Moose;
 
 use OpenData::Array;
 
-with 'OpenData::Provider';
+extends 'OpenData::Provider';
 
 has '+id'   => ( default => 'PortalTransparencia', );
 has '+name' => ( default => 'PortalTransparencia', );

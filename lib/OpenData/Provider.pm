@@ -2,7 +2,8 @@
 package OpenData::Provider;
 
 use Carp;
-use Moose::Role;
+use Moose;
+extends 'OpenData::Component';
 
 with 'OpenData::Identifiable';
 

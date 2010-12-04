@@ -3,7 +3,7 @@ package OpenData::BR::Federal::PortalTransparencia::CEIS;
 
 use Moose;
 
-with 'OpenData::Debug';
+with 'OpenData::Log';
 with 'OpenData::Provider::Collection';
 
 use Data::Dumper;
