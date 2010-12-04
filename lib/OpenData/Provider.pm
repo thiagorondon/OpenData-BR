@@ -20,16 +20,19 @@ has collections => (
 has loader => (
     is  => 'ro',
     isa => 'Object',
+);
 
-    #isa => 'OpenData::Loader',
+has namespace => (
+    is => 'rw',
+    isa => 'Str',
+    default => 'OpenData::BR'
 );
 
 sub add_collections {
     my ($self, @collections) = @_;
-    my $namespace = 'OpenData::BR::Federal::PortalTransparencia';
 
     foreach my $c (@collections) {
-        my $package = join('::', $namespace, $c);
+        my $package = join('::', $self->namespace, $c);
         
         eval { Class::MOP::load_class($package); };
         croak "No such collection: $c" if $@;

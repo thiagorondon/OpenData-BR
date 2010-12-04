@@ -9,6 +9,9 @@ use aliased 'OpenData::BR::Federal::PortalTransparencia::CEIS';
 use aliased 'OpenData::BR::Federal::PortalTransparencia::Convenios';
 use aliased 'OpenData::BR::Federal::PortalTransparencia::Servidores';
 
+# Namespace  (TODO: Retirar isto)
+has '+namespace' => ( default => 'OpenData::BR::Federal::PortalTransparencia' );
+
 # Nome do provedor de dados
 has '+name' => ( default => 'PortalTransparencia', );
 
