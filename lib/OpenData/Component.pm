@@ -3,6 +3,7 @@ package OpenData::Component;
 
 use Moose;
 use Scalar::Util 'blessed';
+use Data::Dumper;
 use OpenData::Array;
 
 with 'OpenData::Log';
@@ -13,6 +14,8 @@ around component_name => sub {
     my ($orig, $self) = (shift, shift);
     blessed($self) ? $self->$orig() || blessed($self) : $self;
 };
+
+sub dumper { shift; Dumper(@_) }
 
 1;
 
