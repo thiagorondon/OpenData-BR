@@ -3,6 +3,8 @@ package OpenData::Provider;
 
 use Carp;
 use Moose;
+use Class::MOP;
+
 extends 'OpenData::Component';
 
 with 'OpenData::Identifiable';
@@ -22,6 +24,20 @@ has loader => (
 
     #isa => 'OpenData::Loader',
 );
+
+sub add_collections {
+    my ($self, @collections) = @_;
+    my $namespace = 'OpenData::BR::Federal::PortalTransparencia';
+
+    foreach my $c (@collections) {
+        my $package = join('::', $namespace, $c);
+        
+        eval { Class::MOP::load_class($package); };
+        croak "No such collection: $c" if $@;
+
+        $self->add_collection($package->new);
+    }
+}
 
 sub add_collection {
     my ( $self, $coll ) = @_;
@@ -57,6 +73,8 @@ sub process {
         $coll_ref->load($data);
     }
 }
+
+__PACKAGE__->meta->make_immutable;
 
 42;
 

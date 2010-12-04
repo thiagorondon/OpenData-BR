@@ -3,6 +3,7 @@ package OpenData::Component;
 
 use Moose;
 use Scalar::Util 'blessed';
+use OpenData::Array;
 
 with 'OpenData::Log';
 

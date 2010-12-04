@@ -10,7 +10,7 @@ use Data::Dumper;
 use OpenData::BR::Federal::PortalTransparencia::PageExtractor;
 use OpenData::BR::Federal::PortalTransparencia::CEIS::CEISTransformer;
 
-has '+id' => ( default => 'ceis', );
+has '+id' => ( default => 'CEIS', );
 has '+description' =>
   ( default => 'CADASTRO DE EMPRESAS INIDÔNEAS OU SANCIONADAS', );
 
