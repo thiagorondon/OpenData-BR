@@ -4,11 +4,6 @@ package OpenData::BR::Federal::PortalTransparencia;
 use Moose;
 extends 'OpenData::Provider';
 
-# Collections disponiveis.
-use aliased 'OpenData::BR::Federal::PortalTransparencia::CEIS';
-use aliased 'OpenData::BR::Federal::PortalTransparencia::Convenios';
-use aliased 'OpenData::BR::Federal::PortalTransparencia::Servidores';
-
 # Namespace  (TODO: Retirar isto)
 has '+namespace' => ( default => 'OpenData::BR::Federal::PortalTransparencia' );
 
