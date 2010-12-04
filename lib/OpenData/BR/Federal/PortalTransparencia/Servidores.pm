@@ -2,33 +2,24 @@
 package OpenData::BR::Federal::PortalTransparencia::Servidores;
 
 use Moose;
-use OpenData::BR::Federal::PortalTransparencia::Servidores::ServidoresTransformer;
-use OpenData::BR::Federal::PortalTransparencia::PageExtractor;
-
 extends 'OpenData::Component';
-
 with 'OpenData::Provider::Collection';
 
-use Data::Dumper;
+use aliased 'OpenData::BR::Federal::PortalTransparencia::Servidores::Transformer';
+use aliased 'OpenData::BR::Federal::PortalTransparencia::PageExtractor';
 
-has '+id'          => ( default => 'servidores', );
+my $uri = 'servidores/Servidor-ListaServidores.asp';
+
 has '+description' => ( default => 'Servidores', );
 
 has '+extractor' => (
     lazy    => 1,
-    default => sub {
-        return OpenData::BR::Federal::PortalTransparencia::PageExtractor->new(
-            mainURI => 'servidores/Servidor-ListaServidores.asp' );
-    },
+    default => sub { PageExtractor->new( mainURI => $uri ) }
 );
 
 has '+transformer' => (
     lazy    => 1,
-    default => sub {
-        return
-          OpenData::BR::Federal::PortalTransparencia::Servidores::ServidoresTransformer
-          ->new;
-    },
+    default => sub { Transformer->new }
 );
 
 1;

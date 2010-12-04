@@ -12,5 +12,5 @@ my $opendata = new OpenData::BR::Federal::PortalTransparencia->new;
 
 $opendata->add_collections('CEIS', 'Convenios', 'Servidores');
 
-my $data = $opendata->process('Convenios');
+my $data = $opendata->process('Servidores');
 
