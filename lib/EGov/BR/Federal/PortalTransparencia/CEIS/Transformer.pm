@@ -1,10 +1,10 @@
 
-package OpenData::BR::Federal::PortalTransparencia::CEIS::Transformer;
+package EGov::BR::Federal::PortalTransparencia::CEIS::Transformer;
 
 use Moose;
 extends 'OpenData::Transformer::HTML';
 
-use aliased 'OpenData::BR::Federal::PortalTransparencia::CEIS::Item';
+use aliased 'EGov::BR::Federal::PortalTransparencia::CEIS::Item';
 
 has '+node_xpath' =>
   ( default => '//div[@id="listagemEmpresasSancionadas"]/table/tbody/tr', );

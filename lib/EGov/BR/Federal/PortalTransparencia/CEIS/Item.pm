@@ -1,15 +1,10 @@
 
-package OpenData::BR::Federal::PortalTransparencia::CEIS::Item;
+package EGov::BR::Federal::PortalTransparencia::CEIS::Item;
 
 use Moose;
 use List::MoreUtils qw/mesh/;
 
 with 'OpenData::Provider::Collection::Item';
-
-has '+id' => (
-    default => 'CEISItem',
-    lazy    => 1,
-);
 
 has cpfcnpj      => ( is => 'ro', isa => 'Str', writer => '_cpfcnpj', );
 has nome         => ( is => 'ro', isa => 'Str', writer => '_nome', );

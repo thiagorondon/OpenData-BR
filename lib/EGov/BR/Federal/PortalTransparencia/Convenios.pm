@@ -1,12 +1,12 @@
 
-package OpenData::BR::Federal::PortalTransparencia::Convenios;
+package EGov::BR::Federal::PortalTransparencia::Convenios;
 
 use Moose;
 extends 'OpenData::Component';
 with 'OpenData::Provider::Collection';
 
-use aliased 'OpenData::BR::Federal::PortalTransparencia::PageExtractor';
-use aliased 'OpenData::BR::Federal::PortalTransparencia::Convenios::Transformer';
+use aliased 'EGov::BR::Federal::PortalTransparencia::Convenios::Transformer';
+use aliased 'EGov::BR::Federal::PortalTransparencia::PageExtractor';
 
 my $uri = 'convenios/ConveniosListaGeral.asp?Ordem=-1';
 

@@ -1,8 +1,8 @@
 
-package OpenData::BR::Federal::PortalTransparencia::Servidores::Transformer;
+package EGov::BR::Federal::PortalTransparencia::Servidores::Transformer;
 
 use Moose;
-use aliased 'OpenData::BR::Federal::PortalTransparencia::Servidores::Item';
+use aliased 'EGov::BR::Federal::PortalTransparencia::Servidores::Item';
 
 extends 'OpenData::Transformer::HTML';
 

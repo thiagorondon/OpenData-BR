@@ -1,8 +1,8 @@
 
-package OpenData::BR::Federal::PortalTransparencia::Convenios::Transformer;
+package EGov::BR::Federal::PortalTransparencia::Convenios::Transformer;
 
 use Moose;
-use aliased 'OpenData::BR::Federal::PortalTransparencia::Convenios::Item';
+use aliased 'EGov::BR::Federal::PortalTransparencia::Convenios::Item';
 
 extends 'OpenData::Transformer::HTML';
 

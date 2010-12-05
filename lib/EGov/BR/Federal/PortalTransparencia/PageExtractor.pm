@@ -1,5 +1,5 @@
 
-package OpenData::BR::Federal::PortalTransparencia::PageExtractor;
+package EGov::BR::Federal::PortalTransparencia::PageExtractor;
 
 use Moose;
 
