@@ -3,7 +3,9 @@ package OpenData::Component;
 
 use Moose;
 use Scalar::Util 'blessed';
+use Data::Dumper;
 use OpenData::Array;
+use namespace::autoclean;
 
 with 'OpenData::Log';
 
@@ -13,6 +15,10 @@ around component_name => sub {
     my ($orig, $self) = (shift, shift);
     blessed($self) ? $self->$orig() || blessed($self) : $self;
 };
+
+sub dumper { shift; Dumper(@_) }
+
+__PACKAGE__->meta->make_immutable;
 
 1;
 

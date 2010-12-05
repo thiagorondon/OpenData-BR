@@ -1,5 +1,5 @@
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 use strict;
 
@@ -15,4 +15,5 @@ package main;
 my $obj = Test::Comp::Foo->new;
 
 is($obj->component_name, 'Test::Comp::Foo');
+ok($obj->can('dumper'));
 
