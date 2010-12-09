@@ -1,12 +1,12 @@
 
-package OpenData::BR::Federal::PortalTransparencia::CEIS;
+package EGov::BR::Federal::PortalTransparencia::CEIS;
 
 use Moose;
 extends 'OpenData::Component';
 with 'OpenData::Provider::Collection';
 
-use aliased 'OpenData::BR::Federal::PortalTransparencia::PageExtractor';
-use aliased 'OpenData::BR::Federal::PortalTransparencia::CEIS::Transformer';
+use aliased 'EGov::BR::Federal::PortalTransparencia::PageExtractor';
+use aliased 'EGov::BR::Federal::PortalTransparencia::CEIS::Transformer';
 
 my $uri = 'ceis/EmpresasSancionadas.asp?paramEmpresa=0';
 

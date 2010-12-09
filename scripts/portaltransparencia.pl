@@ -6,11 +6,11 @@ use warnings;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use OpenData::BR::Federal::PortalTransparencia;
+use EGov::BR::Federal::PortalTransparencia;
 
-my $opendata = new OpenData::BR::Federal::PortalTransparencia->new;
+my $opendata = new EGov::BR::Federal::PortalTransparencia->new;
 
 $opendata->add_collections('CEIS', 'Convenios', 'Servidores');
 
-my $data = $opendata->process('Convenios');
+my $data = $opendata->process('CEIS');
 
