@@ -1,11 +1,11 @@
 
-package OpenData::BR::Federal::PortalTransparencia;
+package EGov::BR::Federal::PortalTransparencia;
 
 use Moose;
 extends 'OpenData::Provider';
 
 # Namespace  (TODO: Retirar isto)
-has '+namespace' => ( default => 'OpenData::BR::Federal::PortalTransparencia' );
+has '+namespace' => ( default => 'EGov::BR::Federal::PortalTransparencia' );
 
 # Nome do provedor de dados
 has '+name' => ( default => 'PortalTransparencia', );

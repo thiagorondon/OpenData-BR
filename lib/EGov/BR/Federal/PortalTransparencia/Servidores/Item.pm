@@ -1,5 +1,5 @@
 
-package OpenData::BR::Federal::PortalTransparencia::Servidores::Item;
+package EGov::BR::Federal::PortalTransparencia::Servidores::Item;
 
 use Moose;
 use List::MoreUtils qw/mesh/;

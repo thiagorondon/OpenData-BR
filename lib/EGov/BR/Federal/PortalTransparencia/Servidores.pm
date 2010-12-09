@@ -1,12 +1,12 @@
 
-package OpenData::BR::Federal::PortalTransparencia::Servidores;
+package EGov::BR::Federal::PortalTransparencia::Servidores;
 
 use Moose;
 extends 'OpenData::Component';
 with 'OpenData::Provider::Collection';
 
-use aliased 'OpenData::BR::Federal::PortalTransparencia::Servidores::Transformer';
-use aliased 'OpenData::BR::Federal::PortalTransparencia::PageExtractor';
+use aliased 'EGov::BR::Federal::PortalTransparencia::Servidores::Transformer';
+use aliased 'EGov::BR::Federal::PortalTransparencia::PageExtractor';
 
 my $uri = 'servidores/Servidor-ListaServidores.asp';
 
