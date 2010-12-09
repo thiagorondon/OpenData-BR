@@ -3,11 +3,11 @@ use Test::More tests => 4;
 
 use strict;
 
-use_ok('OpenData::BR::Federal::PortalTransparencia::Servidores');
+use_ok('EGov::BR::Federal::PortalTransparencia::Servidores');
 
-use OpenData::BR::Federal::PortalTransparencia::Servidores;
+use EGov::BR::Federal::PortalTransparencia::Servidores;
 
-my $obj = OpenData::BR::Federal::PortalTransparencia::Servidores->new;
+my $obj = EGov::BR::Federal::PortalTransparencia::Servidores->new;
 ok($obj);
 
 my $content = $obj->extract;
