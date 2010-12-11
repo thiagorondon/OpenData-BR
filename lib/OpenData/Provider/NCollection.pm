@@ -5,8 +5,9 @@ use Moose;
 
 use OpenData::Provider;
 use OpenData::Utils;
-
 extends 'OpenData::Component';
+
+with 'OpenData::Log';
 with 'OpenData::Identifiable' => { -excludes => 'id' };
 
 has id => (
@@ -66,7 +67,7 @@ sub extract_all {
 
 sub transform {
     my ( $self, $raw ) = @_;
-    $self->confess('Cannot transform empty data') unless $raw;
+    $self->confess('transform - Cannot transform empty data') unless $raw;
     return $self->transformer->transform($raw);
 }
 
@@ -87,7 +88,7 @@ sub transform_all {
 
 sub load {
     my ( $self, $data ) = @_;
-    $self->confess('Cannot load empty data') unless $data;
+    $self->confess('loader - Cannot load empty data') unless $data;
     return unless $data;
     return $self->loader->load($data);
 }
