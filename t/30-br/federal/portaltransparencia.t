@@ -3,7 +3,7 @@ use Test::More tests => 1;
 
 use strict;
 
-use_ok('OpenData::BR::Federal::PortalTransparencia');
+use_ok('EGov::BR::Federal::PortalTransparencia');
 
 1;
 

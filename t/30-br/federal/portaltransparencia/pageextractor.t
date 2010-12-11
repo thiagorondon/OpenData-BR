@@ -4,11 +4,11 @@ use Test::More tests => 13;
 use strict;
 use Cwd;
 
-use_ok('OpenData::BR::Federal::PortalTransparencia::PageExtractor');
+use_ok('EGov::BR::Federal::PortalTransparencia::PageExtractor');
 
-use OpenData::BR::Federal::PortalTransparencia::PageExtractor;
+use EGov::BR::Federal::PortalTransparencia::PageExtractor;
 
-my $pe = OpenData::BR::Federal::PortalTransparencia::PageExtractor->new(
+my $pe = EGov::BR::Federal::PortalTransparencia::PageExtractor->new(
     baseURL => 'file://' . getcwd(),
     mainURI => 'examples/ceis-page.html'
 );
