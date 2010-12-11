@@ -2,11 +2,9 @@
 package Transformer;
 
 use Moose;
-extends 'OpenData::Transformer::Null';
+# extends OpenData::Transformer::OCR ?
 
-# OpenData::Transformer::OCR ?
-
-override transform => sub {
+sub transform {
     my $self = shift;
     my $data = shift;
 
@@ -16,7 +14,7 @@ override transform => sub {
     #close $fh;
 
     return 'ok';
-};
+}
 
 1;
 
@@ -32,10 +30,11 @@ has '+URL' => (
     default => sub { 'http://telelistas.net/templates/cep.aspx'} 
 );
 
+sub extract { &_doform; }
+
 sub _doform {
     my $self = shift;
     $self->get('http://telelistas.net/templates/cep.aspx');
-
     $self->browser->submit_form(
         form_name => 'formCEP',
         fields    => { cep => $cep },

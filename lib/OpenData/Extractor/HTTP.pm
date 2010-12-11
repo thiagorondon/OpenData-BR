@@ -33,7 +33,7 @@ sub get {
     return $http->get();
 }
 
-sub obj { shift->_get->obj; }
+sub browser { shift->_get->obj; }
 
 sub extract {
     my $self = shift;
