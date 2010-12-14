@@ -5,3 +5,8 @@ http://www.portaltransparencia.gov.br/
 http://www.ssp.sp.gov.br/estatistica/
 http://www.seade.gov.br/index.php
 
+- Extractor deve ser item por item, e nao pagina por pagina no portl da transparencia.
+- Transform::OCR
+- Melhorar a logistica para o item, que hoje esta muito flexivel e fora de padrao para os modulos do Loader.
+- Array, Output, Loader ? Juntar tudo.
+

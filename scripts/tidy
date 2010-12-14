@@ -1,7 +1,9 @@
 #!/bin/sh
 
-(
-find bin lib t scripts \( -name '*.pm' -o -name '*.pl' -o -name '*.t' \) -print -exec perltidy -b {} \; | xargs echo 'TIDY:'
+DIRLIST="bin lib t scripts"
 
-find bin lib t scripts -name '*.bak' -print -exec rm -f {} \; | xargs echo '  RM:'
-) > &2
+(
+find $DIRLIST \( -name '*.pm' -o -name '*.pl' -o -name '*.t' \) -print -exec perltidy -b {} \; | xargs -n 1 echo 'TIDY:'
+
+find $DIRLIST -name '*.bak' -print -exec rm -f {} \; | xargs -n 1 echo '  RM:'
+) >&2
