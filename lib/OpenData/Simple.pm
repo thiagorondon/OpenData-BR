@@ -8,6 +8,7 @@ use Devel::Declare ();
 use Carp qw/ confess /;
 use namespace::autoclean;
 use OpenData::Provider;
+use OpenData::Provider::NCollection;
 
 extends 'Devel::Declare::Context::Simple';
 
@@ -20,18 +21,23 @@ sub provider {
 
     die 'Provider need to be clean by clean_provider' if $provider;
 
-    my $collections = $hash->{collections};
-    delete $hash->{collections};
-
     $default_loader = $hash->{default_loader};
     delete $hash->{default_loader};
 
     $default_extract = $hash->{default_extract};
     delete $hash->{default_extract};
 
+    my $collections = $hash->{collections};
+    delete $hash->{collections};
+
     $provider = OpenData::Provider->new($hash);
-
-
+    
+    foreach my $options (@{$collections}) {
+        my $class = OpenData::Provider::NCollection->new($options);
+        $provider->add_collection($class);
+    }
+    
+    return $provider;
 }
 
 sub clean_provider {
