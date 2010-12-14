@@ -1,42 +1,34 @@
 
-use Test::More tests => 18;
+use Test::More tests => 19;
 
 use strict;
-use Scalar::Util qw/blessed reftype/;
 
-package P;
+use OpenData::AZ::Box;
 
-    use Moose;
-    with 'OpenData::AZ::Box';
-
-    sub process_item {
-        my ($self,$item) = @_;
-
-        return eval { uc($item) };
+# tests: 2
+diag( 'constructor and basic tests' );
+my $uc = OpenData::AZ::Box->new(
+    process_item => sub {
+        shift;
+        return eval { uc(shift) };
     }
-
-package main;
-
-# tests: 1
-my $obj = P->new;
-ok($obj);
-
-sub process_param {
-    $obj->input(@_);
-    return $obj->output;
-}
+);
+ok($uc);
+ok($uc->process_item->($uc, 'iop') eq 'IOP' );
 
 # tests: 4
 # scalars
-my $undef = process_param();
+diag( 'scalar params' );
+my $undef = $uc->process();
 ok( !$undef );
-ok( process_param( 'aaa' ) eq 'AAA' );
-ok( process_param( 'aaa' ) ne 'aaa' );
-ok( process_param( 1 ) == 1 );
+ok( $uc->process('aaa') eq 'AAA' );
+ok( $uc->process('aaa') ne 'aaa' );
+ok( $uc->process(1) == 1 );
 
 # tests: 13
 # array
-my @r = process_param( qw/all your base is belong to us/ );
+diag( 'array params' );
+my @r = $uc->process(qw/all your base is belong to us/);
 ok( $r[0] eq 'ALL' );
 ok( $r[1] eq 'YOUR' );
 ok( $r[2] eq 'BASE' );
@@ -44,15 +36,13 @@ ok( $r[3] eq 'IS' );
 ok( $r[4] eq 'BELONG' );
 ok( $r[5] eq 'TO' );
 ok( $r[6] eq 'US' );
-my ($all, $your, $base) = process_param( qw/all your base is belong to us/ );
-ok( $all eq 'ALL' );
+my ( $all, $your, $base ) = $uc->process(qw/all your base is belong to us/);
+ok( $all  eq 'ALL' );
 ok( $your eq 'YOUR' );
 ok( $base eq 'BASE' );
-my $undef2 = $obj->output;
-ok( !$undef2);
-my $r1 = process_param( qw/all your base is belong to us/ );
-#diag('r1     = ' . $r1);
-ok( $obj->output eq 'YOUR' );
-ok( $obj->output eq 'BASE' );
-$obj->clear_queue;
+my $undef2 = $uc->output;
+ok( !$undef2 );
+my $r1 = $uc->process(qw/all your base is belong to us/);
+ok( $uc->output eq 'YOUR' );
+ok( $uc->output eq 'BASE' );
 
