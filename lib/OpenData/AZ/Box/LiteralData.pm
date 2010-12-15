@@ -19,8 +19,7 @@ has data => (
     },
 );
 
-override 'input' => sub {
-};
+override 'input' => sub { };
 
 1;
 
