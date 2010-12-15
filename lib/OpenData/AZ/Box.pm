@@ -297,12 +297,24 @@ Fetch data from the box.
 sub output {
     my $self = shift;
 
+    return unless $self->has_input;
     #use Data::Dumper;
     #print STDERR "output(): self = " .Dumper($self);
     return $self->_handle_list( $self->dequeue ) if wantarray;
 
     #print STDERR "====> wantarray! NOT!\n";
     return $self->_handle_item( scalar $self->dequeue );
+}
+
+=head2 has_input
+
+Returns true if there is data in the input queue, false otherwise.
+
+=cut
+
+sub has_input {
+    my $self = shift;
+    return 0 < scalar @{ $self->_queue };
 }
 
 =head2 process
