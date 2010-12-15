@@ -3,31 +3,12 @@ OpenData-BR
 
 Este projeto tem como objetivo oferecer uma estrutura basica para poder baixar informacoes de portais do governo - especificamente - e importar para formatos acessiveis.
 
+Mais informações em http://www.opendatabr.org/
+
 DESENVOLVEDORES
 
-Definimos utilizar como repositório de controle de versão o GIT (http://git-scm.com/), no qual o repositório principal atualmente é:
-
-	https://github.com/maluco/OpenData-BR
-
-Utilizamos para hospedar o repositório GIT o website https://github.com/, no qual recomendamos que crie um perfil nele.
-
-O primeiro passo - depois de obter um perfil no github - para contribuir com o desenvolvimento do aplicativo é efetuando um fork. Pela própria interface web é disponibilizado uma opção para isto.
-
-Feito isto, agora você terá um repositório próprio para desenvolvimento, no qual você poderá efetuar tuas modificações e então irá enviar elas para o teu repositório, utilizamos comandos como:
-
-	git commit
-	git commit -a -s
-	git pull
-	git status
-	git push
-
-Logo depois de realizar suas contribuições, você pode realizar um "pull request" pelo próprio website do GITHUB, para quem os responsáveis possam efetuar um merge (efetivar) na arvore principal de desenvolvimento.
-
-FAQ
-
-1. Como eu faço para atualizar o meu fork, com as atualizações de uma determina arvore - como por exemplo, a principal - ?
-
-	git pull https://github.com/maluco/OpenData-BR master
+Alexei Znamensky
+Thiago Rondon
 
 CONTRIBUIÇÕES
 
