@@ -25,8 +25,6 @@ has '+process_item' => (
     default => sub {
         return sub {
             my ( $self, $item ) = @_;
-            return unless $item;
-
             #use Data::Dumper;
             #warn 'htmlfilter :: process_item :: item = '.Dumper($item);
             #warn 'htmlfilter :: process_item :: self = '.Dumper($self);

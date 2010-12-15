@@ -41,7 +41,6 @@ has '+process_item' => (
     default => sub {
         return sub {
             my ( $self, $url ) = @_;
-            return unless $url;
             $url = URI->new_abs( $url, $self->baseurl )->as_string
                 if $self->has_baseurl;
             #warn 'process_item:: url = '.$url;
