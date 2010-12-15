@@ -7,7 +7,7 @@ use POSIX;
 
 our $csv = Text::CSV->new;
 
-sub add { 
+sub add {
     my $self = shift;
     my $data = shift;
 

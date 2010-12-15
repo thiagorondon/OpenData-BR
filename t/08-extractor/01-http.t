@@ -15,7 +15,7 @@ isa_ok($obj, 'OpenData::Extractor::HTTP');
 
 ok($obj->set_browser('Mechanize'));
 
-isa_ok($obj->obj, 'WWW::Mechanize');
+isa_ok($obj->browser, 'WWW::Mechanize');
 
 1;
 

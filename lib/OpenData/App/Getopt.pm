@@ -8,7 +8,7 @@ use namespace::autoclean;
 
 with 'MooseX::Getopt';
 
-our %providers = 
+our %providers =
     ( portaldatransparencia => 'BR::Federal::PortalTransparencia' );
 
 has 'debug' => (
