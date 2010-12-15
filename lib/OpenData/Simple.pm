@@ -31,12 +31,12 @@ sub provider {
     delete $hash->{collections};
 
     $provider = OpenData::Provider->new($hash);
-    
+
     foreach my $options (@{$collections}) {
         my $class = OpenData::Provider::NCollection->new($options);
         $provider->add_collection($class);
     }
-    
+
     return $provider;
 }
 
@@ -50,7 +50,7 @@ sub import {
     my $class = shift;
     my $caller = caller;
     my $context = __PACKAGE__->new;
-    
+
     my @cmds = ( 'provider' );
 
     Devel::Declare->setup_for(
