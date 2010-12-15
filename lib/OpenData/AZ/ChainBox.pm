@@ -13,12 +13,7 @@ has chain => (
     required => 1,
 );
 
-has '+process_item' => (
-    default => sub {
-        return sub {
-        }
-    },
-);
+has '+process_item' => ( default => sub { return sub { } },);
 
 sub input {
     my $self = shift;
@@ -27,8 +22,9 @@ sub input {
 
 sub output {
     my $self = shift;
+    return unless $self->has_input;
 
-    use Data::Dumper;
+    #use Data::Dumper;
     #warn 'chainbox :: chain = '.Dumper($self->chain);
     #local $, = "\n";
     #warn 'chainbox :: chain queues = ', map { Dumper($_->_queue) } @{ $self->chain };
@@ -40,6 +36,10 @@ sub output {
 
     my $last = reduce { $b->input( $a->output ); $b } @{ $self->chain };
     return $last->output;
+}
+
+sub has_input {
+    return grep { $_->has_input } @{ shift->chain };
 }
 
 1;
