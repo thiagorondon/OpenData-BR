@@ -9,7 +9,7 @@ use Carp;
 has first_page => (
     is      => 'ro',
     isa     => 'Int',
-    default => 0,
+    default => 1,
 );
 
 has last_page => (
