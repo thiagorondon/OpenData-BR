@@ -53,7 +53,6 @@ my $bigbox = ChainBox->new(
         ),
         HTMLFilter->new(
             search_xpath => '//td',
-            process_into => 1,
             result_type  => 'VALUE',
             process_into => 1,
             deref        => 1,
