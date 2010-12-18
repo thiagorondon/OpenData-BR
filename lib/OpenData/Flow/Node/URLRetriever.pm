@@ -1,8 +1,8 @@
 
-package OpenData::Flow::Box::URLRetriever;
+package OpenData::Flow::Node::URLRetriever;
 
 use Moose;
-extends 'OpenData::Flow::Box';
+extends 'OpenData::Flow::Node';
 
 use OpenData::Get;
 

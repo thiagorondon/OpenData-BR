@@ -6,12 +6,11 @@ use warnings;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use aliased 'OpenData::Flow::Box';
-use aliased 'OpenData::Flow::ChainBox';
-use aliased 'OpenData::Flow::Box::LiteralData';
-use aliased 'OpenData::Flow::Box::HTMLFilter';
-use aliased 'OpenData::Flow::Box::URLRetriever';
-use aliased 'OpenData::Flow::Box::MultiPageURLGenerator';
+use aliased 'OpenData::Flow::Chain';
+use aliased 'OpenData::Flow::Node::LiteralData';
+use aliased 'OpenData::Flow::Node::HTMLFilter';
+use aliased 'OpenData::Flow::Node::URLRetriever';
+use aliased 'OpenData::Flow::Node::MultiPageURLGenerator';
 
 use URI;
 use OpenData::Get;
@@ -21,7 +20,7 @@ my $base = join( '/',
     q{http://www.portaltransparencia.gov.br},
     q{ceis}, q{EmpresasSancionadas.asp?paramEmpresa=0} );
 
-my $bigbox = ChainBox->new(
+my $chain = Chain->new(
     chain => [
         LiteralData->new( data => $base, ),
         MultiPageURLGenerator->new(
@@ -61,4 +60,4 @@ my $bigbox = ChainBox->new(
 );
 
 use Data::Dumper;
-print Dumper( $bigbox->output );
+print Dumper( $chain->output );

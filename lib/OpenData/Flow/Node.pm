@@ -1,18 +1,18 @@
 
-package OpenData::Flow::Box;
+package OpenData::Flow::Node;
 
 use Moose;
 use Scalar::Util qw/blessed reftype/;
 
 =head1 NAME
 
-OpenData::Flow::Box - A Moose class that defines a task in a data flow
+OpenData::Flow::Node - A Moose class that defines a task in a data flow
 
 =head1 SYNOPSIS
 
-    use OpenData::Flow::Box;
+    use OpenData::Flow::Node;
 
-    my $uc = OpenData::Flow::Box->new(
+    my $uc = OpenData::Flow::Node->new(
         process_item => sub {
             shift; return uc(shift);
         }
@@ -49,7 +49,7 @@ This is a L<Moose> based class that provides the idea of a step in a data-flow.
 It attemps to be as generic and unassuming as possible, in order to provide
 flexibility for implementors to make their own boxes as they see fit.
 
-An object of the type C<OpenData::Flow::Box> does three things:
+An object of the type C<OpenData::Flow::Node> does three things:
 accepts some data as input,
 processes that data,
 provides the transformed data as output.
@@ -62,13 +62,13 @@ return the result of C<< $self->output() >>.
 
 A box will only be useful if, naturally,
 it performs some sort of transformation or processing on the input data.
-Thus, objects of the type C<OpenData::Flow::Box> B<must> provide
+Thus, objects of the type C<OpenData::Flow::Node> B<must> provide
 the code reference named C<process_item>.
 This method will be called with just one parameter at a time,
 which will correspond one single input item.
 
 Unless told differently (see the C<process_into> option below),
-C<OpenData::Flow::Box> will treat as an individual item anything that is:
+C<OpenData::Flow::Node> will treat as an individual item anything that is:
 a scalar, a blessed object, and a reference (of any kind).
 And, it will iterate over anything that is either
 an array or hash (treated like an array, as described above).
@@ -76,7 +76,7 @@ an array or hash (treated like an array, as described above).
 However, it might be convenient in many cases to have things work in a smarter
 way. If the input is an array reference, one might expect that every element
 in the referenced array should be processed. Or, that every value in a hash
-reference should be processed. For cases like that, C<OpenData::Flow::Box>
+reference should be processed. For cases like that, C<OpenData::Flow::Node>
 provides a simple de-referencing mechanism.
 
 =head2 INPUT
@@ -97,7 +97,7 @@ that you use references:
 
 And, in the C<process_item>
 
-    my $box = OpenData::AZ:Box->new(
+    my $box = OpenData::AZ:Node->new(
         process_item => sub {
             my ($self,$item) = @_;
             if( ref($item) eq 'ARRAY' ) {
@@ -116,16 +116,16 @@ And, in the C<process_item>
 
 The processing of the data is performed by the sub referenced by the
 C<< process_item >> attribute. This attribute is B<required> by
-C<< OpenData::AZ:Box >>.
+C<< OpenData::AZ:Node >>.
 
 =head3 Calling Convention
 
 The code referenced by C<process_item> will be called with two arguments: a
-reference to the C<< OpenData::AZ:Box >> object, and one single item from
+reference to the C<< OpenData::AZ:Node >> object, and one single item from
 the input queue, be it a simple scalar, or any type of reference. The code
 below shows a typical implementation:
 
-    my $box = OpenData::Flow::Box->new(
+    my $box = OpenData::Flow::Node->new(
         process_item => sub {
             my ($self,$item) = @_;
             # do something with $item
@@ -135,13 +135,13 @@ below shows a typical implementation:
 
 =head3 Inheritance
 
-When inheriting from C<< OpenData::AZ:Box >>, some classes may provide a
+When inheriting from C<< OpenData::AZ:Node >>, some classes may provide a
 default code for C<process_item>. For instance:
 
-    package UCBox;
+    package UCNode;
 
     use Moose;
-    extends 'OpenData::Flow::Box';
+    extends 'OpenData::Flow::Node';
 
     has '+process_item' => (
         default => sub {
@@ -188,7 +188,7 @@ It will work as follows:
     $res = $ucd->output;
     print $res;          # 'A DOZEN DIRTY PIRATES'
 
-Notice that, except for the code reference, for all others C<Box> will
+Notice that, except for the code reference, for all others C<Node> will
 preserve the original structure.
 
 =head2 OUTPUT

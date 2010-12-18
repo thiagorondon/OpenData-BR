@@ -3,7 +3,7 @@ use Test::More tests => 10;
 
 package Repeat;
     use Moose;
-    extends 'OpenData::Flow::Box';
+    extends 'OpenData::Flow::Node';
     has times => ( is => 'ro', isa => 'Int', required => 1 );
     has '+process_item' => (
         default => sub {
@@ -16,19 +16,19 @@ package Repeat;
 
 package main;
 
-use OpenData::Flow::Box;
-use OpenData::Flow::ChainBox;
+use OpenData::Flow::Node;
+use OpenData::Flow::Chain;
 
 # tests: 3
-my $uc = OpenData::Flow::Box->new(
+my $uc = OpenData::Flow::Node->new(
         process_item => sub { shift; return uc(shift) }
 );
 ok($uc);
-my $rv = OpenData::Flow::Box->new(
+my $rv = OpenData::Flow::Node->new(
         process_item => sub { shift; return reverse shift }
 );
 ok($rv);
-my $chain = OpenData::Flow::ChainBox->new( chain => [ ( $uc, $rv ) ] );
+my $chain = OpenData::Flow::Chain->new( chain => [ ( $uc, $rv ) ] );
 ok($chain);
 
 #use Data::Dumper;
@@ -46,10 +46,10 @@ ok( $chain->process('abc') eq 'CBA' );
 # tests: 3
 my $rp5 = Repeat->new( times => 5 );
 ok($rp5);
-my $cc = OpenData::Flow::Box->new(
+my $cc = OpenData::Flow::Node->new(
     process_item => sub { shift; return length(shift) } );
 ok($cc);
-my $chain2 = OpenData::Flow::ChainBox->new( chain => [ $rp5, $cc ] );
+my $chain2 = OpenData::Flow::Chain->new( chain => [ $rp5, $cc ] );
 ok($chain2);
 
 # tests: 2

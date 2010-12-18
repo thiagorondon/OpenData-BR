@@ -1,8 +1,8 @@
 
-package OpenData::Flow::Box::MultiPageURLGenerator;
+package OpenData::Flow::Node::MultiPageURLGenerator;
 
 use Moose;
-extends 'OpenData::Flow::Box';
+extends 'OpenData::Flow::Node';
 
 use Carp;
 
@@ -20,7 +20,7 @@ has last_page => (
     default  => sub {
         my $self = shift;
         #warn 'last_page';
-        carp q{OpenData::Flow::Box::MultiPageURLGenerator: paged_url not set!}
+        carp q{OpenData::Flow::Node::MultiPageURLGenerator: paged_url not set!}
           unless $self->has_paged_url;
         return $self->produce_last_page->( $self->_paged_url );
     },
