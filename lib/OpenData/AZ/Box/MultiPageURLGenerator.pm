@@ -19,6 +19,7 @@ has last_page => (
     lazy     => 1,
     default  => sub {
         my $self = shift;
+        #warn 'last_page';
         carp q{OpenData::AZ::Box::MultiPageURLGenerator: paged_url not set!}
           unless $self->has_paged_url;
         return $self->produce_last_page->( $self->_paged_url );
@@ -55,12 +56,19 @@ has _paged_url => (
 has '+process_item' => (
     default => sub {
         return sub {
-            my ( $self, $paged_url ) = @_;
-            $self->_paged_url($paged_url);
+            my ( $self, $url ) = @_;
+            #warn 'multi page process item, url = '.$url;
+            $self->_paged_url($url);
+            #use Data::Dumper;
+            #print STDERR Dumper($self);
+
+            my $first = $self->first_page;
+            my $last = $self->last_page;
+            $first = 1 + $last + $first if $first < 0;
 
             my $result =
-              [ map { $self->make_page_url->( $self, $paged_url, $_ ) }
-                  $self->first_page .. $self->last_page ];
+              [ map { $self->make_page_url->( $self, $url, $_ ) }
+                  $first .. $last ];
 
             #use Data::Dumper;
             #warn 'url list = ' . Dumper($result);

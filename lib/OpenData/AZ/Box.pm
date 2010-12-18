@@ -29,7 +29,7 @@ OpenData::AZ::Box - A Moose class that defines a task in a data flow
 Or
 
     my $ucd = UC->new(
-        deref => 1,
+        process_into => 1,
         process_item => sub {
             shift; return uc(shift);
         }
@@ -45,28 +45,33 @@ Or
 
 =head1 DESCRIPTION
 
-This is a L<Moose> based class that provides the idea of a step in a
-data-flow.
+This is a L<Moose> based class that provides the idea of a step in a data-flow.
 It attemps to be as generic and unassuming as possible, in order to provide
 flexibility for implementors to make their own boxes as they see fit.
 
-An object of the type C<OpenData::AZ::Box> does three things: accepts some data as input, processes that data, provides the transformed data as output.
+An object of the type C<OpenData::AZ::Box> does three things:
+accepts some data as input,
+processes that data,
+provides the transformed data as output.
 
-The methods C<input> and C<output> provide the obvious functionality, while
-attempting to preserve the input data structure. The convenience method
-C<process()> will pump its parameters into C<< $self->input() >> and immediately
+The methods C<input> and C<output> provide the obvious functionality,
+while attempting to preserve the input data structure.
+The convenience method C<process()> will pump its parameters
+into C<< $self->input() >> and immediately
 return the result of C<< $self->output() >>.
 
-A box will only be useful if, naturally, it performs some sort of
-transformation or processing on the input data.  Thus, objects of the type
-C<OpenData::AZ::Box> B<must> pass the code reference name C<process_item>.
-This method will be called with just one parameter at a time, which will
-correspond one single input item.
+A box will only be useful if, naturally,
+it performs some sort of transformation or processing on the input data.
+Thus, objects of the type C<OpenData::AZ::Box> B<must> provide
+the code reference named C<process_item>.
+This method will be called with just one parameter at a time,
+which will correspond one single input item.
 
-Unless told differently (see the C<deref> option below), C<OpenData::AZ::Box>
-will treat as an individual item anything that is: a scalar, a blessed object,
-and a reference (of any kind). And, it will iterate over anything that is
-either an array or hash (treated like an array, as described above).
+Unless told differently (see the C<process_into> option below),
+C<OpenData::AZ::Box> will treat as an individual item anything that is:
+a scalar, a blessed object, and a reference (of any kind).
+And, it will iterate over anything that is either
+an array or hash (treated like an array, as described above).
 
 However, it might be convenient in many cases to have things work in a smarter
 way. If the input is an array reference, one might expect that every element
@@ -154,8 +159,10 @@ every time a data item needs to be processed.
 
 =head3 Dereferencing
 
-If you set the attribute C< deref > as C<true>, then references will be
-dereferenced as follows:
+If you set the attribute C<process_into> as C<true>, then the box will
+treat references differently.
+It will process the referenced objects, rather than the actual reference.
+It will work as follows:
 
     $scalar = 'some text';
     $ucd->input( \$scalar );
@@ -182,7 +189,7 @@ dereferenced as follows:
     print $res;          # 'A DOZEN DIRTY PIRATES'
 
 Notice that, except for the code reference, for all others C<Box> will
-preserve the original structure. Maybe "deref" is not a good name for this.
+preserve the original structure.
 
 =head2 OUTPUT
 
@@ -192,7 +199,7 @@ will return all the elements in the queue.
 
 =head1 ATTRIBUTES
 
-=head2 deref
+=head2 process_into
 
 A boolean attribute that signals whether references should be dereferenced or
 not.
@@ -205,6 +212,12 @@ mandatory attribute, and must follow the calling conventions described above.
 =cut
 
 has deref => (
+    is      => 'ro',
+    isa     => 'Bool',
+    default => 0,
+);
+
+has process_into => (
     is      => 'ro',
     isa     => 'Bool',
     default => 0,
@@ -400,14 +413,14 @@ has '_handlers' => (
     isa     => 'HashRef',
     lazy    => 1,
     default => sub {
-        my $self = shift;
+        my $me = shift;
         return {
             SVALUE  => \&_handle_svalue,
             BLESSED => \&_handle_svalue,
-            SCALAR  => $self->deref ? \&_handle_scalar : \&_handle_svalue,
-            ARRAY   => $self->deref ? \&_handle_array : \&_handle_svalue,
-            HASH    => $self->deref ? \&_handle_hash : \&_handle_svalue,
-            CODE    => $self->deref ? \&_handle_code : \&_handle_svalue,
+            SCALAR  => $me->process_into ? \&_handle_scalar : \&_handle_svalue,
+            ARRAY   => $me->process_into ? \&_handle_array : \&_handle_svalue,
+            HASH    => $me->process_into ? \&_handle_hash : \&_handle_svalue,
+            CODE    => $me->process_into ? \&_handle_code : \&_handle_svalue,
           },
           ;
     },
@@ -420,18 +433,21 @@ sub _handle_svalue {
 
 sub _handle_scalar {
     my ( $self, $item ) = @_;
-    return $self->process_item->( $self, $$item );
+    my $r = $self->process_item->( $self, $$item );
+    return $self->deref ? $r : \$r;
 }
 
 sub _handle_array {
     my ( $self, $item ) = @_;
-    return [ map { $self->process_item->( $self, $_ ) } @{$item} ];
+    my @r = map { $self->process_item->( $self, $_ ) } @{$item};
+    return $self->deref ? @r : [ @r ];
 }
 
 sub _handle_hash {
     my ( $self, $item ) = @_;
-    return { map { $_ => $self->process_item->( $self, $item->{$_} ) }
-          keys %{$item} };
+    my %r = map { $_ => $self->process_item->( $self, $item->{$_} ) }
+          keys %{$item};
+    return $self->deref ? %r : { %r };
 }
 
 sub _handle_code {
