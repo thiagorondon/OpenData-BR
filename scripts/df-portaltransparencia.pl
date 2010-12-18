@@ -6,12 +6,12 @@ use warnings;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use aliased 'OpenData::AZ::Box';
-use aliased 'OpenData::AZ::ChainBox';
-use aliased 'OpenData::AZ::Box::LiteralData';
-use aliased 'OpenData::AZ::Box::HTMLFilter';
-use aliased 'OpenData::AZ::Box::URLRetriever';
-use aliased 'OpenData::AZ::Box::MultiPageURLGenerator';
+use aliased 'OpenData::Flow::Box';
+use aliased 'OpenData::Flow::ChainBox';
+use aliased 'OpenData::Flow::Box::LiteralData';
+use aliased 'OpenData::Flow::Box::HTMLFilter';
+use aliased 'OpenData::Flow::Box::URLRetriever';
+use aliased 'OpenData::Flow::Box::MultiPageURLGenerator';
 
 use URI;
 use OpenData::Get;

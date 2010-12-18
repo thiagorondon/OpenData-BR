@@ -1,8 +1,8 @@
 
-package OpenData::AZ::Box::URLRetriever;
+package OpenData::Flow::Box::URLRetriever;
 
 use Moose;
-extends 'OpenData::AZ::Box';
+extends 'OpenData::Flow::Box';
 
 use OpenData::Get;
 

@@ -1,18 +1,18 @@
 
-package OpenData::AZ::Box;
+package OpenData::Flow::Box;
 
 use Moose;
 use Scalar::Util qw/blessed reftype/;
 
 =head1 NAME
 
-OpenData::AZ::Box - A Moose class that defines a task in a data flow
+OpenData::Flow::Box - A Moose class that defines a task in a data flow
 
 =head1 SYNOPSIS
 
-    use OpenData::AZ::Box;
+    use OpenData::Flow::Box;
 
-    my $uc = OpenData::AZ::Box->new(
+    my $uc = OpenData::Flow::Box->new(
         process_item => sub {
             shift; return uc(shift);
         }
@@ -49,7 +49,7 @@ This is a L<Moose> based class that provides the idea of a step in a data-flow.
 It attemps to be as generic and unassuming as possible, in order to provide
 flexibility for implementors to make their own boxes as they see fit.
 
-An object of the type C<OpenData::AZ::Box> does three things:
+An object of the type C<OpenData::Flow::Box> does three things:
 accepts some data as input,
 processes that data,
 provides the transformed data as output.
@@ -62,13 +62,13 @@ return the result of C<< $self->output() >>.
 
 A box will only be useful if, naturally,
 it performs some sort of transformation or processing on the input data.
-Thus, objects of the type C<OpenData::AZ::Box> B<must> provide
+Thus, objects of the type C<OpenData::Flow::Box> B<must> provide
 the code reference named C<process_item>.
 This method will be called with just one parameter at a time,
 which will correspond one single input item.
 
 Unless told differently (see the C<process_into> option below),
-C<OpenData::AZ::Box> will treat as an individual item anything that is:
+C<OpenData::Flow::Box> will treat as an individual item anything that is:
 a scalar, a blessed object, and a reference (of any kind).
 And, it will iterate over anything that is either
 an array or hash (treated like an array, as described above).
@@ -76,7 +76,7 @@ an array or hash (treated like an array, as described above).
 However, it might be convenient in many cases to have things work in a smarter
 way. If the input is an array reference, one might expect that every element
 in the referenced array should be processed. Or, that every value in a hash
-reference should be processed. For cases like that, C<OpenData::AZ::Box>
+reference should be processed. For cases like that, C<OpenData::Flow::Box>
 provides a simple de-referencing mechanism.
 
 =head2 INPUT
@@ -125,7 +125,7 @@ reference to the C<< OpenData::AZ:Box >> object, and one single item from
 the input queue, be it a simple scalar, or any type of reference. The code
 below shows a typical implementation:
 
-    my $box = OpenData::AZ::Box->new(
+    my $box = OpenData::Flow::Box->new(
         process_item => sub {
             my ($self,$item) = @_;
             # do something with $item
@@ -141,7 +141,7 @@ default code for C<process_item>. For instance:
     package UCBox;
 
     use Moose;
-    extends 'OpenData::AZ::Box';
+    extends 'OpenData::Flow::Box';
 
     has '+process_item' => (
         default => sub {

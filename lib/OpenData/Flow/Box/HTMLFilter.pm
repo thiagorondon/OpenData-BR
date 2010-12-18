@@ -1,8 +1,8 @@
 
-package OpenData::AZ::Box::HTMLFilter;
+package OpenData::Flow::Box::HTMLFilter;
 
 use Moose;
-extends 'OpenData::AZ::Box';
+extends 'OpenData::Flow::Box';
 
 use Moose::Util::TypeConstraints;
 use HTML::TreeBuilder::XPath;

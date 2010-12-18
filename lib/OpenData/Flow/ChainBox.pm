@@ -1,15 +1,15 @@
 
-package OpenData::AZ::ChainBox;
+package OpenData::Flow::ChainBox;
 
 use Moose;
-extends 'OpenData::AZ::Box';
+extends 'OpenData::Flow::Box';
 
-use OpenData::AZ::Box;
+use OpenData::Flow::Box;
 use List::Util qw/reduce/;
 
 has chain => (
     is       => 'ro',
-    isa      => 'ArrayRef[OpenData::AZ::Box]',
+    isa      => 'ArrayRef[OpenData::Flow::Box]',
     required => 1,
 );
 

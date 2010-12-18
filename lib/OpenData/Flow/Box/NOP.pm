@@ -1,8 +1,8 @@
 
-package OpenData::AZ::Box::NOP;
+package OpenData::Flow::Box::NOP;
 
 use Moose;
-extends 'OpenData::AZ::Box';
+extends 'OpenData::Flow::Box';
 
 has '+process_item' => (
     default => sub {

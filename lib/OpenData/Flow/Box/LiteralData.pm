@@ -1,8 +1,8 @@
 
-package OpenData::AZ::Box::LiteralData;
+package OpenData::Flow::Box::LiteralData;
 
 use Moose;
-extends 'OpenData::AZ::Box::NOP';
+extends 'OpenData::Flow::Box::NOP';
 
 has data => (
     is      => 'ro',

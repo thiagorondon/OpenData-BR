@@ -1,15 +1,15 @@
 
-package OpenData::AZ::Box::URLRetrieverMultiPage;
+package OpenData::Flow::Box::MultiPageURLGenerator;
 
 use Moose;
-extends 'OpenData::AZ::Box::URLRetriever';
+extends 'OpenData::Flow::Box';
 
 use Carp;
 
 has first_page => (
     is      => 'ro',
     isa     => 'Int',
-    default => 0,
+    default => 1,
 );
 
 has last_page => (
@@ -19,12 +19,16 @@ has last_page => (
     lazy     => 1,
     default  => sub {
         my $self = shift;
-        carp q{OpenData::AZ::Box::URLRetrieverMultiPage: paged_url not set!}
+        #warn 'last_page';
+        carp q{OpenData::Flow::Box::MultiPageURLGenerator: paged_url not set!}
           unless $self->has_paged_url;
-        return $self->produce_last_page->($self->_paged_url);
+        return $self->produce_last_page->( $self->_paged_url );
     },
 );
 
+# calling convention for the sub:
+#   - $self
+#   - $url (Str)
 has produce_last_page => (
     is      => 'ro',
     isa     => 'CodeRef',
@@ -52,13 +56,22 @@ has _paged_url => (
 has '+process_item' => (
     default => sub {
         return sub {
-            my ( $self, $paged_url ) = @_;
+            my ( $self, $url ) = @_;
+            #warn 'multi page process item, url = '.$url;
+            $self->_paged_url($url);
+            #use Data::Dumper;
+            #print STDERR Dumper($self);
 
-            $self->_paged_url($paged_url);
+            my $first = $self->first_page;
+            my $last = $self->last_page;
+            $first = 1 + $last + $first if $first < 0;
 
-            my $result = [ map { $self->make_page_url->( $self, $paged_url, $_ ) }
-                  $self->first_page .. $self->last_page ];
+            my $result =
+              [ map { $self->make_page_url->( $self, $url, $_ ) }
+                  $first .. $last ];
 
+            #use Data::Dumper;
+            #warn 'url list = ' . Dumper($result);
             $self->clear_paged_url;
             return $result;
           }

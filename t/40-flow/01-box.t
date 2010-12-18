@@ -3,11 +3,11 @@ use Test::More tests => 19;
 
 use strict;
 
-use OpenData::AZ::Box;
+use OpenData::Flow::Box;
 
 # tests: 2
 diag( 'constructor and basic tests' );
-my $uc = OpenData::AZ::Box->new(
+my $uc = OpenData::Flow::Box->new(
     process_item => sub {
         shift;
         return eval { uc(shift) };
