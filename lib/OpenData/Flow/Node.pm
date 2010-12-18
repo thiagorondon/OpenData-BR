@@ -263,6 +263,17 @@ sub output {
     return $self->_handle_item( scalar $self->_dequeue_input );
 }
 
+=head2 flush
+
+Flushes this node's queues
+
+=cut
+
+sub flush {
+    my $self = shift;
+    while( $self->output ) { };
+}
+
 =head2 has_input
 
 Returns true if there is data in the input queue, false otherwise.
