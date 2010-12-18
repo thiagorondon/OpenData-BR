@@ -6,30 +6,12 @@ extends 'OpenData::AZ::Box';
 
 use OpenData::Get;
 
-has set_browser => ( is => 'rw', isa => 'Str', default => 'Mechanize' );
-
-after set_browser => sub {
-    my $self = shift;
-    my $orig = shift;
-    return if !$orig;
-    $self->_get( OpenData::Get->with_traits($orig)->new );
-};
-
 has _get => (
     is      => 'rw',
-    isa     => 'Object',
+    isa     => 'OpenData::Get',
     lazy    => 1,
-    default => sub { OpenData::Get->with_traits( shift->set_browser )->new }
+    default => sub { OpenData::Get->new }
 );
-
-sub get {
-    my ( $self, $url ) = @_;
-
-    #warn 'url = '.$url;
-    my $http = $self->_get;
-    $http->url($url);
-    return $http->get();
-}
 
 has baseurl => (
     is => 'ro',
@@ -44,7 +26,7 @@ has '+process_item' => (
             $url = URI->new_abs( $url, $self->baseurl )->as_string
                 if $self->has_baseurl;
             #warn 'process_item:: url = '.$url;
-            return $self->get($url);
+            return $self->_get->get($url);
           }
     },
 );

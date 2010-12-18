@@ -194,7 +194,7 @@ will return all the elements in the queue.
 
 =head2 deref
 
-A boolean attribute that signas whether references should be dereferenced or
+A boolean attribute that signals whether references should be dereferenced or
 not.
 
 =head2 process_item
@@ -218,62 +218,6 @@ has process_item => (
 
 =head1 METHODS
 
-=cut
-
-##############################################################################
-# box queue
-
-has '_queue' => (
-    is      => 'rw',
-    isa     => 'ArrayRef',
-    default => sub { return [] },
-    predicate => 'has_queue',
-);
-
-=head2 enqueue
-
-Insert elements into this box' queue.
-
-=cut
-
-sub enqueue {
-    my $self = shift;
-    push @{ $self->_queue }, @_;
-}
-
-=head2 dequeue
-
-Returns element(s) from the box queue. If called in scalar context will return
-one element from the queue. If called in list context, will return all the
-elements currently in the queue.
-
-=cut
-
-sub dequeue {
-    my $self = shift;
-    #warn 'dequeue';
-    return scalar shift @{ $self->_queue } unless wantarray;
-    #warn 'dequeue wants array';
-    my $b = $self->_queue;
-    $self->clear_queue;
-    #local $,= ','; warn 'dequeue returns ',@{$b};
-    return @{$b};
-}
-
-=head2 clear_queue
-
-Reset the queue.
-
-=cut
-
-sub clear_queue {
-    my $self = shift;
-    $self->_queue( [] );
-}
-
-##############################################################################
-# input/ouput methods
-
 =head2 input
 
 Provide input data for the box.
@@ -285,7 +229,7 @@ sub input {
 
     #local $,=','; print STDERR "input = ", @_, "\n";
     return unless @_;
-    $self->enqueue(@_);
+    $self->_enqueue_input(@_);
 }
 
 =head2 output
@@ -300,10 +244,10 @@ sub output {
     return unless $self->has_input;
     #use Data::Dumper;
     #print STDERR "output(): self = " .Dumper($self);
-    return $self->_handle_list( $self->dequeue ) if wantarray;
+    return $self->_handle_list( $self->_dequeue_input ) if wantarray;
 
     #print STDERR "====> wantarray! NOT!\n";
-    return $self->_handle_item( scalar $self->dequeue );
+    return $self->_handle_item( scalar $self->_dequeue_input );
 }
 
 =head2 has_input
@@ -314,7 +258,29 @@ Returns true if there is data in the input queue, false otherwise.
 
 sub has_input {
     my $self = shift;
-    return 0 < scalar @{ $self->_queue };
+    return 0 < scalar @{ $self->_input_queue };
+}
+
+=head2 has_output
+
+Returns true if there is data in the output queue, false otherwise.
+
+=cut
+
+sub has_output {
+    my $self = shift;
+    return 0 < scalar @{ $self->_output_queue };
+}
+
+=head2 has_queued_data
+
+Returns true if there is data in any of this box queues, false otherwise.
+
+=cut
+
+sub has_queued_data {
+    my $self = shift;
+    return ($self->has_input || $self->has_output);
 }
 
 =head2 process
@@ -328,6 +294,71 @@ sub process {
     return unless @_;
     $self->input(@_);
     return $self->output;
+}
+
+##############################################################################
+# box input queue
+
+has '_input_queue' => (
+    is      => 'rw',
+    isa     => 'ArrayRef',
+    default => sub { return [] },
+);
+
+sub _enqueue_input {
+    my $self = shift;
+    push @{ $self->_input_queue }, @_;
+}
+
+sub _dequeue_input {
+    my $self = shift;
+    #warn 'dequeue';
+    return scalar shift @{ $self->_input_queue } unless wantarray;
+    #warn 'dequeue wants array';
+    my $b = $self->_input_queue;
+    $self->_clear_input_queue;
+    #local $,= ','; warn 'dequeue returns ',@{$b};
+    return @{$b};
+}
+
+sub _clear_input_queue {
+    my $self = shift;
+    $self->_input_queue( [] );
+}
+
+##############################################################################
+# box output queue
+
+has '_output_queue' => (
+    is      => 'rw',
+    isa     => 'ArrayRef',
+    default => sub { return [] },
+);
+
+sub _enqueue_output {
+    my $self = shift;
+    push @{ $self->_output_queue }, @_;
+}
+
+sub _dequeue_output {
+    my $self = shift;
+    #warn 'dequeue';
+    return scalar shift @{ $self->_output_queue } unless wantarray;
+    #warn 'dequeue wants array';
+    my $b = $self->_output_queue;
+    $self->_clear_output_queue;
+    #local $,= ','; warn 'dequeue returns ',@{$b};
+    return @{$b};
+}
+
+sub _clear_output_queue {
+    my $self = shift;
+    $self->_input_queue( [] );
+}
+
+##############################################################################
+
+sub _process_input {
 }
 
 ##############################################################################
