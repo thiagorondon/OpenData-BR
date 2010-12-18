@@ -10,3 +10,5 @@ http://www.seade.gov.br/index.php
 - Melhorar a logistica para o item, que hoje esta muito flexivel e fora de padrao para os modulos do Loader.
 - Array, Output, Loader ? Juntar tudo.
 
+Flow
+- mudar as filas para Queue::Base, implementar a 3a.fila (de erro), a la stdin,stdout,stderr ...
