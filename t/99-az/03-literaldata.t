@@ -1,5 +1,4 @@
-
-use Test::More tests => 4;
+use Test::More tests => 7;
 
 use_ok( 'OpenData::AZ::Box::LiteralData' );
 
@@ -13,5 +12,12 @@ my $data = OpenData::AZ::Box::LiteralData->new( data => 'aaa' );
 #my $res = $data->output;
 #diag( 'res = '.$res );
 ok( $data->output eq 'aaa' );
-ok( !$data->output );
+ok( !($data->output) );
+
+eval { $data->input( 'more input' ) };
+ok(!$@);
+ok( !($data->output) );
+
+$data = OpenData::AZ::Box::LiteralData->new( data => [ qw/oh my goodness/ ] );
+is_deeply( $data->output, [ qw/oh my goodness/ ] );
 

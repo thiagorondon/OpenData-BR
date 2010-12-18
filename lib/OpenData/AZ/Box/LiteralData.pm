@@ -13,7 +13,7 @@ has data => (
     trigger => sub {
         my $self = shift;
         if( $self->has_data ) {
-            $self->enqueue( @_ );
+            $self->_enqueue_input( @_ );
             $self->clear_data;
         }
     },
