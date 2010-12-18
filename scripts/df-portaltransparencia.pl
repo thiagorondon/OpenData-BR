@@ -11,10 +11,11 @@ use aliased 'OpenData::Flow::Node::LiteralData';
 use aliased 'OpenData::Flow::Node::HTMLFilter';
 use aliased 'OpenData::Flow::Node::URLRetriever';
 use aliased 'OpenData::Flow::Node::MultiPageURLGenerator';
+use aliased 'OpenData::Flow::Node::Dumper' => 'DumperNode';
 
 use URI;
 use OpenData::Get;
-#use HTML::TreeBuilder::XPath;
+use HTML::TreeBuilder::XPath;
 
 my $base = join( '/',
     q{http://www.portaltransparencia.gov.br},
@@ -56,8 +57,9 @@ my $chain = Chain->new(
             process_into => 1,
             deref        => 1,
         ),
+        DumperNode->new,
     ],
 );
 
-use Data::Dumper;
-print Dumper( $chain->output );
+$chain->flush;
+
