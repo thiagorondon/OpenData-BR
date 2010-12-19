@@ -14,8 +14,8 @@ has _get => (
 );
 
 has baseurl => (
-    is => 'ro',
-    isa => 'Str',
+    is        => 'ro',
+    isa       => 'Str',
     predicate => 'has_baseurl',
 );
 
@@ -24,7 +24,8 @@ has '+process_item' => (
         return sub {
             my ( $self, $url ) = @_;
             $url = URI->new_abs( $url, $self->baseurl )->as_string
-                if $self->has_baseurl;
+              if $self->has_baseurl;
+
             #warn 'process_item:: url = '.$url;
             return $self->_get->get($url);
           }

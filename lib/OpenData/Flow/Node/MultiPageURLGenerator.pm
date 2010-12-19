@@ -19,6 +19,7 @@ has last_page => (
     lazy     => 1,
     default  => sub {
         my $self = shift;
+
         #warn 'last_page';
         carp q{OpenData::Flow::Node::MultiPageURLGenerator: paged_url not set!}
           unless $self->has_paged_url;
@@ -57,13 +58,15 @@ has '+process_item' => (
     default => sub {
         return sub {
             my ( $self, $url ) = @_;
+
             #warn 'multi page process item, url = '.$url;
             $self->_paged_url($url);
+
             #use Data::Dumper;
             #print STDERR Dumper($self);
 
             my $first = $self->first_page;
-            my $last = $self->last_page;
+            my $last  = $self->last_page;
             $first = 1 + $last + $first if $first < 0;
 
             my $result =

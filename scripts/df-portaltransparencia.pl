@@ -25,7 +25,8 @@ my $chain = Chain->new(
     chain => [
         LiteralData->new( data => $base, ),
         MultiPageURLGenerator->new(
-            first_page    => -2,
+            first_page => -2,
+
             #last_page     => 35,
             make_page_url => sub {
                 my ( $self, $url, $page ) = @_;
@@ -33,14 +34,17 @@ my $chain = Chain->new(
                 $u->query_form( $u->query_form, Pagina => $page );
                 return $u->as_string;
             },
-            produce_last_page => sub{
+            produce_last_page => sub {
                 my $url = shift;
+
                 #print STDERR qq{produce_last_page url = $url\n};
-                my $get = OpenData::Get->new;
-                my $html = $get->get( $url );
+                my $get  = OpenData::Get->new;
+                my $html = $get->get($url);
+
                 #print STDERR 'html = '.$html."\n";
-                my $texto = HTML::TreeBuilder::XPath->new_from_content($html)
-                      ->findvalue('//p[@class="paginaAtual"]');
+                my $texto =
+                  HTML::TreeBuilder::XPath->new_from_content($html)
+                  ->findvalue('//p[@class="paginaAtual"]');
                 die q{Não conseguiu fazer a paginação} unless $texto;
                 return $1 if $texto =~ /\d\/(\d+)/;
             },

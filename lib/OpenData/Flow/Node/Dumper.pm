@@ -7,7 +7,9 @@ extends 'OpenData::Flow::Node';
 use Data::Dumper;
 
 has '+process_item' => (
-    default => sub { return sub { shift; print STDERR Dumper(shift); } }
+    default => sub {
+        return sub { shift; print STDERR Dumper(shift); }
+    }
 );
 
 1;

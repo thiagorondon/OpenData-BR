@@ -25,10 +25,12 @@ has '+process_item' => (
     default => sub {
         return sub {
             my ( $self, $item ) = @_;
+
             #use Data::Dumper;
             #warn 'htmlfilter :: process_item :: item = '.Dumper($item);
             #warn 'htmlfilter :: process_item :: self = '.Dumper($self);
             my $html = HTML::TreeBuilder::XPath->new_from_content($item);
+
             #warn 'xpath is built';
 
             return [ $html->findvalues( $self->search_xpath ) ]
@@ -37,6 +39,7 @@ has '+process_item' => (
             #warn 'want NODE or HTML';
 
             my @result = $html->findnodes( $self->search_xpath );
+
             #warn 'result = '.Dumper(\@result);
             return [] unless @result;
 

@@ -255,6 +255,7 @@ sub output {
     my $self = shift;
 
     return unless $self->has_input;
+
     #use Data::Dumper;
     #print STDERR "output(): self = " .Dumper($self);
     return $self->_handle_list( $self->_dequeue_input ) if wantarray;
@@ -271,7 +272,7 @@ Flushes this node's queues
 
 sub flush {
     my $self = shift;
-    while( $self->output ) { }; #empty
+    while ( $self->output ) { };    #empty
     return;
 }
 
@@ -305,7 +306,7 @@ Returns true if there is data in any of this box queues, false otherwise.
 
 sub has_queued_data {
     my $self = shift;
-    return ($self->has_input || $self->has_output);
+    return ( $self->has_input || $self->has_output );
 }
 
 =head2 process
@@ -337,11 +338,14 @@ sub _enqueue_input {
 
 sub _dequeue_input {
     my $self = shift;
+
     #warn 'dequeue';
     return scalar shift @{ $self->_input_queue } unless wantarray;
+
     #warn 'dequeue wants array';
     my $b = $self->_input_queue;
     $self->_clear_input_queue;
+
     #local $,= ','; warn 'dequeue returns ',@{$b};
     return @{$b};
 }
@@ -367,11 +371,14 @@ sub _enqueue_output {
 
 sub _dequeue_output {
     my $self = shift;
+
     #warn 'dequeue';
     return scalar shift @{ $self->_output_queue } unless wantarray;
+
     #warn 'dequeue wants array';
     my $b = $self->_output_queue;
     $self->_clear_output_queue;
+
     #local $,= ','; warn 'dequeue returns ',@{$b};
     return @{$b};
 }
@@ -379,11 +386,6 @@ sub _dequeue_output {
 sub _clear_output_queue {
     my $self = shift;
     $self->_input_queue( [] );
-}
-
-##############################################################################
-
-sub _process_input {
 }
 
 ##############################################################################
@@ -433,7 +435,7 @@ has '_handlers' => (
             ARRAY   => $me->process_into ? \&_handle_array : \&_handle_svalue,
             HASH    => $me->process_into ? \&_handle_hash : \&_handle_svalue,
             CODE    => $me->process_into ? \&_handle_code : \&_handle_svalue,
-          };
+        };
     },
 );
 
@@ -451,14 +453,14 @@ sub _handle_scalar {
 sub _handle_array {
     my ( $self, $item ) = @_;
     my @r = map { $self->process_item->( $self, $_ ) } @{$item};
-    return $self->deref ? @r : [ @r ];
+    return $self->deref ? @r : [@r];
 }
 
 sub _handle_hash {
     my ( $self, $item ) = @_;
     my %r = map { $_ => $self->process_item->( $self, $item->{$_} ) }
-          keys %{$item};
-    return $self->deref ? %r : { %r };
+      keys %{$item};
+    return $self->deref ? %r : {%r};
 }
 
 sub _handle_code {

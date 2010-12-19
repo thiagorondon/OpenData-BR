@@ -13,7 +13,11 @@ has chain => (
     required => 1,
 );
 
-has '+process_item' => ( default => sub { return sub { } },);
+has '+process_item' => (
+    default => sub {
+        return sub { }
+    },
+);
 
 sub input {
     my $self = shift;
@@ -24,10 +28,10 @@ sub output {
     my $self = shift;
     return unless $self->has_input;
 
-    #use Data::Dumper;
-    #warn 'chainbox :: chain = '.Dumper($self->chain);
-    #local $, = "\n";
-    #warn 'chainbox :: chain queues = ', map { Dumper($_->_queue) } @{ $self->chain };
+#use Data::Dumper;
+#warn 'chainbox :: chain = '.Dumper($self->chain);
+#local $, = "\n";
+#warn 'chainbox :: chain queues = ', map { Dumper($_->_queue) } @{ $self->chain };
     my $n = @{ $self->chain };
     $self->confess('Chain has no nodes, cannot process_item()') if $n == 0;
 
