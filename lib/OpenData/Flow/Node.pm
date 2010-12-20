@@ -3,6 +3,7 @@ package OpenData::Flow::Node;
 
 use Moose;
 use Scalar::Util qw/blessed reftype/;
+use Queue::Base;
 
 =head1 NAME
 
@@ -284,7 +285,7 @@ Returns true if there is data in the input queue, false otherwise.
 
 sub has_input {
     my $self = shift;
-    return 0 < scalar @{ $self->_input_queue };
+    return 0 < $self->_inputq->size;
 }
 
 =head2 has_output
@@ -295,7 +296,7 @@ Returns true if there is data in the output queue, false otherwise.
 
 sub has_output {
     my $self = shift;
-    return 0 < scalar @{ $self->_output_queue };
+    return 0 < $self->_outputq->size;
 }
 
 =head2 has_queued_data
@@ -325,67 +326,41 @@ sub process {
 ##############################################################################
 # box input queue
 
-has '_input_queue' => (
-    is      => 'rw',
-    isa     => 'ArrayRef',
-    default => sub { return [] },
+has '_inputq' => (
+    is      => 'ro',
+    isa     => 'Queue::Base',
+    default => sub { Queue::Base->new },
+    handles => {
+        _enqueue_input     => 'add',
+        _is_input_empty    => 'empty',
+        _clear_input_queue => 'clear',
+    },
 );
-
-sub _enqueue_input {
-    my $self = shift;
-    push @{ $self->_input_queue }, @_;
-}
 
 sub _dequeue_input {
     my $self = shift;
-
-    #warn 'dequeue';
-    return scalar shift @{ $self->_input_queue } unless wantarray;
-
-    #warn 'dequeue wants array';
-    my $b = $self->_input_queue;
-    $self->_clear_input_queue;
-
-    #local $,= ','; warn 'dequeue returns ',@{$b};
-    return @{$b};
-}
-
-sub _clear_input_queue {
-    my $self = shift;
-    $self->_input_queue( [] );
+    return $self->_inputq->remove unless wantarray;
+    return $self->_inputq->remove( $self->_inputq->size );
 }
 
 ##############################################################################
 # box output queue
 
-has '_output_queue' => (
-    is      => 'rw',
-    isa     => 'ArrayRef',
-    default => sub { return [] },
+has '_outputq' => (
+    is      => 'ro',
+    isa     => 'Queue::Base',
+    default => sub { Queue::Base->new },
+    handles => {
+        _enqueue_output     => 'add',
+        _is_output_empty    => 'empty',
+        _clear_output_queue => 'clear',
+    },
 );
-
-sub _enqueue_output {
-    my $self = shift;
-    push @{ $self->_output_queue }, @_;
-}
 
 sub _dequeue_output {
     my $self = shift;
-
-    #warn 'dequeue';
-    return scalar shift @{ $self->_output_queue } unless wantarray;
-
-    #warn 'dequeue wants array';
-    my $b = $self->_output_queue;
-    $self->_clear_output_queue;
-
-    #local $,= ','; warn 'dequeue returns ',@{$b};
-    return @{$b};
-}
-
-sub _clear_output_queue {
-    my $self = shift;
-    $self->_input_queue( [] );
+    return $self->_outputq->remove unless wantarray;
+    return $self->_outputq->remove( $self->_outputq->size );
 }
 
 ##############################################################################
