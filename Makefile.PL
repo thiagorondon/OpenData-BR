@@ -13,6 +13,7 @@ requires 'namespace::autoclean';
 requires 'File::Slurp';
 requires 'Text::CSV';
 requires 'Scalar::Util';
+requires 'List::Util';
 requires 'List::MoreUtils';
 requires 'LWP::Curl';
 requires 'HTML::TreeBuilder::XPath';
