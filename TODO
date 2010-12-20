@@ -12,3 +12,5 @@ http://www.seade.gov.br/index.php
 
 Flow
 - mudar as filas para Queue::Base, implementar a 3a.fila (de erro), a la stdin,stdout,stderr ...
+- Node que executa um comando externo (system ou IPC::Run, ou ...) e usa input,out,err
+  como stdin, stdout e stderr
