@@ -1,5 +1,5 @@
 
-package OpenData::Flow::Chain;
+package OpenData::Flow::Node::Chain;
 
 use Moose;
 extends 'OpenData::Flow::Node';

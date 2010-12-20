@@ -6,7 +6,7 @@ use warnings;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use aliased 'OpenData::Flow::Chain';
+use aliased 'OpenData::Flow::Node::Chain';
 use aliased 'OpenData::Flow::Node::LiteralData';
 use aliased 'OpenData::Flow::Node::HTMLFilter';
 use aliased 'OpenData::Flow::Node::URLRetriever';

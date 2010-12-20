@@ -17,7 +17,7 @@ has '+process_item' => (
 package main;
 
 use OpenData::Flow::Node;
-use OpenData::Flow::Chain;
+use OpenData::Flow::Node::Chain;
 
 # tests: 3
 my $uc =
@@ -27,7 +27,7 @@ my $rv =
   OpenData::Flow::Node->new( process_item => sub { shift; return reverse shift }
   );
 ok($rv);
-my $chain = OpenData::Flow::Chain->new( chain => [ ( $uc, $rv ) ] );
+my $chain = OpenData::Flow::Node::Chain->new( chain => [ ( $uc, $rv ) ] );
 ok($chain);
 
 #use Data::Dumper;
@@ -49,7 +49,7 @@ my $cc =
   OpenData::Flow::Node->new( process_item => sub { shift; return length(shift) }
   );
 ok($cc);
-my $chain2 = OpenData::Flow::Chain->new( chain => [ $rp5, $cc ] );
+my $chain2 = OpenData::Flow::Node::Chain->new( chain => [ $rp5, $cc ] );
 ok($chain2);
 
 # tests: 2
