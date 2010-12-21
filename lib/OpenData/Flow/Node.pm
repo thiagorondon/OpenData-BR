@@ -48,7 +48,7 @@ Or
 
 This is a L<Moose> based class that provides the idea of a step in a data-flow.
 It attemps to be as generic and unassuming as possible, in order to provide
-flexibility for implementors to make their own boxes as they see fit.
+flexibility for implementors to make their own nodes as they see fit.
 
 An object of the type C<OpenData::Flow::Node> does three things:
 accepts some data as input,
@@ -61,7 +61,7 @@ The convenience method C<process()> will pump its parameters
 into C<< $self->input() >> and immediately
 return the result of C<< $self->output() >>.
 
-A box will only be useful if, naturally,
+A node will only be useful if, naturally,
 it performs some sort of transformation or processing on the input data.
 Thus, objects of the type C<OpenData::Flow::Node> B<must> provide
 the code reference named C<process_item>.
@@ -87,18 +87,18 @@ accept anything passed as parameter. However, it must be noticed that it
 will not be able to make a distinction between arrays and hashes. Both forms
 below will render the exact same results:
 
-    $box->input( qw/all the simple things/ );
-    $box->input( all => the, simple => 'things' );
+    $node->input( qw/all the simple things/ );
+    $node->input( all => the, simple => 'things' );
 
 If you do want to handle arrays and hashes differently, we strongly suggest
 that you use references:
 
-    $box->input( [ qw/all the simple things/ ] );
-    $box->input( { all => the, simple => 'things' } );
+    $node->input( [ qw/all the simple things/ ] );
+    $node->input( { all => the, simple => 'things' } );
 
 And, in the C<process_item>
 
-    my $box = OpenData::AZ:Node->new(
+    my $node = OpenData::AZ:Node->new(
         process_item => sub {
             my ($self,$item) = @_;
             if( ref($item) eq 'ARRAY' ) {
@@ -126,7 +126,7 @@ reference to the C<< OpenData::AZ:Node >> object, and one single item from
 the input queue, be it a simple scalar, or any type of reference. The code
 below shows a typical implementation:
 
-    my $box = OpenData::Flow::Node->new(
+    my $node = OpenData::Flow::Node->new(
         process_item => sub {
             my ($self,$item) = @_;
             # do something with $item
@@ -160,7 +160,7 @@ every time a data item needs to be processed.
 
 =head3 Dereferencing
 
-If you set the attribute C<process_into> as C<true>, then the box will
+If you set the attribute C<process_into> as C<true>, then the node will
 treat references differently.
 It will process the referenced objects, rather than the actual reference.
 It will work as follows:
@@ -195,15 +195,22 @@ preserve the original structure.
 =head2 OUTPUT
 
 The output is provided by the method C<output>. If called in scalar context
-it will return one processed item from the box. If called in list context it
+it will return one processed item from the node. If called in list context it
 will return all the elements in the queue.
 
 =head1 ATTRIBUTES
 
+=head2 deref
+
+A boolean attribute that signals whether the output of the node will be
+de-referenced or if C<Node> will preserve the original reference.
+
 =head2 process_into
 
 A boolean attribute that signals whether references should be dereferenced or
-not.
+not. If process_into is true, then C<process_item> will be applied into the
+values referenced by any scalar, array or hash reference and onto the result
+of running any code reference.
 
 =head2 process_item
 
@@ -232,36 +239,82 @@ has process_item => (
 
 =head1 METHODS
 
+=cut
+
+##############################################################################
+# node input queue
+
+has '_inputq' => (
+    is      => 'ro',
+    isa     => 'Queue::Base',
+    default => sub { Queue::Base->new },
+    handles => {
+        input           => 'add',
+        _add_input      => 'add',
+        _is_input_empty => 'empty',
+        clear_input     => 'clear',
+    },
+);
+
+sub _dequeue_input {
+    my $self = shift;
+    return $self->_inputq->remove unless wantarray;
+    return $self->_inputq->remove( $self->_inputq->size );
+}
+
 =head2 input
 
-Provide input data for the box.
+Provide input data for the node.
 
 =cut
 
-sub input {
-    my $self = shift;
+#sub input {
+#    my $self = shift;
+#
+#    #local $,=','; print STDERR "input = ", @_, "\n";
+#    $self->_enqueue_input(@_);
+#}
 
-    #local $,=','; print STDERR "input = ", @_, "\n";
-    return unless @_;
-    $self->_enqueue_input(@_);
+=head2 has_input
+
+Returns true if there is data in the input queue, false otherwise.
+
+=cut
+
+sub has_input {
+    my $self = shift;
+    return 0 < $self->_inputq->size;
+}
+
+##############################################################################
+# node output queue
+
+has '_outputq' => (
+    is      => 'ro',
+    isa     => 'Queue::Base',
+    default => sub { Queue::Base->new },
+    handles => {
+        _enqueue_output     => 'add',
+        _is_output_empty    => 'empty',
+        _clear_output_queue => 'clear',
+    },
+);
+
+sub _dequeue_output {
+    my $self = shift;
+    return $self->_outputq->remove unless wantarray;
+    return $self->_outputq->remove( $self->_outputq->size );
 }
 
 =head2 output
 
-Fetch data from the box.
+Fetch data from the node.
 
 =cut
 
 sub output {
     my $self = shift;
-
-    return unless $self->has_input;
-
-    #use Data::Dumper;
-    #print STDERR "output(): self = " .Dumper($self);
     return $self->_handle_list( $self->_dequeue_input ) if wantarray;
-
-    #print STDERR "====> wantarray! NOT!\n";
     return $self->_handle_item( scalar $self->_dequeue_input );
 }
 
@@ -277,17 +330,6 @@ sub flush {
     return;
 }
 
-=head2 has_input
-
-Returns true if there is data in the input queue, false otherwise.
-
-=cut
-
-sub has_input {
-    my $self = shift;
-    return 0 < $self->_inputq->size;
-}
-
 =head2 has_output
 
 Returns true if there is data in the output queue, false otherwise.
@@ -299,9 +341,12 @@ sub has_output {
     return 0 < $self->_outputq->size;
 }
 
+##############################################################################
+
 =head2 has_queued_data
 
-Returns true if there is data in any of this box queues, false otherwise.
+Returns true if there is data in either the input or the output queue of this
+node, false otherwise.
 
 =cut
 
@@ -324,43 +369,35 @@ sub process {
 }
 
 ##############################################################################
-# box input queue
+# node error queue
 
-has '_inputq' => (
+has '_errorq' => (
     is      => 'ro',
     isa     => 'Queue::Base',
     default => sub { Queue::Base->new },
     handles => {
-        _enqueue_input     => 'add',
-        _is_input_empty    => 'empty',
-        _clear_input_queue => 'clear',
+        _enqueue_error  => 'add',
+        _is_error_empty => 'empty',
+        flush_error     => 'clear',
+        clear_error     => 'clear',
     },
 );
 
-sub _dequeue_input {
+sub _dequeue_error {
     my $self = shift;
-    return $self->_inputq->remove unless wantarray;
-    return $self->_inputq->remove( $self->_inputq->size );
+    return $self->_errorq->remove unless wantarray;
+    return $self->_errorq->remove( $self->_errorq->size );
 }
 
-##############################################################################
-# box output queue
+=head2 get_error
 
-has '_outputq' => (
-    is      => 'ro',
-    isa     => 'Queue::Base',
-    default => sub { Queue::Base->new },
-    handles => {
-        _enqueue_output     => 'add',
-        _is_output_empty    => 'empty',
-        _clear_output_queue => 'clear',
-    },
-);
+Fetch error messages (if any) from the node.
 
-sub _dequeue_output {
+=cut
+
+sub get_error {
     my $self = shift;
-    return $self->_outputq->remove unless wantarray;
-    return $self->_outputq->remove( $self->_outputq->size );
+    return $self->_dequeue_error;
 }
 
 ##############################################################################
@@ -402,8 +439,8 @@ has '_handlers' => (
     isa     => 'HashRef',
     lazy    => 1,
     default => sub {
-        my $me = shift;
-        return {
+        my $me           = shift;
+        my $type_handler = {
             SVALUE  => \&_handle_svalue,
             BLESSED => \&_handle_svalue,
             SCALAR  => $me->process_into ? \&_handle_scalar : \&_handle_svalue,
@@ -411,6 +448,16 @@ has '_handlers' => (
             HASH    => $me->process_into ? \&_handle_hash : \&_handle_svalue,
             CODE    => $me->process_into ? \&_handle_code : \&_handle_svalue,
         };
+        return $me->deref
+          ? {
+            SVALUE  => $type_handler->{SVALUE},
+            BLESSED => $type_handler->{BLESSED},
+            SCALAR  => sub { ${ $type_handler->{SCALAR}->(@_) } },
+            ARRAY   => sub { @{ $type_handler->{ARRAY}->(@_) } },
+            HASH    => sub { %{ $type_handler->{HASH}->(@_) } },
+            CODE    => sub { $type_handler->{CODE}->(@_)->() },
+          }
+          : $type_handler;
     },
 );
 
@@ -422,25 +469,25 @@ sub _handle_svalue {
 sub _handle_scalar {
     my ( $self, $item ) = @_;
     my $r = $self->process_item->( $self, $$item );
-    return $self->deref ? $r : \$r;
+    return \$r;
 }
 
 sub _handle_array {
     my ( $self, $item ) = @_;
     my @r = map { $self->process_item->( $self, $_ ) } @{$item};
-    return $self->deref ? @r : [@r];
+    return [@r];
 }
 
 sub _handle_hash {
     my ( $self, $item ) = @_;
     my %r = map { $_ => $self->process_item->( $self, $item->{$_} ) }
       keys %{$item};
-    return $self->deref ? %r : {%r};
+    return {%r};
 }
 
 sub _handle_code {
     my ( $self, $item ) = @_;
-    return $self->process_item->( $self, $item->() );
+    return sub { $self->process_item->( $self, $item->() ) };
 }
 
 1;
@@ -456,6 +503,8 @@ __END__
     module's distribution, or must be installed separately. ]
 
 L<Scalar::Util>
+
+L<Queue::Base>
 
 =head1 INCOMPATIBILITIES
 
