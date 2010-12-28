@@ -5,6 +5,9 @@
   * Sub-site: Transparência nos Estados - [[http://br.transparencia.gov.br/]]
 
 ## Previstas
+* Congresso Nacional
+  * Câmara dos Deputados - [[http://www2.camara.gov.br/transparencia/a-transparencia-na-camara]]
+  * Senado Federal - [[http://www.senado.gov.br/transparencia/]]
 * Secretaria da Segurança Pública do Estado de São Paulo - [[http://www.ssp.sp.gov.br/estatistica/]]
 * Fundação Sistema Estadual de Análise de Dados - [[http://www.seade.gov.br/index.php]]
 * Correios - [[http://www.correios.com.br]]
