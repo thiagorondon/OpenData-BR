@@ -231,6 +231,12 @@ has process_into => (
     default => 0,
 );
 
+has auto_process => (
+    is      => 'ro',
+    isa     => 'Bool',
+    default => 1,
+);
+
 has process_item => (
     is       => 'ro',
     isa      => 'CodeRef',
@@ -249,7 +255,6 @@ has '_inputq' => (
     isa     => 'Queue::Base',
     default => sub { Queue::Base->new },
     handles => {
-        input           => 'add',
         _add_input      => 'add',
         _is_input_empty => 'empty',
         clear_input     => 'clear',
@@ -268,12 +273,12 @@ Provide input data for the node.
 
 =cut
 
-#sub input {
-#    my $self = shift;
-#
-#    #local $,=','; print STDERR "input = ", @_, "\n";
-#    $self->_enqueue_input(@_);
-#}
+sub input {
+    my $self = shift;
+
+    #local $,=','; print STDERR "input = ", @_, "\n";
+    $self->_add_input(@_);
+}
 
 =head2 has_input
 
@@ -286,6 +291,21 @@ sub has_input {
     return 0 < $self->_inputq->size;
 }
 
+=head2 process_input
+
+Processes the items in the input queue and place the results in the output
+queue.
+
+=cut
+
+sub process_input {
+    my $self = shift;
+    return unless $self->has_input;
+
+    $self->_add_output( $self->_handle_list( $self->_dequeue_input ) );
+    use Data::Dumper; warn 'process_input :: self :: after = ' . Dumper($self);
+}
+
 ##############################################################################
 # node output queue
 
@@ -294,7 +314,7 @@ has '_outputq' => (
     isa     => 'Queue::Base',
     default => sub { Queue::Base->new },
     handles => {
-        _enqueue_output     => 'add',
+        _add_output         => 'add',
         _is_output_empty    => 'empty',
         _clear_output_queue => 'clear',
     },
@@ -314,6 +334,9 @@ Fetch data from the node.
 
 sub output {
     my $self = shift;
+    #$self->process_input;
+    #return ( $self->_dequeue_output ) if wantarray;
+    #return scalar $self->_dequeue_output;
     return $self->_handle_list( $self->_dequeue_input ) if wantarray;
     return $self->_handle_item( scalar $self->_dequeue_input );
 }

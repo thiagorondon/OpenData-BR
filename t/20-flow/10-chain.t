@@ -27,7 +27,7 @@ my $rv =
   OpenData::Flow::Node->new( process_item => sub { shift; return reverse shift }
   );
 ok($rv);
-my $chain = OpenData::Flow::Node::Chain->new( chain => [ ( $uc, $rv ) ] );
+my $chain = OpenData::Flow::Node::Chain->new( links => [ ( $uc, $rv ) ] );
 ok($chain);
 
 #use Data::Dumper;
@@ -39,8 +39,10 @@ my $undef = $chain->process();
 ok( !$undef );
 
 #print STDERR '=' x 70 . "\n";
-#use Data::Dumper;
-ok( $chain->process('abc') eq 'CBA' );
+use Data::Dumper;
+my $abc = $chain->process('abc');
+diag( 'abc = ' ,$abc );
+ok( $abc eq 'CBA' );
 
 # tests: 3
 my $rp5 = Repeat->new( times => 5 );
@@ -49,12 +51,12 @@ my $cc =
   OpenData::Flow::Node->new( process_item => sub { shift; return length(shift) }
   );
 ok($cc);
-my $chain2 = OpenData::Flow::Node::Chain->new( chain => [ $rp5, $cc ] );
+my $chain2 = OpenData::Flow::Node::Chain->new( links => [ $rp5, $cc ] );
 ok($chain2);
 
 # tests: 2
-$chain2->input('qwerty');
-$chain2->input('yay');
+$chain2->input('qwerty', 'yay');
+#use Data::Dumper; diag( Dumper($chain) );
 ok( $chain2->output == 30 );
 ok( $chain2->output == 15 );
 

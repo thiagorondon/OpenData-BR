@@ -7,7 +7,7 @@ extends 'OpenData::Flow::Node';
 use OpenData::Flow::Node;
 use List::Util qw/reduce/;
 
-has chain => (
+has links => (
     is       => 'ro',
     isa      => 'ArrayRef[OpenData::Flow::Node]',
     required => 1,
@@ -21,7 +21,9 @@ has '+process_item' => (
 
 sub input {
     my $self = shift;
-    $self->chain->[0]->input(@_);
+    $self->links->[0]->input(@_);
+#use Data::Dumper;
+#warn 'chain :: links = '.Dumper($self->links);
 }
 
 sub output {
@@ -29,21 +31,38 @@ sub output {
     return unless $self->has_input;
 
 #use Data::Dumper;
-#warn 'chainbox :: chain = '.Dumper($self->chain);
+#warn 'chain :: output :: links = '.Dumper($self->links);
 #local $, = "\n";
-#warn 'chainbox :: chain queues = ', map { Dumper($_->_queue) } @{ $self->chain };
-    my $n = @{ $self->chain };
+#warn 'chain :: links queues = ', map { Dumper($_->_queue) } @{ $self->links };
+    my $n = @{ $self->links };
     $self->confess('Chain has no nodes, cannot process_item()') if $n == 0;
 
-    my $first = $self->chain->[0];
+    my $first = $self->links->[0];
     return $first->output if $n == 1;
 
-    my $last = reduce { $b->input( $a->output ); $b } @{ $self->chain };
-    return $last->output;
+    my $last = reduce { $b->input( $a->output ); $b } @{ $self->links };
+    #use Data::Dumper; warn 'last = '.Dumper($last);
+    #my $t = $last->output;
+    #warn 't = ' .Dumper($t);
+    #return scalar $last->output() unless wantarray;
+    #return $last->output();
+    #if( wantarray ) {
+    #    my @r = $last->output;
+    #    use Data::Dumper; warn 'links result (@) = '.Dumper(@r);
+    #    return @r;
+    #}
+    #else {
+    #    my $r = $last->output;
+    #    use Data::Dumper; warn 'links result ($) = '.Dumper($r);
+    #    return $r;
+    #}
+    return ( $last->output ) if wantarray;
+    return scalar $last->output;
+
 }
 
 sub has_input {
-    return grep { $_->has_input } @{ shift->chain };
+    return grep { $_->has_input } @{ shift->links };
 }
 
 1;

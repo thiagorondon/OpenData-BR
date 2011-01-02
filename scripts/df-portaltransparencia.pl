@@ -13,16 +13,12 @@ use aliased 'OpenData::Flow::Node::URLRetriever';
 use aliased 'OpenData::Flow::Node::MultiPageURLGenerator';
 use aliased 'OpenData::Flow::Node::Dumper' => 'DumperNode';
 
-use URI;
-use OpenData::Get;
-use HTML::TreeBuilder::XPath;
-
 my $base = join( '/',
     q{http://www.portaltransparencia.gov.br},
     q{ceis}, q{EmpresasSancionadas.asp?paramEmpresa=0} );
 
 my $chain = Chain->new(
-    chain => [
+    links => [
         LiteralData->new( data => $base, ),
         MultiPageURLGenerator->new(
             first_page => -2,
@@ -30,12 +26,18 @@ my $chain = Chain->new(
             #last_page     => 35,
             make_page_url => sub {
                 my ( $self, $url, $page ) = @_;
+
+                use URI;
+
                 my $u = URI->new($url);
                 $u->query_form( $u->query_form, Pagina => $page );
                 return $u->as_string;
             },
             produce_last_page => sub {
                 my $url = shift;
+
+                use OpenData::Get;
+                use HTML::TreeBuilder::XPath;
 
                 #print STDERR qq{produce_last_page url = $url\n};
                 my $get  = OpenData::Get->new;
