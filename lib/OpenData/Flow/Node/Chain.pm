@@ -41,26 +41,8 @@ sub output {
     return $first->output if $n == 1;
 
     my $last = reduce { $b->input( $a->output ); $b } @{ $self->links };
-    #use Data::Dumper; warn 'last = '.Dumper($last);
-    #my $t = $last->output;
-    #warn 't = ' .Dumper($t);
-    #return scalar $last->output() unless wantarray;
-    #return $last->output();
-    #if( wantarray ) {
-    #    my @r = $last->output;
-    #    use Data::Dumper; warn 'links result (@) = '.Dumper(@r);
-    #    use Data::Dumper; warn 'last = '.Dumper($last);
-    #    return @r;
-    #}
-    #else {
-    #    my $r = $last->output;
-    #    use Data::Dumper; warn 'links result ($) = '.Dumper($r);
-    #    use Data::Dumper; warn 'last = '.Dumper($last);
-    #    return $r;
-    #}
     return ( $last->output ) if wantarray;
     return scalar $last->output;
-
 }
 
 sub has_queued_data {
