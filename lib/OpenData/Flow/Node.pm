@@ -7,7 +7,7 @@ use Queue::Base;
 
 =head1 NAME
 
-OpenData::Flow::Node - A Moose class that defines a task in a data flow
+OpenData::Flow::Node - A generic processing node in a data flow
 
 =head1 SYNOPSIS
 
@@ -98,7 +98,7 @@ that you use references:
 
 And, in the C<process_item>
 
-    my $node = OpenData::AZ:Node->new(
+    my $node = OpenData::Flow:Node->new(
         process_item => sub {
             my ($self,$item) = @_;
             if( ref($item) eq 'ARRAY' ) {
@@ -117,12 +117,12 @@ And, in the C<process_item>
 
 The processing of the data is performed by the sub referenced by the
 C<< process_item >> attribute. This attribute is B<required> by
-C<< OpenData::AZ:Node >>.
+C<< OpenData::Flow::Node >>.
 
 =head3 Calling Convention
 
 The code referenced by C<process_item> will be called with two arguments: a
-reference to the C<< OpenData::AZ:Node >> object, and one single item from
+reference to the C<< OpenData::Flow::Node >> object, and one single item from
 the input queue, be it a simple scalar, or any type of reference. The code
 below shows a typical implementation:
 
@@ -136,7 +136,7 @@ below shows a typical implementation:
 
 =head3 Inheritance
 
-When inheriting from C<< OpenData::AZ:Node >>, some classes may provide a
+When inheriting from C<< OpenData::Flow::Node >>, some classes may provide a
 default code for C<process_item>. For instance:
 
     package UCNode;
@@ -219,6 +219,11 @@ mandatory attribute, and must follow the calling conventions described above.
 
 =cut
 
+has name => (
+    is  => 'ro',
+    isa => 'Str',
+);
+
 has deref => (
     is      => 'ro',
     isa     => 'Bool',
@@ -257,15 +262,17 @@ has '_inputq' => (
     handles => {
         _add_input      => 'add',
         _is_input_empty => 'empty',
+        _dequeue_input  => sub {
+            my $self = shift;
+            return $self->_inputq->remove unless wantarray;
+            return $self->_inputq->remove( $self->_inputq->size );
+        },
         clear_input     => 'clear',
+        has_input       => sub {
+            return 0 < shift->_inputq->size;
+        },
     },
 );
-
-sub _dequeue_input {
-    my $self = shift;
-    return $self->_inputq->remove unless wantarray;
-    return $self->_inputq->remove( $self->_inputq->size );
-}
 
 =head2 input
 
@@ -276,20 +283,13 @@ Provide input data for the node.
 sub input {
     my $self = shift;
 
-    #local $,=','; print STDERR "input = ", @_, "\n";
     $self->_add_input(@_);
+    #use Data::Dumper; warn 'input self (after)= ' .Dumper($self);
 }
 
 =head2 has_input
 
 Returns true if there is data in the input queue, false otherwise.
-
-=cut
-
-sub has_input {
-    my $self = shift;
-    return 0 < $self->_inputq->size;
-}
 
 =head2 process_input
 
@@ -303,7 +303,7 @@ sub process_input {
     return unless $self->has_input;
 
     $self->_add_output( $self->_handle_list( $self->_dequeue_input ) );
-    use Data::Dumper; warn 'process_input :: self :: after = ' . Dumper($self);
+    #use Data::Dumper; warn 'process_input :: self :: after = ' . Dumper($self);
 }
 
 ##############################################################################
@@ -317,14 +317,16 @@ has '_outputq' => (
         _add_output         => 'add',
         _is_output_empty    => 'empty',
         _clear_output_queue => 'clear',
+        _dequeue_output     => sub {
+            my $self = shift;
+            return $self->_outputq->remove unless wantarray;
+            return $self->_outputq->remove( $self->_outputq->size );
+        },
+        has_output          => sub {
+            return 0 < shift->_outputq->size;
+        },
     },
 );
-
-sub _dequeue_output {
-    my $self = shift;
-    return $self->_outputq->remove unless wantarray;
-    return $self->_outputq->remove( $self->_outputq->size );
-}
 
 =head2 output
 
@@ -334,11 +336,10 @@ Fetch data from the node.
 
 sub output {
     my $self = shift;
-    #$self->process_input;
-    #return ( $self->_dequeue_output ) if wantarray;
-    #return scalar $self->_dequeue_output;
-    return $self->_handle_list( $self->_dequeue_input ) if wantarray;
-    return $self->_handle_item( scalar $self->_dequeue_input );
+    $self->process_input if $self->auto_process;
+    #use Data::Dumper; warn 'output self = ' .Dumper($self);
+    return ( $self->_dequeue_output ) if wantarray;
+    return scalar $self->_dequeue_output;
 }
 
 =head2 flush
@@ -349,6 +350,7 @@ Flushes this node's queues
 
 sub flush {
     my $self = shift;
+    $self->process_input;
     while ( $self->output ) { };    #empty
     return;
 }
@@ -358,11 +360,6 @@ sub flush {
 Returns true if there is data in the output queue, false otherwise.
 
 =cut
-
-sub has_output {
-    my $self = shift;
-    return 0 < $self->_outputq->size;
-}
 
 ##############################################################################
 
@@ -388,7 +385,8 @@ sub process {
     my $self = shift;
     return unless @_;
     $self->input(@_);
-    return $self->output;
+    $self->process_input;
+    return wantarray ? $self->output : scalar $self->output;
 }
 
 ##############################################################################
@@ -401,16 +399,15 @@ has '_errorq' => (
     handles => {
         _enqueue_error  => 'add',
         _is_error_empty => 'empty',
+        _dequeue_error     => sub {
+            my $self = shift;
+            return $self->_errorq->remove unless wantarray;
+            return $self->_errorq->remove( $self->_errorq->size );
+        },
         flush_error     => 'clear',
         clear_error     => 'clear',
     },
 );
-
-sub _dequeue_error {
-    my $self = shift;
-    return $self->_errorq->remove unless wantarray;
-    return $self->_errorq->remove( $self->_errorq->size );
-}
 
 =head2 get_error
 
@@ -430,6 +427,7 @@ sub get_error {
 sub _handle_list {
     my $self   = shift;
     my @result = ();
+    #use Data::Dumper; warn '_handle_list(params) = '.Dumper(@_);
     foreach my $item (@_) {
         push @result, $self->_handle_item($item);
     }
@@ -445,15 +443,15 @@ sub _handle_item {
 }
 
 use constant {
-    SVALUE  => 'SVALUE',
-    BLESSED => 'BLESSED',
+    SVALUE => 'SVALUE',
+    OBJECT => 'OBJECT',
 };
 
 sub _param_type {
     my $p = shift;
     my $r = reftype($p);
     return SVALUE unless $r;
-    return BLESSED if blessed($p);
+    return OBJECT if blessed($p);
     return $r;
 }
 
@@ -464,21 +462,21 @@ has '_handlers' => (
     default => sub {
         my $me           = shift;
         my $type_handler = {
-            SVALUE  => \&_handle_svalue,
-            BLESSED => \&_handle_svalue,
-            SCALAR  => $me->process_into ? \&_handle_scalar : \&_handle_svalue,
-            ARRAY   => $me->process_into ? \&_handle_array : \&_handle_svalue,
-            HASH    => $me->process_into ? \&_handle_hash : \&_handle_svalue,
-            CODE    => $me->process_into ? \&_handle_code : \&_handle_svalue,
+            SVALUE => \&_handle_svalue,
+            OBJECT => \&_handle_svalue,
+            SCALAR => $me->process_into ? \&_handle_scalar : \&_handle_svalue,
+            ARRAY  => $me->process_into ? \&_handle_array : \&_handle_svalue,
+            HASH   => $me->process_into ? \&_handle_hash : \&_handle_svalue,
+            CODE   => $me->process_into ? \&_handle_code : \&_handle_svalue,
         };
         return $me->deref
           ? {
-            SVALUE  => $type_handler->{SVALUE},
-            BLESSED => $type_handler->{BLESSED},
-            SCALAR  => sub { ${ $type_handler->{SCALAR}->(@_) } },
-            ARRAY   => sub { @{ $type_handler->{ARRAY}->(@_) } },
-            HASH    => sub { %{ $type_handler->{HASH}->(@_) } },
-            CODE    => sub { $type_handler->{CODE}->(@_)->() },
+            SVALUE => $type_handler->{SVALUE},
+            OBJECT => $type_handler->{OBJECT},
+            SCALAR => sub { ${ $type_handler->{SCALAR}->(@_) } },
+            ARRAY  => sub { @{ $type_handler->{ARRAY}->(@_) } },
+            HASH   => sub { %{ $type_handler->{HASH}->(@_) } },
+            CODE   => sub { $type_handler->{CODE}->(@_)->() },
           }
           : $type_handler;
     },
@@ -486,7 +484,7 @@ has '_handlers' => (
 
 sub _handle_svalue {
     my ( $self, $item ) = @_;
-    return $self->process_item->( $self, $item );
+    return scalar $self->process_item->( $self, $item );
 }
 
 sub _handle_scalar {
@@ -497,6 +495,7 @@ sub _handle_scalar {
 
 sub _handle_array {
     my ( $self, $item ) = @_;
+    #use Data::Dumper; warn 'handle_array :: item = ' . Dumper($item);
     my @r = map { $self->process_item->( $self, $_ ) } @{$item};
     return [@r];
 }

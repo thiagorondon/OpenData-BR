@@ -2,7 +2,7 @@
 package OpenData::Flow::Node::LiteralData;
 
 use Moose;
-extends 'OpenData::Flow::Node::NOP';
+extends 'OpenData::Flow::Node::Null';
 
 has data => (
     is        => 'ro',
@@ -18,8 +18,6 @@ has data => (
         }
     },
 );
-
-override 'input' => sub { };
 
 1;
 

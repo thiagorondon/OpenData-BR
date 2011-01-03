@@ -51,17 +51,19 @@ my $chain = Chain->new(
                 return $1 if $texto =~ /\d\/(\d+)/;
             },
         ),
-        URLRetriever->new( process_into => 1, deref => 1 ),
+#        DumperNode->new,
+        URLRetriever->new( process_into => 1, ),
         HTMLFilter->new(
             search_xpath =>
               '//div[@id="listagemEmpresasSancionadas"]/table/tbody/tr',
             process_into => 1,
+            deref => 1,
         ),
         HTMLFilter->new(
             search_xpath => '//td',
             result_type  => 'VALUE',
             process_into => 1,
-            deref        => 1,
+            deref => 1,
         ),
         DumperNode->new,
     ],

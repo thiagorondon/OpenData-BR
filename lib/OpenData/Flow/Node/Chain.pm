@@ -28,7 +28,7 @@ sub input {
 
 sub output {
     my $self = shift;
-    return unless $self->has_input;
+    return unless $self->has_queued_data;
 
 #use Data::Dumper;
 #warn 'chain :: output :: links = '.Dumper($self->links);
@@ -49,11 +49,13 @@ sub output {
     #if( wantarray ) {
     #    my @r = $last->output;
     #    use Data::Dumper; warn 'links result (@) = '.Dumper(@r);
+    #    use Data::Dumper; warn 'last = '.Dumper($last);
     #    return @r;
     #}
     #else {
     #    my $r = $last->output;
     #    use Data::Dumper; warn 'links result ($) = '.Dumper($r);
+    #    use Data::Dumper; warn 'last = '.Dumper($last);
     #    return $r;
     #}
     return ( $last->output ) if wantarray;
@@ -61,8 +63,8 @@ sub output {
 
 }
 
-sub has_input {
-    return grep { $_->has_input } @{ shift->links };
+sub has_queued_data {
+    return grep { $_->has_queued_data } @{ shift->links };
 }
 
 1;

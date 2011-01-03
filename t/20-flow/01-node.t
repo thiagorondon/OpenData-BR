@@ -18,8 +18,7 @@ ok( $uc->process_item->( $uc, 'iop' ) eq 'IOP' );
 # tests: 4
 # scalars
 diag('scalar params');
-my $undef = $uc->process();
-ok( !$undef );
+ok( !defined($uc->process()) );
 ok( $uc->process('aaa') eq 'AAA' );
 ok( $uc->process('aaa') ne 'aaa' );
 ok( $uc->process(1) == 1 );
@@ -39,8 +38,8 @@ my ( $all, $your, $base ) = $uc->process(qw/all your base is belong to us/);
 ok( $all  eq 'ALL' );
 ok( $your eq 'YOUR' );
 ok( $base eq 'BASE' );
-my $undef2 = $uc->output;
-ok( !$undef2 );
+
+ok( !defined($uc->output) );
 my $r1 = $uc->process(qw/all your base is belong to us/);
 ok( $uc->output eq 'YOUR' );
 ok( $uc->output eq 'BASE' );
