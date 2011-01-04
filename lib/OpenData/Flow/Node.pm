@@ -1,9 +1,265 @@
-
 package OpenData::Flow::Node;
 
 use Moose;
 use Scalar::Util qw/blessed reftype/;
 use Queue::Base;
+
+has name => (
+    is  => 'ro',
+    isa => 'Str',
+);
+
+has deref => (
+    is      => 'ro',
+    isa     => 'Bool',
+    default => 0,
+);
+
+has process_into => (
+    is      => 'ro',
+    isa     => 'Bool',
+    default => 0,
+);
+
+has auto_process => (
+    is      => 'ro',
+    isa     => 'Bool',
+    default => 1,
+);
+
+has process_item => (
+    is       => 'ro',
+    isa      => 'CodeRef',
+    required => 1,
+);
+
+##############################################################################
+# node input queue
+
+has '_inputq' => (
+    is      => 'ro',
+    isa     => 'Queue::Base',
+    default => sub { Queue::Base->new },
+    handles => {
+        _add_input      => 'add',
+        _is_input_empty => 'empty',
+        _dequeue_input  => sub {
+            my $self = shift;
+            return $self->_inputq->remove unless wantarray;
+            return $self->_inputq->remove( $self->_inputq->size );
+        },
+        clear_input => 'clear',
+        has_input   => sub {
+            return 0 < shift->_inputq->size;
+        },
+    },
+);
+
+sub input {
+    my $self = shift;
+
+    $self->_add_input(@_);
+
+    #use Data::Dumper; warn 'input self (after)= ' .Dumper($self);
+}
+
+sub process_input {
+    my $self = shift;
+    return unless $self->has_input;
+
+    $self->_add_output( $self->_handle_list( $self->_dequeue_input ) );
+
+    #use Data::Dumper; warn 'process_input :: self :: after = ' . Dumper($self);
+}
+
+##############################################################################
+# node output queue
+
+has '_outputq' => (
+    is      => 'ro',
+    isa     => 'Queue::Base',
+    default => sub { Queue::Base->new },
+    handles => {
+        _add_output         => 'add',
+        _is_output_empty    => 'empty',
+        _clear_output_queue => 'clear',
+        _dequeue_output     => sub {
+            my $self = shift;
+            return $self->_outputq->remove unless wantarray;
+            return $self->_outputq->remove( $self->_outputq->size );
+        },
+        has_output => sub {
+            return 0 < shift->_outputq->size;
+        },
+    },
+);
+
+sub output {
+    my $self = shift;
+    $self->process_input if $self->auto_process;
+
+    #use Data::Dumper; warn 'output self = ' .Dumper($self);
+    return ( $self->_dequeue_output ) if wantarray;
+    return scalar $self->_dequeue_output;
+}
+
+sub flush {
+    my $self = shift;
+    $self->process_input;
+    while ( $self->output ) { };    #empty
+    return;
+}
+
+##############################################################################
+
+sub has_queued_data {
+    my $self = shift;
+    return ( $self->has_input || $self->has_output );
+}
+
+sub process {
+    my $self = shift;
+    return unless @_;
+    $self->input(@_);
+    $self->process_input;
+    return wantarray ? $self->output : scalar $self->output;
+}
+
+##############################################################################
+# node error queue
+
+has '_errorq' => (
+    is      => 'ro',
+    isa     => 'Queue::Base',
+    default => sub { Queue::Base->new },
+    handles => {
+        _enqueue_error  => 'add',
+        _is_error_empty => 'empty',
+        _dequeue_error  => sub {
+            my $self = shift;
+            return $self->_errorq->remove unless wantarray;
+            return $self->_errorq->remove( $self->_errorq->size );
+        },
+        flush_error => 'clear',
+        clear_error => 'clear',
+    },
+);
+
+sub get_error {
+    my $self = shift;
+    return $self->_dequeue_error;
+}
+
+##############################################################################
+# code to handle different types of input
+#   ex: array-refs, hash-refs, code-refs, etc...
+
+use constant {
+    SVALUE => 'SVALUE',
+    OBJECT => 'OBJECT',
+};
+
+sub _param_type {
+    my $p = shift;
+    my $r = reftype($p);
+    return SVALUE unless $r;
+    return OBJECT if blessed($p);
+    return $r;
+}
+
+sub _handle_list {
+    my $self   = shift;
+    my @result = ();
+
+    #use Data::Dumper; warn '_handle_list(params) = '.Dumper(@_);
+    foreach my $item (@_) {
+        push @result, $self->_handle_item($item);
+    }
+    return @result;
+}
+
+sub _handle_item {
+    my ( $self, $item ) = @_;
+    my $type = _param_type($item);
+    $self->confess('There is no handler for this parameter type!')
+      unless exists $self->_handlers->{$type};
+    return $self->_handlers->{$type}->( $self, $item );
+}
+
+##############################################################################
+#
+#  _handlers
+#
+#  _handlers is a hash reference, with reference types (and some other special
+#  strings) as keys, and code references (a.k.a. handlers) as values.
+#
+#  For each key, a handler will be defined taking into account whether this
+#  node has process_into == 1 and/or deref == 1.
+#
+
+has '_handlers' => (
+    is      => 'ro',
+    isa     => 'HashRef',
+    lazy    => 1,
+    default => sub {
+        my $me           = shift;
+        my $type_handler = {
+            SVALUE => \&_handle_svalue,
+            OBJECT => \&_handle_svalue,
+            SCALAR => $me->process_into ? \&_handle_scalar : \&_handle_svalue,
+            ARRAY  => $me->process_into ? \&_handle_array : \&_handle_svalue,
+            HASH   => $me->process_into ? \&_handle_hash : \&_handle_svalue,
+            CODE   => $me->process_into ? \&_handle_code : \&_handle_svalue,
+        };
+        return $me->deref
+          ? {
+            SVALUE => $type_handler->{SVALUE},
+            OBJECT => $type_handler->{OBJECT},
+            SCALAR => sub { ${ $type_handler->{SCALAR}->(@_) } },
+            ARRAY  => sub { @{ $type_handler->{ARRAY}->(@_) } },
+            HASH   => sub { %{ $type_handler->{HASH}->(@_) } },
+            CODE   => sub { $type_handler->{CODE}->(@_)->() },
+          }
+          : $type_handler;
+    },
+);
+
+sub _handle_svalue {
+    my ( $self, $item ) = @_;
+    return scalar $self->process_item->( $self, $item );
+}
+
+sub _handle_scalar {
+    my ( $self, $item ) = @_;
+    my $r = $self->process_item->( $self, $$item );
+    return \$r;
+}
+
+sub _handle_array {
+    my ( $self, $item ) = @_;
+
+    #use Data::Dumper; warn 'handle_array :: item = ' . Dumper($item);
+    my @r = map { $self->process_item->( $self, $_ ) } @{$item};
+    return [@r];
+}
+
+sub _handle_hash {
+    my ( $self, $item ) = @_;
+    my %r = map { $_ => $self->process_item->( $self, $item->{$_} ) }
+      keys %{$item};
+    return {%r};
+}
+
+sub _handle_code {
+    my ( $self, $item ) = @_;
+    return sub { $self->process_item->( $self, $item->() ) };
+}
+
+1;
+
+__END__
+
+=pod
 
 =head1 NAME
 
@@ -217,75 +473,11 @@ of running any code reference.
 A code reference that is the actual work horse for this class. It is a
 mandatory attribute, and must follow the calling conventions described above.
 
-=cut
-
-has name => (
-    is  => 'ro',
-    isa => 'Str',
-);
-
-has deref => (
-    is      => 'ro',
-    isa     => 'Bool',
-    default => 0,
-);
-
-has process_into => (
-    is      => 'ro',
-    isa     => 'Bool',
-    default => 0,
-);
-
-has auto_process => (
-    is      => 'ro',
-    isa     => 'Bool',
-    default => 1,
-);
-
-has process_item => (
-    is       => 'ro',
-    isa      => 'CodeRef',
-    required => 1,
-);
-
 =head1 METHODS
-
-=cut
-
-##############################################################################
-# node input queue
-
-has '_inputq' => (
-    is      => 'ro',
-    isa     => 'Queue::Base',
-    default => sub { Queue::Base->new },
-    handles => {
-        _add_input      => 'add',
-        _is_input_empty => 'empty',
-        _dequeue_input  => sub {
-            my $self = shift;
-            return $self->_inputq->remove unless wantarray;
-            return $self->_inputq->remove( $self->_inputq->size );
-        },
-        clear_input     => 'clear',
-        has_input       => sub {
-            return 0 < shift->_inputq->size;
-        },
-    },
-);
 
 =head2 input
 
 Provide input data for the node.
-
-=cut
-
-sub input {
-    my $self = shift;
-
-    $self->_add_input(@_);
-    #use Data::Dumper; warn 'input self (after)= ' .Dumper($self);
-}
 
 =head2 has_input
 
@@ -296,225 +488,30 @@ Returns true if there is data in the input queue, false otherwise.
 Processes the items in the input queue and place the results in the output
 queue.
 
-=cut
-
-sub process_input {
-    my $self = shift;
-    return unless $self->has_input;
-
-    $self->_add_output( $self->_handle_list( $self->_dequeue_input ) );
-    #use Data::Dumper; warn 'process_input :: self :: after = ' . Dumper($self);
-}
-
-##############################################################################
-# node output queue
-
-has '_outputq' => (
-    is      => 'ro',
-    isa     => 'Queue::Base',
-    default => sub { Queue::Base->new },
-    handles => {
-        _add_output         => 'add',
-        _is_output_empty    => 'empty',
-        _clear_output_queue => 'clear',
-        _dequeue_output     => sub {
-            my $self = shift;
-            return $self->_outputq->remove unless wantarray;
-            return $self->_outputq->remove( $self->_outputq->size );
-        },
-        has_output          => sub {
-            return 0 < shift->_outputq->size;
-        },
-    },
-);
-
 =head2 output
 
 Fetch data from the node.
-
-=cut
-
-sub output {
-    my $self = shift;
-    $self->process_input if $self->auto_process;
-    #use Data::Dumper; warn 'output self = ' .Dumper($self);
-    return ( $self->_dequeue_output ) if wantarray;
-    return scalar $self->_dequeue_output;
-}
 
 =head2 flush
 
 Flushes this node's queues
 
-=cut
-
-sub flush {
-    my $self = shift;
-    $self->process_input;
-    while ( $self->output ) { };    #empty
-    return;
-}
-
 =head2 has_output
 
 Returns true if there is data in the output queue, false otherwise.
-
-=cut
-
-##############################################################################
 
 =head2 has_queued_data
 
 Returns true if there is data in either the input or the output queue of this
 node, false otherwise.
 
-=cut
-
-sub has_queued_data {
-    my $self = shift;
-    return ( $self->has_input || $self->has_output );
-}
-
 =head2 process
 
 Convenience method to provide input and immediately get the output.
 
-=cut
-
-sub process {
-    my $self = shift;
-    return unless @_;
-    $self->input(@_);
-    $self->process_input;
-    return wantarray ? $self->output : scalar $self->output;
-}
-
-##############################################################################
-# node error queue
-
-has '_errorq' => (
-    is      => 'ro',
-    isa     => 'Queue::Base',
-    default => sub { Queue::Base->new },
-    handles => {
-        _enqueue_error  => 'add',
-        _is_error_empty => 'empty',
-        _dequeue_error     => sub {
-            my $self = shift;
-            return $self->_errorq->remove unless wantarray;
-            return $self->_errorq->remove( $self->_errorq->size );
-        },
-        flush_error     => 'clear',
-        clear_error     => 'clear',
-    },
-);
-
 =head2 get_error
 
 Fetch error messages (if any) from the node.
-
-=cut
-
-sub get_error {
-    my $self = shift;
-    return $self->_dequeue_error;
-}
-
-##############################################################################
-# code to handle different types of input
-#   ex: array-refs, hash-refs, code-refs, etc...
-
-sub _handle_list {
-    my $self   = shift;
-    my @result = ();
-    #use Data::Dumper; warn '_handle_list(params) = '.Dumper(@_);
-    foreach my $item (@_) {
-        push @result, $self->_handle_item($item);
-    }
-    return @result;
-}
-
-sub _handle_item {
-    my ( $self, $item ) = @_;
-    my $type = _param_type($item);
-    $self->confess('There is no handler for this parameter type!')
-      unless exists $self->_handlers->{$type};
-    return $self->_handlers->{$type}->( $self, $item );
-}
-
-use constant {
-    SVALUE => 'SVALUE',
-    OBJECT => 'OBJECT',
-};
-
-sub _param_type {
-    my $p = shift;
-    my $r = reftype($p);
-    return SVALUE unless $r;
-    return OBJECT if blessed($p);
-    return $r;
-}
-
-has '_handlers' => (
-    is      => 'ro',
-    isa     => 'HashRef',
-    lazy    => 1,
-    default => sub {
-        my $me           = shift;
-        my $type_handler = {
-            SVALUE => \&_handle_svalue,
-            OBJECT => \&_handle_svalue,
-            SCALAR => $me->process_into ? \&_handle_scalar : \&_handle_svalue,
-            ARRAY  => $me->process_into ? \&_handle_array : \&_handle_svalue,
-            HASH   => $me->process_into ? \&_handle_hash : \&_handle_svalue,
-            CODE   => $me->process_into ? \&_handle_code : \&_handle_svalue,
-        };
-        return $me->deref
-          ? {
-            SVALUE => $type_handler->{SVALUE},
-            OBJECT => $type_handler->{OBJECT},
-            SCALAR => sub { ${ $type_handler->{SCALAR}->(@_) } },
-            ARRAY  => sub { @{ $type_handler->{ARRAY}->(@_) } },
-            HASH   => sub { %{ $type_handler->{HASH}->(@_) } },
-            CODE   => sub { $type_handler->{CODE}->(@_)->() },
-          }
-          : $type_handler;
-    },
-);
-
-sub _handle_svalue {
-    my ( $self, $item ) = @_;
-    return scalar $self->process_item->( $self, $item );
-}
-
-sub _handle_scalar {
-    my ( $self, $item ) = @_;
-    my $r = $self->process_item->( $self, $$item );
-    return \$r;
-}
-
-sub _handle_array {
-    my ( $self, $item ) = @_;
-    #use Data::Dumper; warn 'handle_array :: item = ' . Dumper($item);
-    my @r = map { $self->process_item->( $self, $_ ) } @{$item};
-    return [@r];
-}
-
-sub _handle_hash {
-    my ( $self, $item ) = @_;
-    my %r = map { $_ => $self->process_item->( $self, $item->{$_} ) }
-      keys %{$item};
-    return {%r};
-}
-
-sub _handle_code {
-    my ( $self, $item ) = @_;
-    return sub { $self->process_item->( $self, $item->() ) };
-}
-
-1;
-
-__END__
 
 =head1 DEPENDENCIES
 
@@ -593,3 +590,4 @@ FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
 SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGES.
 
+=cut
