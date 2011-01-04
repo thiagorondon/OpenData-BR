@@ -13,7 +13,9 @@ requires 'namespace::autoclean';
 requires 'File::Slurp';
 requires 'Text::CSV';
 requires 'Scalar::Util';
+requires 'List::Util';
 requires 'List::MoreUtils';
+requires 'Queue::Base';
 requires 'LWP::Curl';
 requires 'HTML::TreeBuilder::XPath';
 requires 'DBI';
@@ -22,8 +24,8 @@ requires 'MongoDB';
 requires 'WWW::Mechanize';
 requires 'Test::Memory::Cycle';
 requires 'MooseX::App::Cmd';
-requires 'version' => 0.86;
 requires 'aliased';
+requires 'version' => 0.86;
 
 recommends 'Text::CSV_XS' => '0.50';
 

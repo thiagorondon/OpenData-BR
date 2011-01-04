@@ -1,0 +1,678 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- intancia o include para obter a connection string -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pt" lang="pt">
+
+<head>
+    <title> Portal da Transparência - Todos os Conv&ecirc;nios </title>
+    <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=iso-8859-1">
+		<link rel="stylesheet" type="text/css" href="/css/reset.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/geral.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/cabecalho.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/consultas.css"/>
+
+	<link rel="stylesheet" type="text/css" href="/css/cabecalhoPrint.css" media="print"/>
+	<link rel="stylesheet" type="text/css" href="/css/consultasPrint.css" media="print"/><script language="JavaScript">
+    function navega(pagina)
+    {
+    
+        var paginaInicial = 1;
+        var paginaFinal = 25637;
+        var paginaAtual = 1;
+        var strUrl = "/convenios/convenioslistageral.asp?ordem=-1" 
+        
+
+        if (pagina == paginaAtual || pagina =='')
+        {
+            document.paginacao.numeroPagina.value = '';
+        }
+        else
+        {
+            if (isNaN(pagina) || (pagina < paginaInicial) || (pagina > paginaFinal))
+            {
+                alert('Pagina inválida');
+                document.paginacao.numeroPagina.value = '';
+            }
+            else
+            {
+                strUrl += '&Pagina=' + pagina;
+                window.location = strUrl;
+            }
+        }
+        return false
+    }
+	
+    function pesquisa(texto)
+    {
+		var strUrl = "/convenios/convenioslistageral.asp?ordem=-1"
+		
+		strUrl = strUrl + '&pagina=1&textoPesquisa=' + texto
+		window.location = strUrl;
+    }    
+</script>
+
+	
+
+    <noscript>Script de navegação</noscript>
+</head>
+
+<body>
+<div id="site">
+
+<script type="text/javascript" language="JavaScript">
+if (window != top) top.location.href = location.href;
+
+function comboChange(comoBox,usado){
+  window.open( comoBox.options[comoBox.selectedIndex].value);
+  if (usado) comoBox.selectedIndex=0;
+
+}
+</script>
+
+<noscript>Script para abertura de nova janela</noscript>
+
+<div id="presidencia">
+
+	<a href="http://www.cgu.gov.br" target="_blank" style="float:left; width:64%">
+		<!-- style margin-bottom:-4px == HACK IE6 -->
+		<img src="/images/cgu_logo.gif" style="border-style: none; margin-bottom:-4px;" alt="Presidência da Republica - Controladoria Geral da União"/>
+	</a>
+
+	
+	<div style="float:left; width:23.5%;">
+		<select name="sltVoce" id="sltVoce" title="Paginas do Governo Federal" class="pr" tabindex="1" onchange="comboChange(this,1)" size="1">
+			<option value="" selected="selected">Destaques do Governo</option>
+			<option value="http://www.brasil.gov.br">Portal do Governo Federal</option>
+			<option value="http://www.e.gov.br">Portal de Serviços do Governo</option>
+			<option value="http://www.agenciabrasil.gov.br">Portal da Agência de Notícias</option>
+			<option value="http://www.brasil.gov.br/emquestao">Em Questão</option>
+			<option value="http://www.fomezero.gov.br">Programa Fome Zero</option>
+		  </select>
+	</div>
+
+	<!-- <a href="http://www.brasil.gov.br" target="_blank" style="float:left; width:12.5%;"> -->
+		<!-- style margin-bottom:-4px == HACK IE6 -->
+		<!-- <img src="/images/brasil.gif" style="margin-top:2px; margin-bottom:-4px;" alt="Brasil - Um pais de todos"/> -->
+	<!-- </a> -->
+	
+</div>
+
+
+<!-- Testeira do Portal da Transparência -->
+<div id="logo">
+	<a href="/" title="Portal da Transparência">
+		<h1>
+            <img src="/images/bandeira.png" alt="Portal da Transparência do Governo Federal" />
+        </h1>
+	</a>
+</div>
+
+<script type="text/javascript" language="JavaScript">
+
+    function redirAcessoRapido() {
+
+        var sel = document.getElementById('linksAcessoRapido');
+        var opt = sel.options[sel.selectedIndex];
+		
+		// Apenas redireciona se não for um link "fake" (#)
+		if (opt.value != "#")
+		{
+			// Se possui um "+" indicando para abrir em nova janela...
+			if (opt.value.indexOf ("+") == 0)
+			{
+				window.open (opt.value.substring(1)); // ... abre em nova janela (desconsiderando o "+")
+			}
+			else // Se não possui...
+			{
+				window.location = opt.value; // ... abre na mesma janela
+			}
+		}
+		
+    }
+	
+</script>
+
+<!-- Combo de acesso rápido -->
+<div id="acesso-rapido">
+
+    <div class="conteudo">
+        <h2>
+            <label for="linksAcessoRapido">Acesso rápido</label>
+        </h2>
+        <select id="linksAcessoRapido">
+                <option value="#">Selecione...</option>
+            <optgroup label="CONSULTAS">
+                <option value="/Despesas.asp">Despesas</option>
+				<option value="/receitas">Receitas</option>
+                <option value="/convenios">Convênios</option>
+                <option value="/ceis">Empresas Sancionadas</option>
+				<option value="/servidores">Servidores</option>
+            </optgroup>
+            <optgroup label="GRÁFICOS E DOWNLOADS">
+                <option value="/planilhas/">Download de Consultas</option>
+				<option value="/graficos/">Portal em Gráficos</option>
+            </optgroup>			
+            <optgroup label="INFORMAÇÕES">
+                <option value="/sobre">Sobre o Portal</option>
+                <option value="/sobre/Origem.asp">Dados do Portal</option>
+                <option value="/aprendaMais">Aprenda Mais</option>
+                <option value="/noticias">Notícias</option>
+                <option value="/controleSocial">Controle Social</option>
+                <option value="/licitacoesecontratos/">Licitações e Contratos</option>
+            </optgroup>
+            <optgroup label="SERVIÇOS">
+				<option value="/convenios/ConveniosFormulario.asp">Informações sobre convênios</option>
+				<option value="/rede/">Rede de Transparência</option>
+				<option value="http://www1.transparencia.gov.br/">Páginas de Transparência</option>
+				<option value="http://br.transparencia.gov.br/">Estados e Municípios</option>
+				<option value="+http://www.cgu.gov.br/olhovivo/">Programa Olho Vivo</option>
+				<option value="+http://www.portalzinho.cgu.gov.br/">Portal Criança Cidadã</option>
+            </optgroup>
+        </select>
+        <a href="javascript: redirAcessoRapido();">OK</a>
+    </div>
+    <div class="borda"></div>
+</div>
+
+<!-- Links de navegação -->
+<div id="navegacao">
+	<ul>
+		<li><a href="/faleConosco/">Fale conosco</a> |</li>
+		<li><a href="/glossario/">Glossário</a> |</li>
+		<li><a href="/faleConosco/Perguntas.asp">Perguntas Freqüentes</a> |</li>
+		<li><a href="/links/">Links</a> |</li>
+		<li><a href="/manual/">Manual de Navegação</a></li>
+	</ul>
+</div>
+
+
+<!--Conteúdo geral -->
+<div id="pagina">
+	
+	<div id="conteudo" >
+
+		<div id="titulo">
+			
+			<h1>
+				Todos os Conv&ecirc;nios
+			</h1>
+		</div>
+		
+	
+	    <div id="acoes">
+	
+         
+	<a  href='http://arquivos.portaldatransparencia.gov.br/PortalTransparenciaEscolheTipoDePlanilha.asp?origem=Convenios&Planilha=0'
+		onclick="javascript: window.open('http://arquivos.portaldatransparencia.gov.br/PortalTransparenciaEscolheTipoDePlanilha.asp?origem=Convenios&Planilha=0&fechar=1','_blank','width=420,height=200,resizable=yes,menubar=no,status=yes'); return false;">
+		baixar mais dados&nbsp;<img src="/images/icone-salvar.png" alt="baixar mais dados"/></a>
+
+
+	<!-- Sublinhado simulado via javascript para IE6; para outros navegadores, o css resolve isso. -->
+	<span  
+			onclick="javascript: print();" 
+			onkeypress="javascript: if (checkKey(event,13)) print ();"						
+			onmouseover="javascript: this.style.textDecoration='underline'; this.style.cursor='pointer';"
+			onmouseout="javascript: this.style.textDecoration='none';"
+			>
+				imprimir&nbsp;<img src="/images/icone-imprimir.png" alt="imprimir"/>
+	</span>
+	
+    </div>
+		
+		
+		<div id="resumo">
+
+			
+			
+
+	<table>
+		<caption style='display:none;'>Resumo da Consulta</caption>
+		<thead>
+			<tr>
+				<th>Descrição</th>
+				<th>Valor</th>
+			</tr>
+		</thead>
+		<tbody>
+
+
+			<tr>
+				<td class="firstChild"> Período: </td>
+				<td class="colunaValor" style="text-align: left;">
+					01/01/1996 a 07/12/2010
+				</td>
+			</tr>
+
+			<tr>
+				<td class="firstChild"> Total conveniado no período: </td>
+				<td class="colunaValor" style="text-align: left;">
+					R$&nbsp;279.772.656.423,64
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+	
+
+	
+		</div>
+		
+		<div id="listagemConvenios">
+
+			<div id="ajudaListagem">
+				<p class="firstChild">Selecione o(a) &quot;Número&quot; para obter o detalhamento do valor</p>
+				<p>Caso queira outra classificação, clique no título da coluna correspondente</p>
+			</div>
+				
+			<table>
+				<!-- cabecalho da tabela -->
+				<thead>
+					<tr>
+					
+						<th style="width:7%;" class="" title="Ordena por &quot;Número&quot;"><a href="/convenios/ConveniosListaGeral.asp?Periodo=&Ordem=1&textoPesquisa=">Número</a></th>
+					
+						<th style="width:13%;" class="" title="Ordena pelo &quot;Número Original&quot;"><a href="/convenios/ConveniosListaGeral.asp?Periodo=&Ordem=2&textoPesquisa=">Número Original</a></th>
+					
+						<th style="width:3%;" class="" title="Ordena por &quot;UF&quot;"><a href="/convenios/ConveniosListaGeral.asp?Periodo=&Ordem=3&textoPesquisa=">UF</a></th>
+					
+						<th style="width:33%;" class="" title="Ordena por &quot;Objeto&quot;"><a href="/convenios/ConveniosListaGeral.asp?Periodo=&Ordem=4&textoPesquisa=">Objeto</a></th>
+					
+						<th style="width:13%;" class="" title="Ordena por &quot;Órgão Superior&quot;"><a href="/convenios/ConveniosListaGeral.asp?Periodo=&Ordem=5&textoPesquisa=">Órgão Superior</a></th>
+					
+						<th style="width:17%;" class="" title="Ordena por &quot;Concedente&quot;"><a href="/convenios/ConveniosListaGeral.asp?Periodo=&Ordem=6&textoPesquisa=">Concedente</a></th>
+					
+						<th style="width:17%;" class="" title="Ordena por &quot;Convenente&quot;"><a href="/convenios/ConveniosListaGeral.asp?Periodo=&Ordem=7&textoPesquisa=">Convenente</a></th>
+					
+						<th style="width:10%;" class="colunaValor" title="Ordena por &quot;Valor Conveniado&quot;"><a href="/convenios/ConveniosListaGeral.asp?Periodo=&Ordem=-8&textoPesquisa=">Valor Conveniado</a></th>
+					
+					</tr>
+				</thead>
+				<tbody>
+			
+					<tr  >
+						<td class="">
+							<a href="DetalhaConvenio.asp?TipoConsulta=5&CodConvenio=900154">
+								900154
+							</a>
+						</td>												
+						<td class="" >
+							06159/2009          
+						</td>						
+						<td class="">SC</td>
+						<td class="" style="width: 30em;">
+						AQUISIÇÃO DE 01 (UM) CAMINHÃO TRUQUE NOVO E 01 (UM) TANQUE DE CHAPA METÁLICA PARA LIMPEZA POR SUCÇÃO.
+						
+						</td>
+						<td class="">MINIST. DA AGRICUL.,PECUARIA E ABASTECIMENTO </td>
+						<td class="">CAIXA ECONOMICA FEDERAL/MA</td>
+						<td class="">LAURO MULLER PREFEITURA</td>
+						<td class="colunaValor">195.000,00</td>
+						
+					</tr>
+			
+					<tr  class="linhaPar"  >
+						<td class="">
+							<a href="DetalhaConvenio.asp?TipoConsulta=5&CodConvenio=900153">
+								900153
+							</a>
+						</td>												
+						<td class="" >
+							04968/2009          
+						</td>						
+						<td class="">SC</td>
+						<td class="" style="width: 30em;">
+						Aquisição de Máquinas e equipamentos (01 trator agrícola e 01 caminhão tipo caçamba)
+						
+						</td>
+						<td class="">MINIST. DA AGRICUL.,PECUARIA E ABASTECIMENTO </td>
+						<td class="">CAIXA ECONOMICA FEDERAL/MA</td>
+						<td class="">SAO JOAQUIM PREFEITURA</td>
+						<td class="colunaValor">195.000,00</td>
+						
+					</tr>
+			
+					<tr  >
+						<td class="">
+							<a href="DetalhaConvenio.asp?TipoConsulta=5&CodConvenio=900152">
+								900152
+							</a>
+						</td>												
+						<td class="" >
+							07331/2009          
+						</td>						
+						<td class="">SC</td>
+						<td class="" style="width: 30em;">
+						AQUISIÇÃO DE UMA RETROESCAVADEIRA
+						
+						</td>
+						<td class="">MINIST. DA AGRICUL.,PECUARIA E ABASTECIMENTO </td>
+						<td class="">CAIXA ECONOMICA FEDERAL/MA</td>
+						<td class="">IMBITUBA PREFEITURA</td>
+						<td class="colunaValor">195.000,00</td>
+						
+					</tr>
+			
+					<tr  class="linhaPar"  >
+						<td class="">
+							<a href="DetalhaConvenio.asp?TipoConsulta=5&CodConvenio=900151">
+								900151
+							</a>
+						</td>												
+						<td class="" >
+							04587/2009          
+						</td>						
+						<td class="">SC</td>
+						<td class="" style="width: 30em;">
+						AQUISIÇÃO DE UMA RETROESCAVADEIRA
+						
+						</td>
+						<td class="">MINIST. DA AGRICUL.,PECUARIA E ABASTECIMENTO </td>
+						<td class="">CAIXA ECONOMICA FEDERAL/MA</td>
+						<td class="">IMARUI PREFEITURA</td>
+						<td class="colunaValor">195.000,00</td>
+						
+					</tr>
+			
+					<tr  >
+						<td class="">
+							<a href="DetalhaConvenio.asp?TipoConsulta=5&CodConvenio=900150">
+								900150
+							</a>
+						</td>												
+						<td class="" >
+							76674/2009          
+						</td>						
+						<td class="">PA</td>
+						<td class="" style="width: 30em;">
+						Aquisição de patrulha agrícola e implementos.
+						
+						</td>
+						<td class="">MINIST. DA AGRICUL.,PECUARIA E ABASTECIMENTO </td>
+						<td class="">CAIXA ECONOMICA FEDERAL/MA</td>
+						<td class="">PREFEITURA MUNICIPAL DE TAILANDIA</td>
+						<td class="colunaValor">292.500,00</td>
+						
+					</tr>
+			
+					<tr  class="linhaPar"  >
+						<td class="">
+							<a href="DetalhaConvenio.asp?TipoConsulta=5&CodConvenio=900142">
+								900142
+							</a>
+						</td>												
+						<td class="" >
+							07388/2009          
+						</td>						
+						<td class="">MG</td>
+						<td class="" style="width: 30em;">
+						CONSTRUCAO DE MERCADO MUNICIPAL
+						
+						</td>
+						<td class="">MINIST. DA AGRICUL.,PECUARIA E ABASTECIMENTO </td>
+						<td class="">CAIXA ECONOMICA FEDERAL/MA</td>
+						<td class="">GUARACIAMA PREFEITURA MUNICIPAL</td>
+						<td class="colunaValor">292.500,00</td>
+						
+					</tr>
+			
+					<tr  >
+						<td class="">
+							<a href="DetalhaConvenio.asp?TipoConsulta=5&CodConvenio=900140">
+								900140
+							</a>
+						</td>												
+						<td class="" >
+							53313/2009          
+						</td>						
+						<td class="">MG</td>
+						<td class="" style="width: 30em;">
+						Construção de Matadouro e aquisição de equipamentos..SANGRIA BOVINA  Box de atordoamento simples, Grade de deslizamento simples, Guincho eletrico para sangria bovina, Ralo duplo para sangue e agua, Conjunto trilhamento aéreo não mecanizado, Lavat
+						
+						</td>
+						<td class="">MINIST. DA AGRICUL.,PECUARIA E ABASTECIMENTO </td>
+						<td class="">CAIXA ECONOMICA FEDERAL/MA</td>
+						<td class="">PREFEITURA MUNICIPAL DE CURVELO</td>
+						<td class="colunaValor">1.170.000,00</td>
+						
+					</tr>
+			
+					<tr  class="linhaPar"  >
+						<td class="">
+							<a href="DetalhaConvenio.asp?TipoConsulta=5&CodConvenio=900139">
+								900139
+							</a>
+						</td>												
+						<td class="" >
+							00369/2009          
+						</td>						
+						<td class="">RS</td>
+						<td class="" style="width: 30em;">
+						PATRULHA MECANIZADA
+						
+						</td>
+						<td class="">MINIST. DA AGRICUL.,PECUARIA E ABASTECIMENTO </td>
+						<td class="">CAIXA ECONOMICA FEDERAL/MA</td>
+						<td class="">SAO JOSE DAS MISSOES PREFEITURA MUNICIPAL</td>
+						<td class="colunaValor">146.250,00</td>
+						
+					</tr>
+			
+					<tr  >
+						<td class="">
+							<a href="DetalhaConvenio.asp?TipoConsulta=5&CodConvenio=900138">
+								900138
+							</a>
+						</td>												
+						<td class="" >
+							04424/2009          
+						</td>						
+						<td class="">SC</td>
+						<td class="" style="width: 30em;">
+						Construção de um Sistema de Tratamento de Efluentes e Aquisição de Equipamentos para o Abatedouro Municipal de Bovinos e de Aves.
+						
+						</td>
+						<td class="">MINIST. DA AGRICUL.,PECUARIA E ABASTECIMENTO </td>
+						<td class="">CAIXA ECONOMICA FEDERAL/MA</td>
+						<td class="">VITOR MEIRELES PREFEITURA</td>
+						<td class="colunaValor">97.500,00</td>
+						
+					</tr>
+			
+					<tr  class="linhaPar"  >
+						<td class="">
+							<a href="DetalhaConvenio.asp?TipoConsulta=5&CodConvenio=900136">
+								900136
+							</a>
+						</td>												
+						<td class="" >
+							52102/2009          
+						</td>						
+						<td class="">SC</td>
+						<td class="" style="width: 30em;">
+						AQUISIÇÃO DE UMA RETROESCAVADEIRA TRAÇADA.
+						
+						</td>
+						<td class="">MINIST. DA AGRICUL.,PECUARIA E ABASTECIMENTO </td>
+						<td class="">CAIXA ECONOMICA FEDERAL/MA</td>
+						<td class="">CHAPADAO DO LAGEADO PREFEITURA MUNICIPAL</td>
+						<td class="colunaValor">97.500,00</td>
+						
+					</tr>
+			
+					<tr  >
+						<td class="">
+							<a href="DetalhaConvenio.asp?TipoConsulta=5&CodConvenio=900134">
+								900134
+							</a>
+						</td>												
+						<td class="" >
+							17411/2009          
+						</td>						
+						<td class="">SC</td>
+						<td class="" style="width: 30em;">
+						Aquisição de uma retroescavadeira.
+						
+						</td>
+						<td class="">MINIST. DA AGRICUL.,PECUARIA E ABASTECIMENTO </td>
+						<td class="">CAIXA ECONOMICA FEDERAL/MA</td>
+						<td class="">PREFEITURA MUNICIPAL DE ABELARDO LUZ</td>
+						<td class="colunaValor">146.250,00</td>
+						
+					</tr>
+			
+					<tr  class="linhaPar"  >
+						<td class="">
+							<a href="DetalhaConvenio.asp?TipoConsulta=5&CodConvenio=900133">
+								900133
+							</a>
+						</td>												
+						<td class="" >
+							76296/2009          
+						</td>						
+						<td class="">TO</td>
+						<td class="" style="width: 30em;">
+						IMPLANTAÇÃO DA CONSTRUÇÃO DA FEIRA COBERTA DO MUNICIPIO DE RIO DOS BOIS-TO.
+						
+						</td>
+						<td class="">MINIST. DA AGRICUL.,PECUARIA E ABASTECIMENTO </td>
+						<td class="">CAIXA ECONOMICA FEDERAL/MA</td>
+						<td class="">RIO DOS BOIS PREFEITURA MUNICIPAL</td>
+						<td class="colunaValor">156.000,00</td>
+						
+					</tr>
+			
+					<tr  >
+						<td class="">
+							<a href="DetalhaConvenio.asp?TipoConsulta=5&CodConvenio=900131">
+								900131
+							</a>
+						</td>												
+						<td class="" >
+							42975/2009          
+						</td>						
+						<td class="">TO</td>
+						<td class="" style="width: 30em;">
+						Aquisição de máquinas e equipamentos agrícolas.
+						
+						</td>
+						<td class="">MINIST. DA AGRICUL.,PECUARIA E ABASTECIMENTO </td>
+						<td class="">CAIXA ECONOMICA FEDERAL/MA</td>
+						<td class="">PAU D'ARCO PREFEITURA MUNICIPAL</td>
+						<td class="colunaValor">97.500,00</td>
+						
+					</tr>
+			
+					<tr  class="linhaPar"  >
+						<td class="">
+							<a href="DetalhaConvenio.asp?TipoConsulta=5&CodConvenio=900130">
+								900130
+							</a>
+						</td>												
+						<td class="" >
+							10527/2009          
+						</td>						
+						<td class="">TO</td>
+						<td class="" style="width: 30em;">
+						Aquisição de Trator Agrícola Traçado.
+						
+						</td>
+						<td class="">MINIST. DA AGRICUL.,PECUARIA E ABASTECIMENTO </td>
+						<td class="">CAIXA ECONOMICA FEDERAL/MA</td>
+						<td class="">SAMPAIO PREFEITURA MUNICIPAL</td>
+						<td class="colunaValor">97.500,00</td>
+						
+					</tr>
+			
+					<tr  >
+						<td class="">
+							<a href="DetalhaConvenio.asp?TipoConsulta=5&CodConvenio=900129">
+								900129
+							</a>
+						</td>												
+						<td class="" >
+							07302/2009          
+						</td>						
+						<td class="">TO</td>
+						<td class="" style="width: 30em;">
+						AQUISIÇÃO DE TRATOR AGRICOLA
+						
+						</td>
+						<td class="">MINIST. DA AGRICUL.,PECUARIA E ABASTECIMENTO </td>
+						<td class="">CAIXA ECONOMICA FEDERAL/MA</td>
+						<td class="">LAGOA DA CONFUSAO PREFEITURA MUNICIPAL</td>
+						<td class="colunaValor">97.500,00</td>
+						
+					</tr>
+			
+				</tbody>
+			</table>
+			
+		</div>
+		
+		<script language="javascript" src="../../Recursos/helper.js"></script>
+<noscript> </noscript>
+
+<form name="formPesquisa" onsubmit="return false">
+
+	<div id="pesquisaListagem">
+	
+		<label for="Pesquisa">Pesquisar:</label>
+		<input type="text" id="Pesquisa" name="Pesquisa" onfocus="this.select();this.value='';"
+			   onkeypress="if (checkKey(event,13)) pesquisa(document.formPesquisa.Pesquisa.value);"
+			   value="Entre com o texto" >
+		<input type="button" value="ok" style="width:3em;" 
+			   onclick="pesquisa(document.formPesquisa.Pesquisa.value);"
+			   onkeypress="if (checkKey(event,13)) pesquisa(document.formPesquisa.Pesquisa.value);" />
+	</div>
+	
+</form><script language="javascript" src="../../Recursos/helper.js"></script>
+<noscript> </noscript>
+
+<form name="paginacao" onsubmit="return false">
+
+	<div id="paginacao">
+
+		<p class="paginaAtual">Página 1/25637</p>
+		<p>
+			
+				&#171; Primeira |
+				&#8249; Anterior |
+			
+				<a href="#" onclick="return navega(2);" >Próxima &#8250;</a> |
+				<a href="#" onclick="return navega(25637);" >Última &#187;</a> |
+			
+
+			<label for="numeroPagina">Página:</label>
+			
+				<input id="numeroPagina" type="text" style="width:7em;"
+					   value="nº página" onfocus="this.select();"
+					   onkeypress="if (checkKey(event,13)) navega(document.paginacao.numeroPagina.value);" />
+				<input type="button" value="Ir" style="width:3.5em;"
+					   onclick="navega(document.paginacao.numeroPagina.value);" 
+					   onkeypress="if (checkKey(event,13)) navega(document.paginacao.numeroPagina.value);" />
+			
+		</p>
+	</div>
+</form><div id="avisos">
+	<p>
+		Recomenda-se visualizar em resolução 1024x768
+	</p>
+</div>
+
+		
+	</div> <!-- /conteudo -->
+</div>
+</div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<noscript> </noscript>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-1665737-12");
+pageTracker._trackPageview();
+</script>
+<noscript> </noscript>
+</body>
+</html>

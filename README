@@ -1,4 +1,3 @@
-
 OpenData-BR
 
 Este projeto tem como objetivo oferecer uma estrutura basica para poder baixar informacoes de portais do governo - especificamente - e importar para formatos acessiveis.
@@ -8,7 +7,7 @@ Mais informações em http://www.opendatabr.org/
 
 DESENVOLVEDORES
 
-Alexei Znamensky
+Alexei Znamensky <russoz@cpan.prg>
 Thiago Rondon
 
 

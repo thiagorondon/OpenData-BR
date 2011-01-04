@@ -1,5 +1,5 @@
 
-use Test::More tests => 5;
+use Test::More tests => 3;
 
 use strict;
 
@@ -12,10 +12,6 @@ ok($@);
 
 $obj = OpenData::Extractor::HTTP->new(URL => 'http://localhost');
 isa_ok($obj, 'OpenData::Extractor::HTTP');
-
-ok($obj->set_browser('Mechanize'));
-
-isa_ok($obj->browser, 'WWW::Mechanize');
 
 1;
 

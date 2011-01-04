@@ -2,27 +2,22 @@
 package OpenData::Get::Mechanize;
 
 use Moose::Role;
-with 'OpenData::Get::Base' => { -excludes => 'content' };
 with 'OpenData::Log';
 
 use WWW::Mechanize;
 
-has obj => (
-    is      => 'rw',
-    isa     => 'Object',
-    lazy    => 1,
-    default => sub {
-        my $self = shift;
-        WWW::Mechanize->new(
-            agent       => $self->agent,
-            onerror     => sub { $self->debug(@_) },
-            timeout     => $self->timeout
-        );
-    }
-);
+sub _make_obj {
+    my $self = shift;
+    return WWW::Mechanize->new(
+        agent   => $self->agent,
+        onerror => sub { $self->debug(@_) },
+        timeout => $self->timeout
+    );
+}
 
-sub content {
+sub _content {
     my ( $self, $response ) = @_;
+    #print STDERR "mech _content\n";
     return $response->content;
 }
 

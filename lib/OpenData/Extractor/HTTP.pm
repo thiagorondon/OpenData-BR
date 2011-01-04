@@ -9,31 +9,20 @@ use OpenData::Get;
 
 has URL => ( is => 'ro', isa => 'Str', required => 1 );
 
-has set_browser => ( is => 'rw', isa => 'Str', default => 'Mechanize' );
-
-after set_browser => sub {
-    my $self = shift;
-    my $orig = shift;
-    return if !$orig;
-    $self->_get( OpenData::Get->with_traits($orig)->new );
-};
-
 has _get => (
     is      => 'rw',
-    isa     => 'Object',
+    isa     => 'OpenData::Get',
     lazy    => 1,
-    default => sub { OpenData::Get->with_traits( shift->set_browser )->new }
+    default => sub { OpenData::Get->new }
 );
 
 sub get {
     my ( $self, $url ) = @_;
     #warn 'url = '.$url;
     my $http = $self->_get;
-    $http->url($url);
-    return $http->get();
+    #$http->url($url);
+    return $http->get($url);
 }
-
-sub browser { shift->_get->obj; }
 
 sub extract {
     my $self = shift;

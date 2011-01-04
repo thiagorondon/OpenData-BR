@@ -1,4 +1,3 @@
-
 * Módulo para passar html entities para utf8.
 
 http://www.portaltransparencia.gov.br/
@@ -10,3 +9,6 @@ http://www.seade.gov.br/index.php
 - Melhorar a logistica para o item, que hoje esta muito flexivel e fora de padrao para os modulos do Loader.
 - Array, Output, Loader ? Juntar tudo.
 
+Flow
+- Node que executa um comando externo (system ou IPC::Run, ou ...) e usa input,out,err
+  como stdin, stdout e stderr
