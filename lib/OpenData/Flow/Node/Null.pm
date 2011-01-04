@@ -19,9 +19,9 @@ OpenData::Flow::Node::Null - A null node, will discard any input and return unde
 
     use OpenData::Flow::Null;
 
-    my $nop = OpenData::Flow::Node::Null->new;
+    my $null = OpenData::Flow::Node::Null->new;
     
-    my $result = $nop->process( 'abc' );
+    my $result = $null->process( 'abc' );
     # $result == undef
 
 =head1 DESCRIPTION
