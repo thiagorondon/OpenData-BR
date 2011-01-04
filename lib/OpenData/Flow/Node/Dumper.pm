@@ -12,7 +12,7 @@ has '+process_item' => (
             my $item = shift;
             print STDERR Dumper($item);
             return $item;
-        }
+          }
     }
 );
 
