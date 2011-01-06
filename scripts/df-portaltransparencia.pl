@@ -47,7 +47,7 @@ my $chain = Chain->new(
                 my $texto =
                   HTML::TreeBuilder::XPath->new_from_content($html)
                   ->findvalue('//p[@class="paginaAtual"]');
-                die q{Não conseguiu fazer a paginação} unless $texto;
+                die q{Não conseguiu determinar a última página} unless $texto;
                 return $1 if $texto =~ /\d\/(\d+)/;
             },
         ),
