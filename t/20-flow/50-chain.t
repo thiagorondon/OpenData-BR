@@ -1,5 +1,5 @@
 
-use Test::More tests => 10;
+use Test::More tests => 12;
 
 package Repeat;
 use Moose;
@@ -28,10 +28,10 @@ my $uc = OpenData::Flow::Node->new(
 ok($uc);
 my $rv = OpenData::Flow::Node->new(
     name         => 'Reverse',
-    process_item => sub { shift; return reverse $_[0]; }
+    process_item => sub { shift; return scalar reverse $_[0]; }
 );
 ok($rv);
-my $chain = OpenData::Flow::Node::Chain->new( links => [ ( $uc, $rv ) ] );
+my $chain = OpenData::Flow::Node::Chain->new( links => [ $uc, $rv ] );
 ok($chain);
 
 #use Data::Dumper;
@@ -71,4 +71,10 @@ my $fifteen = $chain2->output;
 
 #use Data::Dumper; diag( Dumper($fifteen) );
 ok( $fifteen == 15 );
+
+my $chain3 = OpenData::Flow::Node::Chain->new( links => [] );
+ok($chain3);
+
+eval { $chain3->process('some text') };
+ok( $@, $@ );
 
