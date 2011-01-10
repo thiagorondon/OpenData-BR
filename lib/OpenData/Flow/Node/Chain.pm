@@ -14,43 +14,23 @@ has links => (
 
 has '+process_item' => (
     default => sub {
-        return sub { }
+        return sub {
+            my ( $self, $item ) = @_;
+
+            #use Data::Dumper;
+            #warn 'chain          = '.Dumper($self);
+            #warn 'chain :: links = '.Dumper($self->links);
+            $self->confess('Chain has no nodes, cannot process_item()')
+              unless scalar @{ $self->links };
+
+            $self->links->[0]->input($item);
+            my $last =
+              reduce { $a->process_input; $b->input( $a->output ); $b }
+            @{ $self->links };
+            return $last->output;
+        },;
     },
 );
-
-sub input {
-    my $self = shift;
-    $self->links->[0]->input(@_);
-
-    #use Data::Dumper;
-    #warn 'chain :: links = '.Dumper($self->links);
-}
-
-sub output {
-    my $self = shift;
-    return unless $self->has_queued_data;
-
- #use Data::Dumper;
- #warn 'chain :: output :: links = '.Dumper($self->links);
- #local $, = "\n";
- #warn 'chain :: links queues = ', map { Dumper($_->_queue) } @{ $self->links };
-    my $n = @{ $self->links };
-    $self->confess('Chain has no nodes, cannot process_item()') if $n == 0;
-
-    my $first = $self->links->[0];
-    $first->process_input;
-    return $first->output if $n == 1;
-
-    my $last =
-      reduce { $a->process_input; $b->input( $a->output ); $b }
-    @{ $self->links };
-    return ( $last->output ) if wantarray;
-    return scalar $last->output;
-}
-
-sub has_queued_data {
-    return grep { $_->has_queued_data } @{ shift->links };
-}
 
 1;
 

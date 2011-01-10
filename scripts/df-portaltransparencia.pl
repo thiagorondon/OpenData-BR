@@ -6,6 +6,7 @@ use warnings;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
+use aliased 'OpenData::Flow::Node';
 use aliased 'OpenData::Flow::Node::Chain';
 use aliased 'OpenData::Flow::Node::LiteralData';
 use aliased 'OpenData::Flow::Node::HTMLFilter';
@@ -18,8 +19,9 @@ my $base = join( '/',
     q{ceis}, q{EmpresasSancionadas.asp?paramEmpresa=0} );
 
 my $chain = Chain->new(
+    data  => [ $base ],
     links => [
-        LiteralData->new( data => $base, ),
+        #DumperNode->new,
         MultiPageURLGenerator->new(
             first_page => -2,
 
@@ -51,19 +53,26 @@ my $chain = Chain->new(
                 return $1 if $texto =~ /\d\/(\d+)/;
             },
         ),
-#        DumperNode->new,
+        #DumperNode->new,
         URLRetriever->new( process_into => 1, ),
+        #DumperNode->new,
         HTMLFilter->new(
             search_xpath =>
               '//div[@id="listagemEmpresasSancionadas"]/table/tbody/tr',
-            process_into => 1,
-            deref => 1,
         ),
+        #DumperNode->new,
         HTMLFilter->new(
             search_xpath => '//td',
             result_type  => 'VALUE',
+            ref_result   => 1,
+        ),
+        Node->new(
             process_into => 1,
-            deref => 1,
+            process_item => sub {
+                shift; local $_ = shift;
+                s/^\s*//; s/\s*$//;
+                return $_;
+            }
         ),
         DumperNode->new,
     ],
