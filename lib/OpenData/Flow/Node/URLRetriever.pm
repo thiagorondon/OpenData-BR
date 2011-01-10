@@ -22,22 +22,19 @@ has baseurl => (
 has '+process_item' => (
     default => sub {
         return sub {
-            my ( $self, $url ) = @_;
-            $url = URI->new_abs( $url, $self->baseurl )->as_string
-              if $self->has_baseurl;
+            my ( $self, $item ) = @_;
+
+            #warn 'process_item:: item = '.$item;
+            my $url =
+              $self->has_baseurl
+              ? URI->new_abs( $item, $self->baseurl )->as_string
+              : $item;
 
             #warn 'process_item:: url = '.$url;
             return $self->_get->get($url);
           }
     },
 );
-
-#before 'output' => sub {
-#    use Data::Dumper;
-#    warn Dumper(shift);
-#    local $, = q{ || };
-#    warn @_;
-#};
 
 1;
 
