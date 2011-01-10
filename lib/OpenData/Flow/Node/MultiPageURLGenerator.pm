@@ -69,14 +69,13 @@ has '+process_item' => (
             my $last  = $self->last_page;
             $first = 1 + $last + $first if $first < 0;
 
-            my $result =
-              [ map { $self->make_page_url->( $self, $url, $_ ) }
-                  $first .. $last ];
+            my @result =
+              map { $self->make_page_url->( $self, $url, $_ ) } $first .. $last;
 
             #use Data::Dumper;
             #warn 'url list = ' . Dumper($result);
             $self->clear_paged_url;
-            return $result;
+            return @result;
           }
     },
 );
