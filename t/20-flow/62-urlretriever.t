@@ -5,4 +5,3 @@ BEGIN {
     use_ok('OpenData::Flow::Node::URLRetriever');
 }
 
-
