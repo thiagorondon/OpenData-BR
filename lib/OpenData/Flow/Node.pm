@@ -27,6 +27,15 @@ has auto_process => (
     default => 1,
 );
 
+has data => (
+    is      => 'ro',
+    isa     => 'ArrayRef',
+    trigger => sub {
+        my ( $self, $new ) = @_;
+        $self->_add_input( @{$new} );
+    },
+);
+
 has process_item => (
     is       => 'ro',
     isa      => 'CodeRef',
@@ -173,17 +182,12 @@ sub _handle_list {
 
     #use Data::Dumper; warn '_handle_list(params) = '.Dumper(@_);
     foreach my $item (@_) {
-        push @result, $self->_handle_item($item);
+        my $type = _param_type($item);
+        $self->confess('There is no handler for this parameter type!')
+          unless exists $self->_handlers->{$type};
+        push @result, $self->_handlers->{$type}->( $self, $item );
     }
     return @result;
-}
-
-sub _handle_item {
-    my ( $self, $item ) = @_;
-    my $type = _param_type($item);
-    $self->confess('There is no handler for this parameter type!')
-      unless exists $self->_handlers->{$type};
-    return $self->_handlers->{$type}->( $self, $item );
 }
 
 ##############################################################################
@@ -206,10 +210,12 @@ has '_handlers' => (
         my $type_handler = {
             SVALUE => \&_handle_svalue,
             OBJECT => \&_handle_svalue,
-            SCALAR => $me->process_into ? \&_handle_scalar : \&_handle_svalue,
-            ARRAY  => $me->process_into ? \&_handle_array : \&_handle_svalue,
-            HASH   => $me->process_into ? \&_handle_hash : \&_handle_svalue,
-            CODE   => $me->process_into ? \&_handle_code : \&_handle_svalue,
+            SCALAR => $me->process_into
+            ? \&_handle_scalar_ref
+            : \&_handle_svalue,
+            ARRAY => $me->process_into ? \&_handle_array_ref : \&_handle_svalue,
+            HASH  => $me->process_into ? \&_handle_hash_ref  : \&_handle_svalue,
+            CODE  => $me->process_into ? \&_handle_code_ref  : \&_handle_svalue,
         };
         return $me->deref
           ? {
@@ -226,31 +232,31 @@ has '_handlers' => (
 
 sub _handle_svalue {
     my ( $self, $item ) = @_;
-    return scalar $self->process_item->( $self, $item );
+    return $self->process_item->( $self, $item );
 }
 
-sub _handle_scalar {
+sub _handle_scalar_ref {
     my ( $self, $item ) = @_;
     my $r = $self->process_item->( $self, $$item );
     return \$r;
 }
 
-sub _handle_array {
+sub _handle_array_ref {
     my ( $self, $item ) = @_;
 
-    #use Data::Dumper; warn 'handle_array :: item = ' . Dumper($item);
+    #use Data::Dumper; warn 'handle_array_ref :: item = ' . Dumper($item);
     my @r = map { $self->process_item->( $self, $_ ) } @{$item};
     return [@r];
 }
 
-sub _handle_hash {
+sub _handle_hash_ref {
     my ( $self, $item ) = @_;
     my %r = map { $_ => $self->process_item->( $self, $item->{$_} ) }
       keys %{$item};
     return {%r};
 }
 
-sub _handle_code {
+sub _handle_code_ref {
     my ( $self, $item ) = @_;
     return sub { $self->process_item->( $self, $item->() ) };
 }
