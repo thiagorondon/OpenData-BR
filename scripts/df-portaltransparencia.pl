@@ -11,7 +11,7 @@ use aliased 'OpenData::Flow::Node::LiteralData';
 use aliased 'OpenData::Flow::Node::HTMLFilter';
 use aliased 'OpenData::Flow::Node::URLRetriever';
 use aliased 'OpenData::Flow::Node::MultiPageURLGenerator';
-use aliased 'OpenData::Flow::Node::Dumper' => 'DumperNode';
+use aliased 'OpenData::Flow::Node::CSV' => 'DumperNode';
 
 my $base = join( '/',
     q{http://www.portaltransparencia.gov.br},
@@ -21,7 +21,7 @@ my $chain = Chain->new(
     links => [
         LiteralData->new( data => $base, ),
         MultiPageURLGenerator->new(
-            first_page => -2,
+            #first_page => 0,
 
             #last_page     => 35,
             make_page_url => sub {

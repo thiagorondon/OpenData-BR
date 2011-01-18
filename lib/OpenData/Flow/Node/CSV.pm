@@ -13,7 +13,7 @@ has '+process_item' => (
         return sub {
             shift;
             my $data = shift;
-            $csv->print( *STDERR,
+            $csv->print( *STDOUT,
                 [ map { utf8::upgrade( my $x = $_ ); $x } @{$data} ] );
             print "\n";
           }
