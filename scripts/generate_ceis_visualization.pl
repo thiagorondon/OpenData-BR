@@ -42,7 +42,7 @@ my $footer = <<HTML;
 </script>
 </head>
 <body style="font-family: Arial;border: 0 none;">
-<div id="visualization" style="width: 800px; height: 400px;"></div>
+<div id="visualization" style="width: 600px; height: 750px;"></div>
 </body>
 </html>
 
@@ -66,7 +66,7 @@ HTML
 
 my $footer2 = <<HTML;
  var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-    chart.draw(data, {width: 450, height: 300, title: 'CEIS'});
+    chart.draw(data, {width: 750, height: 600, title: 'CEIS'});
 }
 </script>
 </head>
@@ -80,10 +80,10 @@ HTML
 
 sub main {
 
-    my ( $filename, $col, $template ) = @ARGV;
+    my ( $filename, $col, $template, $n_items ) = @ARGV;
 
     if ( !$filename and !$col ) {
-        print "Use: $0 <file.csv> <col> [template]\n";
+        print "Use: $0 <file.csv> <col> [template] [n_items]\n";
         exit;
     }
 
@@ -105,7 +105,7 @@ sub main {
 
     my %stats = &get_hash_data( $filename, $col );
 
-    my ( $loop, $content ) = &make_content(%stats);
+    my ( $loop, $content ) = &make_content($n_items, %stats);
 
     if ( $template == 1 ) {
         $header =~ s/NROWS/$loop/g;
@@ -142,18 +142,37 @@ sub get_hash_data {
 }
 
 sub make_content {
+    my $n_items = shift;
     my %hash = @_;
+
     my $loop = 0;
     my $content;
-    foreach my $state ( keys %hash ) {
+    my $others = 0;
+    foreach my $state ( sort { $hash{$b} <=> $hash{$a}} (keys(%hash)) ) {
         my $uf = $state;
         my $va = $hash{$state};
-        $content .= <<EOF;
+
+        if ($n_items and $n_items < $loop) {
+            $others += $va;
+            
+        } else {
+            $content .= <<EOF;
     data.setValue($loop, 0, '$state');
     data.setValue($loop, 1, $va)
 EOF
+        }
         $loop++;
     }
+
+    if ($n_items and $others) {
+        $loop = $n_items + 1; # fix for NROWS
+        $content .= <<EOF;
+    data.setValue($loop, 0, 'others');
+    data.setValue($loop, 1, $others)
+EOF
+        $loop++; # fix for NROWS
+    }
+
     return ( $loop, $content );
 }
 
