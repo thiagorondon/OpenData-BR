@@ -102,16 +102,9 @@ None reported.
 
 =head1 BUGS AND LIMITATIONS
 
-I cheated. Looking at the code, it can be noticed that I have overridden the
-C<input> and C<output> methods, disregarding the semantics of some other
-methods, like C<process_input> and C<flush>, to name a couple.
-In some not so distant a future, a new implementation should come up that
-respects the semantics of all the methods defined in C<OpenData::Flow::Node>.
-
 Please report any bugs or feature requests to
 C<bug-opendata@rt.cpan.org>, or through the web interface at
 L<http://rt.cpan.org>.
-
 
 =head1 AUTHOR
 
