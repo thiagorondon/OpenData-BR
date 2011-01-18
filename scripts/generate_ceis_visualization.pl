@@ -49,45 +49,112 @@ my $footer = <<HTML;
 
 HTML
 
+my $header2 = <<HTML;
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+    google.load("visualization", "1", {packages:["corechart"]});
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+    var data = new google.visualization.DataTable();
+    data.addRows(NROWS);
+    data.addColumn('string', 'Estado');
+    data.addColumn('number', 'CEIS');
+
+HTML
+
+my $footer2 = <<HTML;
+ var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+    chart.draw(data, {width: 450, height: 300, title: 'CEIS'});
+}
+</script>
+</head>
+
+<body>
+<div id="chart_div"></div>
+</body>
+</html>
+
+HTML
+
 sub main {
 
-    if ( !$ARGV[0] ) {
-        print "Use: $0 <file.csv>\n";
+    my ( $filename, $col, $template ) = @ARGV;
+
+    if ( !$filename and !$col ) {
+        print "Use: $0 <file.csv> <col> [template]\n";
         exit;
     }
 
+    if ( !-r $filename ) {
+        print "Unable to read file $ARGV[0]\n";
+        exit;
+    }
+
+    if ( $col ne int($col) ) {
+        print "<col> must be integer\n";
+        exit;
+    }
+
+    if ( $template and $template != 1 and $template != 2 ) {
+        print "[template] must be 1 or 2.\n";
+        exit;
+    }
+    $template = 1 if !$template;
+
+    my %stats = &get_hash_data( $filename, $col );
+
+    my ( $loop, $content ) = &make_content(%stats);
+
+    if ( $template == 1 ) {
+        $header =~ s/NROWS/$loop/g;
+        print $header, $content, $footer;
+    }
+    else {
+        $header2 =~ s/NROWS/$loop/g;
+        print $header2, $content, $footer2;
+    }
+}
+
+sub get_hash_data {
+    my $file = shift;
+    my $col  = shift;
+
     my $csv = Text::CSV->new( { binary => 1 } );
-    open my $fh, '<', $ARGV[0] or die "Error: $!";
-    my %count;
+    open my $fh, '<', $file or die "Error: $!";
+
+    my %hash;
 
     while ( my $row = $csv->getline($fh) ) {
-        my $state = $row->[6];
-        next if !$state;
-        next if $state eq '**';
-        defined( $count{$state} ) ? $count{$state}++ : ( $count{$state} = 0 );
-
+        my $value = $row->[$col];
+        if ( $value and $value ne '**' ) {
+            defined( $hash{$value} )
+              ? $hash{$value}++
+              : ( $hash{$value} = 1 );
+        }
     }
 
     $csv->eof or $csv->error_diag();
     close $fh;
 
+    return %hash;
+}
+
+sub make_content {
+    my %hash = @_;
     my $loop = 0;
     my $content;
-    foreach my $state ( keys %count ) {
+    foreach my $state ( keys %hash ) {
         my $uf = $state;
-        my $va = $count{$state};
+        my $va = $hash{$state};
         $content .= <<EOF;
     data.setValue($loop, 0, '$state');
     data.setValue($loop, 1, $va)
 EOF
         $loop++;
     }
-
-    $header =~ s/NROWS/$loop/g;
-
-    print $header;
-    print $content;
-    print $footer;
+    return ( $loop, $content );
 }
 
 main;
