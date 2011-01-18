@@ -14,6 +14,8 @@ use aliased 'OpenData::Flow::Node::URLRetriever';
 use aliased 'OpenData::Flow::Node::MultiPageURLGenerator';
 use aliased 'OpenData::Flow::Node::Dumper' => 'DumperNode';
 
+#use Scalar::Util qw/reftype/;
+
 my $base = join( '/',
     q{http://www.portaltransparencia.gov.br},
     q{ceis}, q{EmpresasSancionadas.asp?paramEmpresa=0} );
@@ -24,7 +26,6 @@ my $chain = Chain->new(
         #DumperNode->new,
         MultiPageURLGenerator->new(
             first_page => -2,
-
             #last_page     => 35,
             make_page_url => sub {
                 my ( $self, $url, $page ) = @_;
@@ -66,6 +67,12 @@ my $chain = Chain->new(
             result_type  => 'VALUE',
             ref_result   => 1,
         ),
+#        Node->new(
+#            process_into => 1,
+#            process_item => sub {
+#                shift; print STDERR 'type = ', shift, "\n";
+#            },
+#        ),
         Node->new(
             process_into => 1,
             process_item => sub {
