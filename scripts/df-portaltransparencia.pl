@@ -13,15 +13,13 @@ use aliased 'OpenData::Flow::Node::URLRetriever';
 use aliased 'OpenData::Flow::Node::MultiPageURLGenerator';
 use aliased 'OpenData::Flow::Node::CSV' => 'DumperNode';
 
-my $base = join( '/',
-    q{http://www.portaltransparencia.gov.br},
-    q{ceis}, q{EmpresasSancionadas.asp?paramEmpresa=0} );
+my $base = 'http://www.portaltransparencia.gov.br/ceis/EmpresasSancionadas.asp?paramEmpresa=0';
 
 my $chain = Chain->new(
     links => [
         LiteralData->new( data => $base, ),
         MultiPageURLGenerator->new(
-            #first_page => 0,
+            first_page => -1,
 
             #last_page     => 35,
             make_page_url => sub {
@@ -39,33 +37,34 @@ my $chain = Chain->new(
                 use OpenData::Get;
                 use HTML::TreeBuilder::XPath;
 
-                #print STDERR qq{produce_last_page url = $url\n};
                 my $get  = OpenData::Get->new;
                 my $html = $get->get($url);
 
-                #print STDERR 'html = '.$html."\n";
-                my $texto =
-                  HTML::TreeBuilder::XPath->new_from_content($html)
-                  ->findvalue('//p[@class="paginaAtual"]');
+                my $texto
+                    = HTML::TreeBuilder::XPath->new_from_content($html)->findvalue('//p[@class="paginaAtual"]');
                 die q{Não conseguiu fazer a paginação} unless $texto;
                 return $1 if $texto =~ /\d\/(\d+)/;
             },
         ),
-#        DumperNode->new,
         URLRetriever->new( process_into => 1, ),
         HTMLFilter->new(
-            search_xpath =>
-              '//div[@id="listagemEmpresasSancionadas"]/table/tbody/tr',
+            search_xpath => '//div[@id="listagemEmpresasSancionadas"]/table/tbody/tr',
             process_into => 1,
-            deref => 1,
+            deref        => 1,
         ),
         HTMLFilter->new(
             search_xpath => '//td',
             result_type  => 'VALUE',
             process_into => 1,
-            deref => 1,
+            deref        => 1,
         ),
-        DumperNode->new,
+        DumperNode->new(
+            header => [
+                'CNPJ/CPF', 'Nome/Razao Social/Nome Fantasia',
+                'Tipo', 'Data Inicial', 'Data Final', 'Nome do orgao/entidade',
+                'UF', 'Fonte', 'Data'
+            ]
+        ),
     ],
 );
 

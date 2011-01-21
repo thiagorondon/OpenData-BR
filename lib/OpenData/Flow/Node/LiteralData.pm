@@ -2,6 +2,13 @@
 package OpenData::Flow::Node::LiteralData;
 
 use Moose;
+with(
+    'MooseX::OneArgNew' => {
+        type     => 'Any',
+        init_arg => 'data',
+    }
+);
+
 extends 'OpenData::Flow::Node::Null';
 
 has data => (
