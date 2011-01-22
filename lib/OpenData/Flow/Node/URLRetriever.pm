@@ -2,6 +2,7 @@
 package OpenData::Flow::Node::URLRetriever;
 
 use Moose;
+with 'OpenData::Log';
 extends 'OpenData::Flow::Node';
 
 use OpenData::Get;
@@ -30,7 +31,7 @@ has '+process_item' => (
               ? URI->new_abs( $item, $self->baseurl )->as_string
               : $item;
 
-            #warn 'process_item:: url = '.$url;
+            $self->debug("process_item:: url = $url");
             return $self->_get->get($url);
           }
     },

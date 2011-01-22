@@ -12,7 +12,7 @@ use aliased 'OpenData::Flow::Node::LiteralData';
 use aliased 'OpenData::Flow::Node::HTMLFilter';
 use aliased 'OpenData::Flow::Node::URLRetriever';
 use aliased 'OpenData::Flow::Node::MultiPageURLGenerator';
-use aliased 'OpenData::Flow::Node::CSV' => 'DumperNode';
+use aliased 'OpenData::Flow::Node::CSV';
 
 #use Scalar::Util qw/reftype/;
 
@@ -81,7 +81,7 @@ my $chain = Chain->new(
                 return $_;
             }
         ),
-        DumperNode->new,
+        CSV->new,
     ],
 );
 
