@@ -29,44 +29,43 @@ has attempts => (
 );
 
 has obj => (
-	is => 'ro',
-	isa => 'Any',
-	lazy => 1,
-	predicate => 'has_obj',
-	default => sub { 
-		my $self = shift;
-        my $mod = q{OpenData::Get::}.$self->browser;
-		eval "with q($mod)";
-		$self->confess($@) if $@;
-		return $self->_make_obj;
-	},
+    is        => 'ro',
+    isa       => 'Any',
+    lazy      => 1,
+    predicate => 'has_obj',
+    default   => sub {
+        my $self = shift;
+        my $mod  = q{OpenData::Get::} . $self->browser;
+        eval "with q($mod)";
+        $self->confess($@) if $@;
+        return $self->_make_obj;
+    },
 );
 
 has browser => (
-	is => 'ro',
-	isa => 'Str',
-	required => 1,
-	lazy => 1,
-	default => 'Mechanize',
+    is       => 'ro',
+    isa      => 'Str',
+    required => 1,
+    lazy     => 1,
+    default  => 'Mechanize',
 );
 
 has content_sub => (
-	is => 'ro',
-	isa => 'CodeRef',
-	lazy => 1,
-	default => sub { 
-		my $self = shift;
-        my $mod = q{OpenData::Get::}.$self->browser;
-		eval "with q($mod)";
-		$self->confess($@) if $@;
-		#return $self->_make_obj;
-		return sub {
-			#print STDERR qq#can content\n# if $self->can('_content');
-			return $self->_content(shift);
-        } if $self->can('_content');
+    is      => 'ro',
+    isa     => 'CodeRef',
+    lazy    => 1,
+    default => sub {
+        my $self = shift;
+        my $mod  = q{OpenData::Get::} . $self->browser;
+
+        eval "with q($mod)";
+        $self->confess($@) if $@;
+
+        return sub { return $self->_content(shift); }
+            if $self->can('_content');
 
         return sub { return shift }
-	},
+    },
 );
 
 sub get {
