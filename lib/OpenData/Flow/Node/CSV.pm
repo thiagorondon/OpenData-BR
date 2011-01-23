@@ -17,8 +17,9 @@ has 'header' => (
 );
 
 has 'filehandle' => (
-    is  => 'ro',
-    isa => 'FileHandle', default => sub { \*STDOUT } 
+    is      => 'ro',
+    isa     => 'FileHandle',
+    default => sub { \*STDOUT }
 );
 
 has 'eol' => (

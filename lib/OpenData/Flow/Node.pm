@@ -298,13 +298,16 @@ Or
         }
     );
 
-    $ucd->input( [ qw/aaa bbb ccc/ ] );
+    $ucd->input( [qw/aaa bbb ccc/] );
     $item = $ucd->output;
     # $item == [ 'AAA', 'BBB', 'CCC' ]
-    
-    $ucd->input( { a => 'aaa', b => 'bbb } );
+
+    $ucd->input(
+        {   a => 'aaa',
+            b => 'bbb } );
+
     $item = $ucd->output;
-    # $item == { a => 'AAA', b => 'BBB' }
+    # $item == { a => ' AAA ', b => ' BBB ' }
 
 =head1 DESCRIPTION
 
@@ -418,7 +421,7 @@ Notice that the enclosing C<sub> B<< is mandatory >> in this case. The reason
 is that the outter C<sub> is responsible for providing a default value to
 C<process_item> and is run only once by C<Moose>, while the inner C<sub>
 is the actual value of the code reference C<process_item>, and will be invoked
-every time a data item needs to be processed. 
+every time a data item needs to be processed.
 
 =head3 Dereferencing
 
