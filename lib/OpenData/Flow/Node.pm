@@ -27,7 +27,7 @@ has auto_process => (
     default => 1,
 );
 
-has data => (
+has initial_data => (
     is      => 'ro',
     isa     => 'ArrayRef',
     trigger => sub {
