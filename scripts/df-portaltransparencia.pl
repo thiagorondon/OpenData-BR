@@ -21,7 +21,7 @@ my $base = join( '/',
     q{ceis}, q{EmpresasSancionadas.asp?paramEmpresa=0} );
 
 my $chain = Chain->new(
-    data  => [ $base ],
+    initial_data  => [ $base ],
     links => [
         #DumperNode->new,
         MultiPageURLGenerator->new(
