@@ -1,0 +1,41 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="identificador">
+    <xs:restriction>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:minLength value="4"/>
+        </xs:restriction>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="255"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:minInclusive value="-2"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="publicador">
+    <xs:element name="nome" type="identificador"/>
+    <xs:element name="url" type="xs:anyURI"/>
+  </xs:complexType>
+  <xs:complexType name="documento">
+    <xs:element name="conteudo" type="xs:base64Binary"/>
+    <xs:element name="tipoMIME">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value=".+/.+"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+  </xs:complexType>
+  <xs:element name="data" type="xs:date"/>
+  <xs:element name="titulo" type="identificador">
+  <xs:element name="publicador" type="publicador">
+  <xs:element name="autor" type="identificador">
+  <xs:element name="documentoOriginal" type="documento">
+  <xs:element name="restricoes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="texto" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
