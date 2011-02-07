@@ -26,6 +26,7 @@ requires 'Test::Memory::Cycle';
 requires 'MooseX::App::Cmd';
 requires 'aliased';
 requires 'MooseX::OneArgNew';
+requires 'MooseX::Types::IO';
 requires 'version' => 0.86;
 
 recommends 'Text::CSV_XS' => '0.50';
