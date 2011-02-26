@@ -10,24 +10,18 @@ requires 'Moose';
 requires 'MooseX::Traits';
 
 requires 'namespace::autoclean';
-requires 'File::Slurp';
 requires 'Text::CSV';
 requires 'Scalar::Util';
-requires 'List::Util';
 requires 'List::MoreUtils';
-requires 'Queue::Base';
 requires 'LWP::Curl';
 requires 'HTML::TreeBuilder::XPath';
 requires 'DBI';
 requires 'DBD::SQLite';
 requires 'MongoDB';
 requires 'WWW::Mechanize';
-requires 'Test::Memory::Cycle';
-requires 'MooseX::App::Cmd';
 requires 'aliased';
-requires 'MooseX::OneArgNew';
-requires 'MooseX::Types::IO';
 requires 'version' => 0.86;
+requires 'DataFlow' => '0.91.04';
 
 recommends 'Text::CSV_XS' => '0.50';
 
