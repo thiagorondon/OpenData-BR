@@ -14,9 +14,8 @@ has '+name' => ( default => 'PortalTransparencia', );
 has '+description' => ( default => 'http://www.portaltransparencia.gov.br' );
 
 # Loader que será utilizado.
-has '+loader' => (
-    default => sub { OpenData::Array->new_with_traits( traits => 'Dumper' ) }
-);
+has '+loader' =>
+  ( default => sub { OpenData::Array->new_with_traits( traits => 'Dumper' ) } );
 
 1;
 

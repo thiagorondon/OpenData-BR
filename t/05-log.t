@@ -7,19 +7,19 @@ use_ok('OpenData::Log');
 
 package TestLog;
 
-    use Moose;
-    with 'OpenData::Log';
+use Moose;
+with 'OpenData::Log';
 
-    1;
+1;
 
 package main;
 
 my $logger = TestLog->new;
 
-can_ok($logger, 'enable');
+can_ok( $logger, 'enable' );
 
 for my $item (qw[ debug info warn error fatal ]) {
-    can_ok($logger, $item);
-    can_ok($logger, "is_$item");
+    can_ok( $logger, $item );
+    can_ok( $logger, "is_$item" );
 }
 

@@ -12,8 +12,8 @@ sub add {
     my $data = shift;
 
     my @cols;
-    foreach my $item (@{$data}) {
-        push ( @cols, $item->{$_} ) for keys %{$item};
+    foreach my $item ( @{$data} ) {
+        push( @cols, $item->{$_} ) for keys %{$item};
     }
 
     print $csv->print( *STDOUT_FILENO, \@cols );

@@ -30,7 +30,7 @@ has orgao_exercicio => (
 has jornada => ( is => 'ro', isa => 'Str', writer => '_jornada', );
 
 sub elements_list {
-    return [ qw/cpf nome_do_servidor orgao_lotacao orgao_exercicio jornada/ ];
+    return [qw/cpf nome_do_servidor orgao_lotacao orgao_exercicio jornada/];
 }
 
 sub new_from_array {

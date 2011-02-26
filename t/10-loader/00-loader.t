@@ -4,26 +4,26 @@ use strict;
 
 package OneL;
 
-    use Moose;
-    with 'OpenData::Loader';
+use Moose;
+with 'OpenData::Loader';
 
-    our @r;
+our @r;
 
-    sub load {
-        shift;
-        push @r, @_;
-    }
+sub load {
+    shift;
+    push @r, @_;
+}
 
-    sub result {
-        shift;
-        return wantarray ? @__PACKAGE__::r : $__PACKAGE__::r[0];
-    }
+sub result {
+    shift;
+    return wantarray ? @__PACKAGE__::r : $__PACKAGE__::r[0];
+}
 
-    1;
+1;
 
 package main;
 
 my $obj = OneL->new;
 ok($obj);
-can_ok($obj, 'load');
-ok($obj->load( 'anything') );
+can_ok( $obj, 'load' );
+ok( $obj->load('anything') );

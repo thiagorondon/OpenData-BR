@@ -9,7 +9,7 @@ use namespace::autoclean;
 with 'MooseX::Getopt';
 
 our %providers =
-    ( portaldatransparencia => 'BR::Federal::PortalTransparencia' );
+  ( portaldatransparencia => 'BR::Federal::PortalTransparencia' );
 
 has 'debug' => (
     is      => 'rw',

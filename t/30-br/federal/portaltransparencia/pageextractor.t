@@ -14,10 +14,10 @@ my $pe = EGov::BR::Federal::PortalTransparencia::PageExtractor->new(
 );
 
 ok($pe);
-can_ok($pe,'_make_page_url');
-can_ok($pe,'_total_page');
-can_ok($pe,'turn_page');
-can_ok($pe,'extract');
+can_ok( $pe, '_make_page_url' );
+can_ok( $pe, '_total_page' );
+can_ok( $pe, 'turn_page' );
+can_ok( $pe, 'extract' );
 
 ok( $pe->URL eq 'file://' . getcwd() . '/' . 'examples/ceis-page.html' );
 ok( $pe->_make_page_url(42) eq $pe->URL . '?Pagina=42' );

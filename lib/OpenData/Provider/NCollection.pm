@@ -11,37 +11,39 @@ with 'OpenData::Log';
 with 'OpenData::Identifiable' => { -excludes => 'id' };
 
 has id => (
-    is  => 'ro',
-    isa => 'Str',
-    lazy => 1,
+    is      => 'ro',
+    isa     => 'Str',
+    lazy    => 1,
     default => sub {
         my $self = shift;
-        defined($self->component_name) ?
-            OpenData::Utils::class2suffix($self->component_name) : undef }
+        defined( $self->component_name )
+          ? OpenData::Utils::class2suffix( $self->component_name )
+          : undef;
+    }
 );
 
 has provider => (
-    is => 'rw',
+    is  => 'rw',
     isa => 'OpenData::Provider',
 );
 
 has extractor => (
-    is => 'ro',
-    isa => 'Object',
+    is       => 'ro',
+    isa      => 'Object',
     required => 1,
 );
 
 has transformer => (
-    is => 'ro',
-    isa => 'Object',
+    is       => 'ro',
+    isa      => 'Object',
     required => 1,
 );
 
 has loader => (
-    is       => 'ro',
-    isa      => 'Object',
-    lazy => 1,
-    default  => sub {
+    is      => 'ro',
+    isa     => 'Object',
+    lazy    => 1,
+    default => sub {
         shift->provider->loader;
     },
 );

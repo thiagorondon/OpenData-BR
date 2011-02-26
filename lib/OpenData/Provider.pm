@@ -23,21 +23,21 @@ has loader => (
 );
 
 has namespace => (
-    is => 'rw',
-    isa => 'Str',
+    is      => 'rw',
+    isa     => 'Str',
     default => 'OpenData::BR'
 );
 
 sub add_collections {
-    my ($self, @collections) = @_;
+    my ( $self, @collections ) = @_;
 
     foreach my $c (@collections) {
-        my $package = join('::', $self->namespace, $c);
+        my $package = join( '::', $self->namespace, $c );
 
         eval { Class::MOP::load_class($package); };
         croak "No such collection: $c" if $@;
 
-        $self->add_collection($package->new);
+        $self->add_collection( $package->new );
     }
 }
 

@@ -62,7 +62,7 @@ has content_sub => (
         $self->confess($@) if $@;
 
         return sub { return $self->_content(shift); }
-            if $self->can('_content');
+          if $self->can('_content');
 
         return sub { return shift }
     },
@@ -70,11 +70,13 @@ has content_sub => (
 
 sub get {
     my ( $self, $url ) = @_;
+
     #use Data::Dumper;
     #1 if $self->obj;
     #print STDERR Dumper($self);
     for ( 1 .. $self->attempts ) {
-        my $content = $self->obj->get( $url );
+        my $content = $self->obj->get($url);
+
         #print STDERR Dumper($content);
         #print STDERR 'obj = '.$self->obj."\n";
         #my $res = $self->content_sub->($content) if $content;

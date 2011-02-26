@@ -5,41 +5,41 @@ use strict;
 
 package Test::Collection;
 
-    use Moose;
+use Moose;
 
-    with 'OpenData::Provider::Collection';
+with 'OpenData::Provider::Collection';
 
-    has '+id' => ( default => 'test' );
+has '+id' => ( default => 'test' );
 
-    has '+extractor' => (
-        lazy => 1,
-        default => sub { 1 }
-    );
+has '+extractor' => (
+    lazy    => 1,
+    default => sub { 1 }
+);
 
-    has '+transformer' => (
-        lazy => 1,
-        default => sub { 1 }
-    );
+has '+transformer' => (
+    lazy    => 1,
+    default => sub { 1 }
+);
 
-    1;
+1;
 
 package Test;
 
-    use Moose;
-    extends 'OpenData::Provider';
+use Moose;
+extends 'OpenData::Provider';
 
-    sub add_collection_test {
-        my $c = Test::Collection->new;
-        shift->add_collection($c);
-    }
+sub add_collection_test {
+    my $c = Test::Collection->new;
+    shift->add_collection($c);
+}
 
-    1;
+1;
 
 package main;
 
 my $opendata = Test->new;
 
-ok( $opendata );
+ok($opendata);
 ok( $opendata->can('collection') );
 ok( $opendata->can('loader') );
 ok( $opendata->can('add_collection') );

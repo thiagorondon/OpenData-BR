@@ -12,8 +12,8 @@ use OpenData::Provider::NCollection;
 
 extends 'Devel::Declare::Context::Simple';
 
-our $provider = undef;
-our $default_loader = undef;
+our $provider        = undef;
+our $default_loader  = undef;
 our $default_extract = undef;
 
 sub provider {
@@ -32,7 +32,7 @@ sub provider {
 
     $provider = OpenData::Provider->new($hash);
 
-    foreach my $options (@{$collections}) {
+    foreach my $options ( @{$collections} ) {
         my $class = OpenData::Provider::NCollection->new($options);
         $provider->add_collection($class);
     }
@@ -41,26 +41,31 @@ sub provider {
 }
 
 sub clean_provider {
-    $provider = undef;
-    $default_loader = undef;
+    $provider        = undef;
+    $default_loader  = undef;
     $default_extract = undef;
 }
 
 sub import {
-    my $class = shift;
-    my $caller = caller;
+    my $class   = shift;
+    my $caller  = caller;
     my $context = __PACKAGE__->new;
 
-    my @cmds = ( 'provider' );
+    my @cmds = ('provider');
 
     Devel::Declare->setup_for(
-        $caller, {
-            map { $_ => { const => sub { $context->parser(@_) } } } @cmds
+        $caller,
+        {
+            map {
+                $_ => {
+                    const => sub { $context->parser(@_) }
+                  }
+              } @cmds
         }
     );
 
     no strict 'refs';
-    map { *{ join('::', $caller, $_) } = \&$_ } @cmds;
+    map { *{ join( '::', $caller, $_ ) } = \&$_ } @cmds;
 }
 
 sub parser {
@@ -69,12 +74,10 @@ sub parser {
     $self->init(@_);
     $self->skip_declarator;
 
-    my $name = $self->strip_name;
+    my $name  = $self->strip_name;
     my $proto = $self->strip_proto;
 
 }
 
 1;
-
-
 

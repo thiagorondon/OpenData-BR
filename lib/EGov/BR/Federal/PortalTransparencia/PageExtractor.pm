@@ -57,7 +57,7 @@ has page => (
 before 'page' => sub {
     my ( $self, $num ) = @_;
     if ($num) {
-        $self->confess( 'Invalid page ('
+        $self->confess( 'Invalid page (' 
               . $num
               . '), must be between 0 < x <= last page ('
               . $self->last_page
