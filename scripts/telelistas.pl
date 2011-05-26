@@ -5,9 +5,8 @@ use warnings;
 use WWW::Mechanize;
 use HTML::TreeBuilder::XPath;
 
-my $cep  = $ARGV[0] or die "$0 <cep>\n";
+my $cep = $ARGV[0] or die "$0 <cep>\n";
 my $mech = WWW::Mechanize->new();
-
 
 #start
 action();
@@ -21,9 +20,9 @@ sub action {
     );
     $mech->submit_form( form_name => 'redereciona' );
     $mech->get(
-        'http://www.buscacep.correios.com.br/servicos/dnec/ListaDetalheCEPImage?TipoCep=2&Posicao=1'
+'http://www.buscacep.correios.com.br/servicos/dnec/ListaDetalheCEPImage?TipoCep=2&Posicao=1'
     );
-    save($mech->content);
+    save( $mech->content );
 }
 
 sub save {

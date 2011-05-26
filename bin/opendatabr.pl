@@ -30,20 +30,21 @@ sub main {
         &provider_list;
         &help;
         exit(1);
-    } elsif ( !$providers{$app->provider} ) {
+    }
+    elsif ( !$providers{ $app->provider } ) {
         print "Provider invalido.\n";
         &provider_list;
         &help;
         exit(2);
     }
 
-    my $package = join('::', 'OpenData', $providers{$app->provider});
+    my $package = join( '::', 'OpenData', $providers{ $app->provider } );
     eval { Class::MOP::load_class($package) };
     die "$@" if $@;
 
     my $opendata = $package->new;
-    $opendata->add_collections($app->collection);
-    $opendata->process($app->collection);
+    $opendata->add_collections( $app->collection );
+    $opendata->process( $app->collection );
 
 }
 

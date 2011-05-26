@@ -2,6 +2,7 @@
 package Transformer;
 
 use Moose;
+
 # extends OpenData::Transformer::OCR ?
 
 sub transform {
@@ -26,9 +27,7 @@ extends 'OpenData::Extractor::HTTP';
 my $cep = '04002-002';
 
 # pq o HTTP deve exigir o URL ?
-has '+URL' => (
-    default => sub { 'http://telelistas.net/templates/cep.aspx'} 
-);
+has '+URL' => ( default => sub { 'http://telelistas.net/templates/cep.aspx' } );
 
 sub extract { &_doform; }
 
@@ -41,7 +40,7 @@ sub _doform {
     );
     $self->browser->submit_form( form_name => 'redereciona' );
     my $content = $self->get(
-        'http://www.buscacep.correios.com.br/servicos/dnec/ListaDetalheCEPImage?TipoCep=2&Posicao=1'
+'http://www.buscacep.correios.com.br/servicos/dnec/ListaDetalheCEPImage?TipoCep=2&Posicao=1'
     );
     return [$content];
 }
@@ -60,21 +59,21 @@ use OpenData::Simple;
 use OpenData::Array;
 
 my $opendata = provider {
-    
-    name => 'CEPs',
+
+    name        => 'CEPs',
     description => 'CEPs dos correios',
-    url => 'http://www.correios.com.br/',
-    
-    collections => [ {
-        id => 'CEPs',
-        extractor =>  Extractor->new,
-        transformer => Transformer->new,
-        loader => OpenData::Array->new_with_traits( traits => 'Dumper' )
-    } ]
+    url         => 'http://www.correios.com.br/',
+
+    collections => [
+        {
+            id          => 'CEPs',
+            extractor   => Extractor->new,
+            transformer => Transformer->new,
+            loader => OpenData::Array->new_with_traits( traits => 'Dumper' )
+        }
+      ]
 
 };
 
 $opendata->process('CEPs');
-
-
 

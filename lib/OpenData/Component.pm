@@ -12,7 +12,7 @@ with 'OpenData::Log';
 has component_name => ( is => 'ro' );
 
 around component_name => sub {
-    my ($orig, $self) = (shift, shift);
+    my ( $orig, $self ) = ( shift, shift );
     blessed($self) ? $self->$orig() || blessed($self) : $self;
 };
 

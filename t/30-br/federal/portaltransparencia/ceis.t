@@ -3,7 +3,7 @@ use Test::More tests => 4;
 
 use strict;
 
-use_ok( 'EGov::BR::Federal::PortalTransparencia::CEIS');
+use_ok('EGov::BR::Federal::PortalTransparencia::CEIS');
 
 use EGov::BR::Federal::PortalTransparencia::CEIS;
 

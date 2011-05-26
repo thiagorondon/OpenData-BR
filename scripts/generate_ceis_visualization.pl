@@ -105,7 +105,7 @@ sub main {
 
     my %stats = &get_hash_data( $filename, $col );
 
-    my ( $loop, $content ) = &make_content($n_items, %stats);
+    my ( $loop, $content ) = &make_content( $n_items, %stats );
 
     if ( $template == 1 ) {
         $header =~ s/NROWS/$loop/g;
@@ -143,19 +143,20 @@ sub get_hash_data {
 
 sub make_content {
     my $n_items = shift;
-    my %hash = @_;
+    my %hash    = @_;
 
     my $loop = 0;
     my $content;
     my $others = 0;
-    foreach my $state ( sort { $hash{$b} <=> $hash{$a}} (keys(%hash)) ) {
+    foreach my $state ( sort { $hash{$b} <=> $hash{$a} } ( keys(%hash) ) ) {
         my $uf = $state;
         my $va = $hash{$state};
 
-        if ($n_items and $n_items < $loop) {
+        if ( $n_items and $n_items < $loop ) {
             $others += $va;
-            
-        } else {
+
+        }
+        else {
             $content .= <<EOF;
     data.setValue($loop, 0, '$state');
     data.setValue($loop, 1, $va)
@@ -164,13 +165,13 @@ EOF
         $loop++;
     }
 
-    if ($n_items and $others) {
-        $loop = $n_items + 1; # fix for NROWS
+    if ( $n_items and $others ) {
+        $loop = $n_items + 1;    # fix for NROWS
         $content .= <<EOF;
     data.setValue($loop, 0, 'others');
     data.setValue($loop, 1, $others)
 EOF
-        $loop++; # fix for NROWS
+        $loop++;                 # fix for NROWS
     }
 
     return ( $loop, $content );
