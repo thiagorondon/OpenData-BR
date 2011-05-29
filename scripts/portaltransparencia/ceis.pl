@@ -12,8 +12,7 @@ use EGov::BR::Federal::PortalTransparencia::Flows::CEIS;
 my $flow = EGov::BR::Federal::PortalTransparencia::Flows::CEIS->new(
 
 # PARA RESTRINGIR PAGINAS A SEREM SCRAPE-ADAS, USE OS PARÂMETROS:
-    first_page => -1,
-
+#    first_page => -1,
 #    last_page => 50,
 
 # PARA HABILITAR CONVERSÃO PARA FORMATO CSV, DESCOMENTE LINHAS ABAIXO.
