@@ -17,6 +17,7 @@ has '_site' => (
     is       => 'ro',
     isa      => 'Str',
     init_arg => undef,
+    lazy     => 1,
     default  => q{http://www.portaldatransparencia.gov.br},
 );
 
@@ -24,6 +25,7 @@ has 'BASE' => (
     is       => 'ro',
     isa      => 'Str',
     init_arg => undef,
+    lazy     => 1,
     default  => sub {
         my $self = shift;
         return join( '/',
@@ -35,10 +37,17 @@ has 'link_text' => (
     is       => 'ro',
     isa      => 'DataFlow',
     init_arg => undef,
+    lazy     => 1,
     default  => sub {
-        return DataFlow::Proc::HTMLFilter->new(
-            search_xpath => '//a',
-            type         => 'VALUE',
+        return DataFlow->new(
+            [
+                [
+                    HTMLFilter => {
+                        search_xpath => '//a',
+                        type         => 'VALUE',
+                    }
+                ]
+            ]
         );
     },
 );
@@ -47,10 +56,17 @@ has 'link_href' => (
     is       => 'ro',
     isa      => 'DataFlow',
     init_arg => undef,
+    lazy     => 1,
     default  => sub {
-        return DataFlow::Proc::HTMLFilter->new(
-            search_xpath => '//a/@href',
-            type         => 'VALUE',
+        return DataFlow->new(
+            [
+                [
+                    HTMLFilter => {
+                        search_xpath => '//a/@href',
+                        type         => 'VALUE',
+                    }
+                ]
+            ]
         );
     },
 );
@@ -59,10 +75,17 @@ has 'cleartdtag' => (
     is       => 'ro',
     isa      => 'DataFlow',
     init_arg => undef,
+    lazy     => 1,
     default  => sub {
-        return DataFlow::Proc::HTMLFilter->new(
-            search_xpath => '//td',
-            type         => 'VALUE',
+        return DataFlow->new(
+            [
+                [
+                    HTMLFilter => {
+                        search_xpath => '//td',
+                        type         => 'VALUE',
+                    }
+                ]
+            ]
         );
     },
 );
@@ -71,18 +94,23 @@ has 'splitlink' => (
     is       => 'ro',
     isa      => 'DataFlow',
     init_arg => undef,
+    lazy     => 1,
     default  => sub {
-		my $self = shift;
-        return sub {
-            my ( $text, $href ) =
-              ( $self->link_text->process($_), $self->link_href->process($_) );
-            if ( $text && $href ) {
-                return ( $text, $href );
+        my $self = shift;
+        return DataFlow->new(
+            sub {
+                my ( $text, $href ) = (
+                    $self->link_text->process($_),
+                    $self->link_href->process($_)
+                );
+                if ( $text && $href ) {
+                    return ( $text, $href );
+                }
+                else {
+                    return ( $self->cleartdtag->process($_), '' );
+                }
             }
-            else {
-                return ( $self->cleartdtag->process($_), '' );
-            }
-        };
+        );
     },
 );
 
@@ -90,10 +118,10 @@ has '+procs' => (
     init_arg => undef,
     lazy     => 1,
     default  => sub {
-		my $self = shift;
+        my $self = shift;
         return [
             sub {
-                my $u = URI->new($base);
+                my $u = URI->new( $self->BASE );
                 $u->query_form( $u->query_form, Ano => $_ );
                 return $u->as_string;
             },
@@ -117,10 +145,11 @@ has '+procs' => (
                     p      => sub {
                         my ( $first, @d ) = @{$_};
                         my $split = [ $self->splitlink->process($first) ];
-                        $split->[1] = join( '/', $site, $split->[1] )
+                        $split->[1] = join( '/', $self->_site, $split->[1] )
                           if $split->[1];
-                        return [ @{$split},
-                            map { $self->cleartdtag->process($_) } @d ];
+                        return [
+                            @{$split}, map { $self->cleartdtag->process($_) } @d
+                        ];
                     },
                 }
             ],
@@ -146,10 +175,5 @@ has '+procs' => (
     },
 );
 
-my $ano = shift || eval { use DateTime; DateTime->now->year - 1 };
-
-$flow->input($ano);
-my @res = $flow->flush;
-
-p @res;
+1;
 
